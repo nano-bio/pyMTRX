@@ -7,10 +7,12 @@
 
 # built-in modules
 import re
+import struct
 
 # third-party modules
 import numpy as np
-import png
+from PIL import Image
+#import png
 #import matplotlib.colors as mplcolors
 #import matplotlib as mpl
 
@@ -174,7 +176,7 @@ class ScanData(object):
         TODO: add color mapping
         '''
         
-        imgdata = np.zeros(self.shape, dtype=np.int)
+        imgdata = np.zeros(self.shape, dtype='uint32')
         zlst = np.sort( np.ravel(self.Z) )
         z_min = zlst[len(zlst)*25/1000]
         z_max = zlst[len(zlst)*975/1000]
@@ -190,9 +192,14 @@ class ScanData(object):
             # END for
         # END for
         
-        pngwriter = png.Writer(size=self.Z.shape, greyscale=True)
+        imgdata = imgdata.flatten()
+        bytes = struct.pack( ' '.join(len(imgdata)*['B']), *imgdata )
+        #pngwriter = png.Writer(size=self.Z.shape, greyscale=True)
         with open(save_name, 'wb') as f:
-            pngwriter.write(f, imgdata)
+            Image.frombytes('L', self.Z.shape, bytes).save(
+                f, format='png'
+            )
+            #pngwriter.write(f, imgdata)
         # END with
     # END save_png
     

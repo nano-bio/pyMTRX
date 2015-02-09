@@ -108,8 +108,13 @@ class Experiment(object):
                 )
             # END if
             
-            while self._init_readblock(f):
-                pass
+            # On first pass only read in the
+            # channel/axis dictionary information
+            while self._init_readblock(f, axch_pass=True): pass
+            
+            # On second pass read everything else
+            f.seek(12)
+            while self._init_readblock(f): pass
         # END with
         
         # Parse all of the MARKs now that all of the channels/axes have been
@@ -174,7 +179,7 @@ class Experiment(object):
         self.log.close()
     # END __init__
     
-    def _init_readblock(self, f):
+    def _init_readblock(self, f, axch_pass=False):
         '''__init__ subroutine for reading blocks
         
         The following blocks will be ignored:
@@ -205,30 +210,32 @@ class Experiment(object):
         bkbuff = MatrixBuffer(f, bklen)
         
         # Subroutines to parse the data in the different types of blocks
-        if re.search(r'EEPA', name):
-            self._init_read_EEPA(bkbuff)
-        elif re.search(r'PMOD', name):
-            self.log.write(
-                '{} {} '.format(
-                    time.strftime('%H:%M:%S', time.localtime(t)), name, bklen
+        if not axch_pass:
+            if re.search(r'EEPA', name):
+                self._init_read_EEPA(bkbuff)
+            elif re.search(r'PMOD', name):
+                self.log.write(
+                    '{} {} '.format(
+                        time.strftime('%H:%M:%S', time.localtime(t)), name, bklen
+                    )
                 )
-            )
-            self._init_read_PMOD(bkbuff)
-        elif re.search(r'BREF', name):
-            self.log.write(
-                '{} {} '.format(
-                    time.strftime('%H:%M:%S', time.localtime(t)), name, bklen
+                self._init_read_PMOD(bkbuff)
+            elif re.search(r'BREF', name):
+                self.log.write(
+                    '{} {} '.format(
+                        time.strftime('%H:%M:%S', time.localtime(t)), name, bklen
+                    )
                 )
-            )
-            self._init_read_BREF(bkbuff)
-        elif re.search(r'MARK', name):
-            self.log.write(
-                '{} {} '.format(
-                    time.strftime('%H:%M:%S', time.localtime(t)), name
+                self._init_read_BREF(bkbuff)
+            elif re.search(r'MARK', name):
+                self.log.write(
+                    '{} {} '.format(
+                        time.strftime('%H:%M:%S', time.localtime(t)), name
+                    )
                 )
-            )
-            self._init_read_MARK(bkbuff)
-        elif re.search(r'CCSY', name):
+                self._init_read_MARK(bkbuff)
+            # END if
+        elif axch_pass and re.search(r'CCSY', name):
             self.log.write(
                 '{} {} \n'.format(
                     time.strftime('%H:%M:%S', time.localtime(t)), name
@@ -238,8 +245,10 @@ class Experiment(object):
         # END if
         bkbuff.advance()
         if len(bkbuff)>0:
-            print '{} {}, {} left'.format(name, bklen, len(bkbuff))
-            raise RuntimeError('buffer and file object out of sync')
+            raise RuntimeError(
+                'buffer and file object out of sync' +
+                '{} {}, {} left'.format(name, bklen, len(bkbuff))
+            )
         # END if
         return True
     # END _init_readblock
@@ -297,18 +306,30 @@ class Experiment(object):
             self.unlinked_spectra.append(None)
             while self.unlinked_spectra[0] is not None:
                 spectra_fname, mrk = self.unlinked_spectra.pop(0)
+                if mrk is None:
+                    first_name, repeat = re.subn(
+                        r'(--\d+_)\d+(\.[^.]$)', '\g<1>1\g<2>', spectra_fname
+                    )
+                    if repeat:
+                        # copy over mark for following spectra
+                        self.unlinked_spectra.insert(
+                            0,
+                            (spectra_fname, self.stslinks[first_name][0])
+                        )
+                    else:
+                        # this is a "free-range" spectra
+                        # e.g. an I(t) spectra
+                        self.free_spectra.append(spectra_fname)
+                    # END if
+                    continue
+                # END if
                 try:
                     sts_parent_ax = self.axch[mrk[4]].depn_ax
                 except KeyError as err:
                     self.unlinked_spectra.append( (spectra_fname, mrk) )
                     continue
                 # END try
-                if mrk is None:
-                    # this is a "free-range" spectra
-                    # e.g. an I(t) spectra
-                    self.free_spectra.append(spectra_fname)
-                    continue
-                elif sts_parent_ax.name != img_chnl_name:
+                if sts_parent_ax.name != img_chnl_name:
                     # this spectra was clicked in a different channel window
                     # e.g. user clicked in I window instead of Z
                     self.unlinked_spectra.append( (spectra_fname, mrk) )
@@ -321,25 +342,12 @@ class Experiment(object):
                 # END if
                 # make a link for spec --> scan lookup
                 i, ii = re.search(r'--(\d+)_(\d+)\.[^.]+$', fname).groups()
-                try:
-                    # This replaces the spectra's image indices so that they
-                    # are correct.
-                    # (NOTE: this makes the indices IMPLICIT data)
-                    mrk = ( int(i), int(ii), mrk[2], mrk[3],
-                            sts_parent_ax.name
-                          )
-                except TypeError as err:
-                    print 'i ='
-                    pprint(i)
-                    print 'ii ='
-                    pprint(ii)
-                    print 'mark {} ='.format(repr(type(mrk)))
-                    pprint(mrk)
-                    print 'self.unlinked_spectra ='
-                    pprint(self.unlinked_spectra)
-                    print 'self.stslinks[fname] ='
-                    pprint(self.stslinks[fname])
-                    raise err
+                # This replaces the spectra's image indices so that they
+                # are correct.
+                # (NOTE: this makes the indices IMPLICIT data)
+                mrk = ( int(i), int(ii), mrk[2], mrk[3],
+                        sts_parent_ax.name
+                      )
                 self.stslinks[spectra_fname] = (mrk, fname)
             # END while
             self.unlinked_spectra.pop(0)
@@ -391,7 +399,8 @@ class Experiment(object):
             # ii: MATRIX scan number index for the parent scan
             # d: direction of the parent scan where the spectra was taken
             locstr, img_chnl_hash, _unknown, ii, d = re.search(
-                r'^MTRX\$STS_LOCATION-(.+?)%%(\w+)-(\d+)-(\d+)-(\d+)', markstr
+                r'^MTRX\$STS_LOCATION-(.+?)%%([a-fA-F\d]+)-(\d+)-(\d+)-(\d+)',
+                markstr
             ).groups()
             img_chnl_hash = int(img_chnl_hash, 16)
             self.last_sts_mark = ( int(ii), int(_unknown), int(d),
@@ -402,43 +411,26 @@ class Experiment(object):
         elif re.search(r'MTRX\$DATA_SET_NAME', markstr):
             self.data_set = re.search(r'-(.*)$', markstr).group(1)
         elif re.search(r'MTRX\$CREATION_COMMENT', markstr):
-            try:
-                self.comment = re.search(r'(?<=COMMENT-).*', markstr).group(0)
-            except AttributeError:
-                print 'parse warning on "{}"'.format(markstr)
-                self.comment = markstr
-            # END try
+            self.comment = re.search(r'(?<=COMMENT-).*', markstr).group(0)
         elif re.search(r'MTRX\$IMAGE_COMMENT', markstr):
             # Example:
             # "MTRX$IMAGE_COMMENT-Z.-493925695555-2-0-2%this is only a test"
             # "MTRX$IMAGE_COMMENT-I(V).-47249096771-1-0--1%added -2.6 V offset manually"
             # NOTE: ii not correctly assigned
             # NOTE: d may be correct
-            print '"{}"'.format(markstr)
             chnl_name, chnl_key, _unknown, ii, d, comment = re.search(
                 r'^MTRX\$IMAGE_COMMENT-(.+?)\.-(\w+)-(\d+)-(\d+)-+(\d+)%(.*)',
                 markstr
             ).groups()
             d = int(d)
             chnl_key = int(chnl_key) #Used to be base 16
-            try:
-                depn_ax = self.axch[chnl_key].depn_ax
-                self.log.write(
-                    '    {} --> {}\n'.format( chnl_key, 
-                                              self.axch[chnl_key].descrip
-                                            )
-                )
-                chnl_name = depn_ax.name
-            except KeyError as err:
-                # TODO remove this quick fix with a real fix
-                print '{} while trying to attach image comment'.format(
-                    repr(err)
-                )
-                chnl_name = 'Z'
-                return
-                #print 'working file: "{}"'.format(self.fp)
-                #raise err
-            # END try
+            depn_ax = self.axch[chnl_key].depn_ax
+            self.log.write(
+                '    {} --> {}\n'.format( chnl_key, 
+                                          self.axch[chnl_key].descrip
+                                        )
+            )
+            chnl_name = depn_ax.name
             if chnl_name in self.img_comments:
                 self.img_comments[chnl_name].append( (chnl_name, d, comment) )
             else:
@@ -1452,8 +1444,10 @@ class MatrixBuffer(object):
         if y >= 0:
             return y
         else:
-            print 'self._N = {}, self._i = {}'.format(self._N, self._i)
-            raise RuntimeError('MatrixBuffer over-read')
+            raise RuntimeError(
+                'MatrixBuffer over-read: ' +
+                'self._N = {}, self._i = {}'.format(self._N, self._i)
+            )
     # END __len__
     
     def __nonzero__(self):

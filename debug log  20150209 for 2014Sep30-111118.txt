@@ -1,0 +1,740 @@
+self.axch = 
+    4299423811 (x0000000100440043):
+        { '_mtrx_hash_value': 4299423811,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda4a410>,
+          'descrip': u'ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)'}
+    8592031809 (x0000000200200041):
+        { '_mtrx_hash_value': 8592031809,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::XYScanner::Y'}
+    8594391107 (x0000000200440043):
+        { '_mtrx_hash_value': 8594391107,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda4a810>,
+          'descrip': u'ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)'}
+    12886999105 (x0000000300200041):
+        { '_mtrx_hash_value': 12886999105,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': <experiment.IndependentAxis object at 0x7f1ebda4a290>,
+          'qual_name': u'Default::XYScanner::X'}
+    12889358403 (x0000000300440043):
+        { '_mtrx_hash_value': 12889358403,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda4a890>,
+          'descrip': u'ChannelData: channel = I, storage = ResultStorage(BlockTransfer)'}
+    17181966403 (x0000000400200043):
+        { '_mtrx_hash_value': 17181966403,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a1d0>,
+          'name': u'I',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda29490>,
+          'unit': u'A'}
+    17184325699 (x0000000400440043):
+        { '_mtrx_hash_value': 17184325699,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9ff2d0>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    21479292995 (x0000000500440043):
+        { '_mtrx_hash_value': 21479292995,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9ff3d0>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    25771900993 (x0000000600200041):
+        { '_mtrx_hash_value': 25771900993,
+          'len': 290,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    25774260291 (x0000000600440043):
+        { '_mtrx_hash_value': 25774260291,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9fff50>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    30066868289 (x0000000700200041):
+        { '_mtrx_hash_value': 30066868289,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    34364194883 (x0000000800440043):
+        { '_mtrx_hash_value': 34364194883,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9fff10>,
+          'descrip': u'ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)'}
+    38659162179 (x0000000900440043):
+        { '_mtrx_hash_value': 38659162179,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda4a310>,
+          'descrip': u'ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)'}
+    42951770179 (x0000000a00200043):
+        { '_mtrx_hash_value': 42951770179,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a1d0>,
+          'name': u'Z',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda56210>,
+          'unit': u'm'}
+    42954129475 (x0000000a00440043):
+        { '_mtrx_hash_value': 42954129475,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9f7ad0>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    47246737475 (x0000000b00200043):
+        { '_mtrx_hash_value': 47246737475,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a1d0>,
+          'name': u'Aux2',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda56c10>,
+          'unit': u'V'}
+    47249096771 (x0000000b00440043):
+        { '_mtrx_hash_value': 47249096771,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9f7e90>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    51541704771 (x0000000c00200043):
+        { '_mtrx_hash_value': 51541704771,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9ff210>,
+          'name': u'I(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9ffb90>,
+          'unit': u'A'}
+    51544064067 (x0000000c00440043):
+        { '_mtrx_hash_value': 51544064067,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9f7f10>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    55836672067 (x0000000d00200043):
+        { '_mtrx_hash_value': 55836672067,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9ff7d0>,
+          'name': u'I(Z)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9ffed0>,
+          'unit': u'A'}
+    60131639363 (x0000000e00200043):
+        { '_mtrx_hash_value': 60131639363,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9ff210>,
+          'name': u'Aux2(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9f73d0>,
+          'unit': u'V'}
+    68721573953 (x0000001000200041):
+        { '_mtrx_hash_value': 68721573953,
+          'len': 3600,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Clock2::t2'}
+    68723933251 (x0000001000440043):
+        { '_mtrx_hash_value': 68723933251,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9f7d10>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    73016541251 (x0000001100200043):
+        { '_mtrx_hash_value': 73016541251,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9ff150>,
+          'name': u'I(t)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9ff9d0>,
+          'unit': u'A'}
+    73018900547 (x0000001100440043):
+        { '_mtrx_hash_value': 73018900547,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9f7350>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    77311508545 (x0000001200200041):
+        { '_mtrx_hash_value': 77311508545,
+          'len': 600,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Clock2::t2'}
+    77313867843 (x0000001200440043):
+        { '_mtrx_hash_value': 77313867843,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebd9f7d90>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    81606475843 (x0000001300200043):
+        { '_mtrx_hash_value': 81606475843,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a3d0>,
+          'name': u'I(t)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda56a10>,
+          'unit': u'A'}
+    81608835139 (x0000001300440043):
+        { '_mtrx_hash_value': 81608835139,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda4af90>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    85901443137 (x0000001400200041):
+        { '_mtrx_hash_value': 85901443137,
+          'len': 378,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    85903802435 (x0000001400440043):
+        { '_mtrx_hash_value': 85903802435,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda56990>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    90196410433 (x0000001500200041):
+        { '_mtrx_hash_value': 90196410433,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    90198769731 (x0000001500440043):
+        { '_mtrx_hash_value': 90198769731,
+          'depn_ax': <experiment.DependentAxis object at 0x7f1ebda566d0>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    94491377731 (x0000001600200043):
+        { '_mtrx_hash_value': 94491377731,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9f7e50>,
+          'name': u'Aux2(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9f7cd0>,
+          'unit': u'V'}
+    98786345027 (x0000001700200043):
+        { '_mtrx_hash_value': 98786345027,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9f7e50>,
+          'name': u'I(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9f7390>,
+          'unit': u'A'}
+    103081312323 (x0000001800200043):
+        { '_mtrx_hash_value': 103081312323,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9f7050>,
+          'name': u'I(Z)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9f7b10>,
+          'unit': u'A'}
+    128851116097 (x0000001e00200041):
+        { '_mtrx_hash_value': 128851116097,
+          'len': 962,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    133146083393 (x0000001f00200041):
+        { '_mtrx_hash_value': 133146083393,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    137441050691 (x0000002000200043):
+        { '_mtrx_hash_value': 137441050691,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9f7950>,
+          'name': u'Aux2(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebd9f7410>,
+          'unit': u'V'}
+    141736017987 (x0000002100200043):
+        { '_mtrx_hash_value': 141736017987,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9f7950>,
+          'name': u'I(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda4acd0>,
+          'unit': u'A'}
+    146030985283 (x0000002200200043):
+        { '_mtrx_hash_value': 146030985283,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebd9f7e10>,
+          'name': u'I(Z)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda4aa90>,
+          'unit': u'A'}
+    150325952577 (x0000002300200041):
+        { '_mtrx_hash_value': 150325952577,
+          'len': 2842,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    154620919873 (x0000002400200041):
+        { '_mtrx_hash_value': 154620919873,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    158915887171 (x0000002500200043):
+        { '_mtrx_hash_value': 158915887171,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a850>,
+          'name': u'Aux2(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda56b50>,
+          'unit': u'V'}
+    163210854467 (x0000002600200043):
+        { '_mtrx_hash_value': 163210854467,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a850>,
+          'name': u'I(V)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda56b10>,
+          'unit': u'A'}
+    167505821763 (x0000002700200043):
+        { '_mtrx_hash_value': 167505821763,
+          'indp_ax': <experiment.IndependentAxis object at 0x7f1ebda4a710>,
+          'name': u'I(Z)',
+          'trans_func': <experiment.TransferFunction object at 0x7f1ebda560d0>,
+          'unit': u'A'}
+
+self.stslinks = 
+11:19:11 CCSY 
+    DICT
+        8592031809, 0, Default::XYScanner::Y, True
+        25771900993, 0, Default::Spectroscopy::V, True
+        30066868289, 0, Default::Spectroscopy::Z, False
+        68721573953, 0, Default::Clock2::t2, False
+        12886999105, 8592031809, Default::XYScanner::X, True
+        ---
+        17181966403, 12886999105, I, A
+        42951770179, 12886999105, Z, m
+        47246737475, 12886999105, Aux2, V
+        51541704771, 25771900993, I(V), A
+        55836672067, 30066868289, I(Z), A
+        60131639363, 25771900993, Aux2(V), V
+        73016541251, 68721573953, I(t), A
+        ---
+        4299423811, 42951770179, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        8594391107, 47246737475, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        12889358403, 17181966403, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        17184325699, 60131639363, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        21479292995, 51541704771, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        25774260291, 55836672067, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        34364194883, 73016541251, ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        8592031809, 600, 0, 0
+        25771900993, 290, 0, 0
+        30066868289, 1000, 0, 0
+        68721573953, 3600, 0, 0
+        12886999105, 600, 1, 0
+        ---
+        17181966403, 1, 0
+        42951770179, 1, 0
+        47246737475, 1, 0
+        51541704771, 1, 0
+        55836672067, 1, 0
+        60131639363, 1, 0
+        73016541251, 1, 0
+        ---
+        4299423811, 2, 32
+        8594391107, 2, 32
+        12889358403, 2, 32
+        17184325699, 1, 32
+        21479292995, 1, 32
+        25774260291, 1, 32
+        34364194883, 1, 32
+        ---
+    SCAN
+    XFER
+        17181966403: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        42951770179: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        47246737475: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        51541704771: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        55836672067: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        60131639363: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        73016541251: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+11:23:03 CCSY 
+    DICT
+        8592031809, 0, Default::XYScanner::Y, True
+        25771900993, 0, Default::Spectroscopy::V, True
+        30066868289, 0, Default::Spectroscopy::Z, False
+        77311508545, 0, Default::Clock2::t2, False
+        12886999105, 8592031809, Default::XYScanner::X, True
+        ---
+        17181966403, 12886999105, I, A
+        42951770179, 12886999105, Z, m
+        47246737475, 12886999105, Aux2, V
+        51541704771, 25771900993, I(V), A
+        55836672067, 30066868289, I(Z), A
+        60131639363, 25771900993, Aux2(V), V
+        81606475843, 77311508545, I(t), A
+        ---
+        4299423811, 42951770179, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        8594391107, 47246737475, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        12889358403, 17181966403, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        17184325699, 60131639363, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        21479292995, 51541704771, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        25774260291, 55836672067, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        38659162179, 81606475843, ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        8592031809, 600, 0, 0
+        25771900993, 290, 0, 0
+        30066868289, 1000, 0, 0
+        77311508545, 600, 0, 0
+        12886999105, 600, 1, 0
+        ---
+        17181966403, 1, 0
+        42951770179, 1, 0
+        47246737475, 1, 0
+        51541704771, 1, 0
+        55836672067, 1, 0
+        60131639363, 1, 0
+        81606475843, 1, 0
+        ---
+        4299423811, 2, 32
+        8594391107, 2, 32
+        12889358403, 2, 32
+        17184325699, 1, 32
+        21479292995, 1, 32
+        25774260291, 1, 32
+        38659162179, 1, 32
+        ---
+    SCAN
+    XFER
+        17181966403: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        42951770179: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        47246737475: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        51541704771: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        55836672067: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        60131639363: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+13:27:47 CCSY 
+    DICT
+        8592031809, 0, Default::XYScanner::Y, True
+        77311508545, 0, Default::Clock2::t2, False
+        85901443137, 0, Default::Spectroscopy::V, True
+        90196410433, 0, Default::Spectroscopy::Z, False
+        12886999105, 8592031809, Default::XYScanner::X, True
+        ---
+        17181966403, 12886999105, I, A
+        42951770179, 12886999105, Z, m
+        47246737475, 12886999105, Aux2, V
+        81606475843, 77311508545, I(t), A
+        94491377731, 85901443137, Aux2(V), V
+        98786345027, 85901443137, I(V), A
+        103081312323, 90196410433, I(Z), A
+        ---
+        4299423811, 42951770179, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        8594391107, 47246737475, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        12889358403, 17181966403, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        38659162179, 81606475843, ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)
+        42954129475, 94491377731, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        47249096771, 98786345027, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        51544064067, 103081312323, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        8592031809, 600, 0, 0
+        77311508545, 600, 0, 0
+        85901443137, 378, 0, 0
+        90196410433, 1000, 0, 0
+        12886999105, 600, 1, 0
+        ---
+        17181966403, 1, 0
+        42951770179, 1, 0
+        47246737475, 1, 0
+        81606475843, 1, 0
+        94491377731, 1, 0
+        98786345027, 1, 0
+        103081312323, 1, 0
+        ---
+        4299423811, 2, 32
+        8594391107, 2, 32
+        12889358403, 2, 32
+        38659162179, 1, 32
+        42954129475, 1, 32
+        47249096771, 1, 32
+        51544064067, 1, 32
+        ---
+    SCAN
+    XFER
+        17181966403: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        42951770179: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        47246737475: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        94491377731: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        98786345027: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        103081312323: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+16:16:47 CCSY 
+    DICT
+        8592031809, 0, Default::XYScanner::Y, True
+        77311508545, 0, Default::Clock2::t2, False
+        128851116097, 0, Default::Spectroscopy::V, True
+        133146083393, 0, Default::Spectroscopy::Z, False
+        12886999105, 8592031809, Default::XYScanner::X, True
+        ---
+        17181966403, 12886999105, I, A
+        42951770179, 12886999105, Z, m
+        47246737475, 12886999105, Aux2, V
+        81606475843, 77311508545, I(t), A
+        137441050691, 128851116097, Aux2(V), V
+        141736017987, 128851116097, I(V), A
+        146030985283, 133146083393, I(Z), A
+        ---
+        4299423811, 42951770179, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        8594391107, 47246737475, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        12889358403, 17181966403, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        38659162179, 81606475843, ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)
+        68723933251, 137441050691, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        73018900547, 141736017987, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        77313867843, 146030985283, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        8592031809, 600, 0, 0
+        77311508545, 600, 0, 0
+        128851116097, 962, 0, 0
+        133146083393, 1000, 0, 0
+        12886999105, 600, 1, 0
+        ---
+        17181966403, 1, 0
+        42951770179, 1, 0
+        47246737475, 1, 0
+        81606475843, 1, 0
+        137441050691, 1, 0
+        141736017987, 1, 0
+        146030985283, 1, 0
+        ---
+        4299423811, 2, 32
+        8594391107, 2, 32
+        12889358403, 2, 32
+        38659162179, 1, 32
+        68723933251, 1, 32
+        73018900547, 1, 32
+        77313867843, 1, 32
+        ---
+    SCAN
+    XFER
+        17181966403: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        42951770179: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        47246737475: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        137441050691: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        141736017987: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        146030985283: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+07:24:21 CCSY 
+    DICT
+        8592031809, 0, Default::XYScanner::Y, True
+        77311508545, 0, Default::Clock2::t2, False
+        150325952577, 0, Default::Spectroscopy::V, True
+        154620919873, 0, Default::Spectroscopy::Z, False
+        12886999105, 8592031809, Default::XYScanner::X, True
+        ---
+        17181966403, 12886999105, I, A
+        42951770179, 12886999105, Z, m
+        47246737475, 12886999105, Aux2, V
+        81606475843, 77311508545, I(t), A
+        158915887171, 150325952577, Aux2(V), V
+        163210854467, 150325952577, I(V), A
+        167505821763, 154620919873, I(Z), A
+        ---
+        4299423811, 42951770179, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        8594391107, 47246737475, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        12889358403, 17181966403, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        38659162179, 81606475843, ChannelData: channel = I(t), storage = ResultStorage(BlockTransfer)
+        81608835139, 158915887171, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        85903802435, 163210854467, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        90198769731, 167505821763, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        8592031809, 600, 0, 0
+        77311508545, 600, 0, 0
+        150325952577, 2842, 0, 0
+        154620919873, 1000, 0, 0
+        12886999105, 600, 1, 0
+        ---
+        17181966403, 1, 0
+        42951770179, 1, 0
+        47246737475, 1, 0
+        81606475843, 1, 0
+        158915887171, 1, 0
+        163210854467, 1, 0
+        167505821763, 1, 0
+        ---
+        4299423811, 2, 32
+        8594391107, 2, 32
+        12889358403, 2, 32
+        38659162179, 1, 32
+        81608835139, 1, 32
+        85903802435, 1, 32
+        90198769731, 1, 32
+        ---
+    SCAN
+    XFER
+        17181966403: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        42951770179: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        47246737475: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        158915887171: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        163210854467: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        167505821763: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+11:11:21 MARK     MTRX$CREATION_COMMENT-
+11:11:21 MARK     MTRX$SAMPLE_NAME-I125_0923
+11:11:21 MARK     MTRX$DATA_SET_NAME-70 K
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1(V)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1(Z)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1(r)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(V)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(Z)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(r)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(t)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I
+11:11:21 MARK     MTRX$ENABLE_RECORDING-I(V)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I(Z)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I(r)
+11:11:21 MARK     MTRX$ENABLE_RECORDING-I(t)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I_Reg
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Z
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Z(r)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Z(t)
+11:11:21 MARK     Instrument information: Instrument >Default< calibration data set >STM/AFM for SPM PRE 4< parameter set >LT STM< (variant: >LHe<)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I_Reg
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1(Z)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Z(r)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(Z)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Z
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1(V)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(r)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(t)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux2(V)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Aux1(r)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-Z(t)
+11:11:21 MARK     MTRX$ENABLE_RECORDING-I(t)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I(Z)
+11:11:21 MARK     MTRX$ENABLE_RECORDING-I(V)
+11:11:21 MARK     MTRX$DISABLE_RECORDING-I(r)
+11:11:29 PMOD     GapVoltageControl_Voltage = 1.0 Volt
+11:12:25 PMOD     STMSCBService_VGap_Select = True --
+11:12:40 PMOD     GapVoltageControl_Voltage = -1.0 Volt
+11:18:29 PMOD     Clock2_Period = 1.0 Second
+11:18:29 PMOD     I_t_Oversampling_Factor = 400000 --
+11:18:38 PMOD     Clock2_Samples = 3600 Count
+11:18:40 PMOD     Clock2_Enable = True --
+11:19:10 PMOD     Clock2_Enable = False --
+11:19:11 BREF     2014Sep30-111118--1_1.I(t)_mtrx
+11:19:19 PMOD     Clock2_Samples = 600 Count
+11:19:21 PMOD     Clock2_Enable = True --
+11:19:31 PMOD     GapVoltageControl_Voltage = -10.0009170742 Volt
+11:23:02 PMOD     Clock2_Enable = False --
+11:23:03 BREF     2014Sep30-111118--2_1.I(t)_mtrx
+11:23:30 PMOD     Clock2_Enable = True --
+11:23:36 PMOD     GapVoltageControl_Voltage = -5.0 Volt
+11:24:40 PMOD     GapVoltageControl_Voltage = -6.0 Volt
+11:24:51 PMOD     GapVoltageControl_Voltage = -2.0 Volt
+11:25:03 PMOD     Clock2_Enable = False --
+11:25:04 BREF     2014Sep30-111118--3_1.I(t)_mtrx
+11:27:31 PMOD     Spectroscopy_Device_1_Points = 189 Count
+11:27:31 PMOD     Spectroscopy_Device_1_End = 10.0008993821 Volt
+11:27:46 PMOD     GapVoltageControl_Voltage = -10.0009170742 Volt
+11:27:53 MARK     MTRX$STS_LOCATION-140,148;-3.33333e-012,-6.66667e-013%%100440043-1-1-0%%
+11:29:47 MARK     MTRX$IMAGE_COMMENT-I(V).-47249096771-1-0--1%added -2.6 V offset manually
+    47249096771 --> ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+13:27:47 BREF     2014Sep30-111118--1_1.I(V)_mtrx
+13:33:04 PMOD     Spectroscopy_Device_1_Points = 401 Count
+13:33:04 PMOD     Spectroscopy_Device_1_End = 10.0008983203 Volt
+13:35:56 PMOD     Spectroscopy_Device_1_Points = 481 Count
+13:35:56 PMOD     Spectroscopy_Device_1_End = 10.0008972026 Volt
+13:36:02 MARK     MTRX$STS_LOCATION-139,148;-3.66667e-012,-6.66667e-013%%100440043-3-3-0%%
+16:16:47 BREF     2014Sep30-111118--2_1.I(V)_mtrx
+16:18:00 PMOD     STMSCBService_VGap_Select = False --
+16:18:01 PMOD     STMSCBService_VGap_Out_Mod_Select = True --
+16:18:45 PMOD     STMSCBService_VGap_Out_Mod_Select = False --
+16:20:00 PMOD     STMSCBService_VGap_Select = True --
+16:21:16 MARK     MTRX$STS_LOCATION-141,147;-3e-012,-1e-012%%100440043-4-4-0%%
+16:22:06 BREF     2014Sep30-111118--3_1.I(V)_mtrx
+16:23:47 PMOD     Spectroscopy_Device_1_Points = 1421 Count
+16:23:47 PMOD     Spectroscopy_Device_1_End = 10.000895433 Volt
+16:24:11 MARK     MTRX$STS_LOCATION-142,146;-2.66667e-012,-1.33333e-012%%100440043-6-6-0%%
+16:26:06 MARK     MTRX$IMAGE_COMMENT-I(V).-85903802435-1-0--1%extra -2.6 V DC applied through Vext
+    85903802435 --> ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+07:24:21 BREF     2014Sep30-111118--4_1.I(V)_mtrx
