@@ -21,17 +21,19 @@ import random
 import time
 import multiprocessing as mp
 
+import pdb
+
 # 3rd-party modules
 #sys.path.append('C:/Users/csykes/alex/Dropbox/ampPy/spm_dev/')
 from pyMTRX.experiment import Experiment
 
 #==============================================================================
-def main(cwd='./', r=True, debug=False):
-    if debug:
-        print '*** DEBUG MODE ON ***'
-    t = [time.time()]
+def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
+    if debug: print '*** DEBUG MODE ON ***'
+    t = time.time()
     if cwd[-1] != '/':
         cwd += '/'
+    files = os.listdir(cwd)
     print 'looking for experiment files in "{}"'.format(cwd)
     # find one experiment file and then move on
     experiment_files = find_files(cwd, fext='mtrx', r=r)
@@ -39,17 +41,22 @@ def main(cwd='./', r=True, debug=False):
     for fp in experiment_files:
         print '    ' + os.path.basename(fp)
     
-    results = []
-    multi = True
-    if not multi:
+    N_opened = []
+    try:
+        processes = int(processes)
+    except ValueError:
+        processes = 1
+    #END try
+    if processes < 1 or debug: processes = 1
+    if processes == 1:
         for fp in experiment_files:
-            results.append( create_experiment_log(fp, debug=debug) )
+            N_opened.append( create_experiment_log(fp, debug=debug) )
         # END for
     else:
         # Create worker pool and start all jobs
-        worker_pool = mp.Pool(processes=mp.cpu_count())
+        worker_pool = mp.Pool(processes=processes)
         for fp in experiment_files:
-            results.append(
+            N_opened.append(
                 worker_pool.apply_async( create_experiment_log,
                                          args=(fp,debug)
                                        )
@@ -60,61 +67,27 @@ def main(cwd='./', r=True, debug=False):
         worker_pool.join()
     # END if
     
-    t.append(time.time())
-    all_img_entries = []
-    all_sts_entries = []
-    if not multi:
-        for ex_img_entries, ex_sts_entries in results:
-            all_img_entries.extend(ex_img_entries)
-            all_sts_entries.extend(ex_sts_entries)
-        # END for
+    N = 0
+    if processes == 1:
+        for n in N_opened: N += n
     else:
-        for resultobj in results:
+        for n in N_opened:
             try:
-                ex_img_entries, ex_sts_entries = resultobj.get()
+                n.get()
             except:
                 continue
             # END try
-            all_img_entries.extend(ex_img_entries)
-            all_sts_entries.extend(ex_sts_entries)
+            N += n.get()
         # END for
     # END if
-    all_img_entries.sort(key=lambda tup: tup[0])
-    all_sts_entries.sort(key=lambda tup: tup[0])
-    
-    t.append(time.time())
-    with open('vt-stm logbook.csv', 'w') as fstm:
-        fstm.write(
-            'time,sample,index,rep,dir,channel,x (nm),y (nm),scan bias (V),current setpoint (pA),loop gain (%),T_raster (ms),points,lines,line width (nm),image height (nm),,angle (deg),No. STS,data set,exp comment,img comment,file\n'
-        )
-        for _, ls in all_img_entries:
-            fstm.write(ls)
-        # END for
-    # END with
-    with open('vt-sts logbook.csv', 'w') as fsts:
-        fsts.write(
-            'time,sample,scan index,rep,dir,channel,spec index,rep,dir,channel,start voltage (V),end voltage (V),scan bias (V),current setpoint (pA),loop gain (%),T_raster (ms),points,data set,exp comment,comments,file\n'
-        )
-        for _, ls in all_sts_entries:
-            fsts.write(ls)
-        # END for
-    # END with
-    
-    t.append(time.time())
-    # t = [start, read done, sort done, write done]
-    N = len(experiment_files) + len(all_img_entries) + len(all_sts_entries)
-    print 'Files read: {:,d}'.format(N)
-    print 'Total run time: {:02d}:{:02d}:{:06.3f}'.format(
-        *make_hms(t[-1]-t[0])
+    t = time.time() - t
+    hours = int(t/3600)
+    minutes = int((t-3600*hours)/60)
+    seconds = int(t - 3600*hours - 60*minutes)
+    print 'Total run time: {:02d}:{:02d}:{:02d}'.format(
+        hours, minutes, seconds
     )
-    t_ = t[1] - t[0]
-    print 'Average import speed: {:.0f} files/min'.format(N/(t_/60))
-    print 'Sort time: {:02d}:{:02d}:{:06.3f}'.format(
-        *make_hms(t[3]-t[2])
-    )
-    print 'Write time: {:02d}:{:02d}:{:06.3f}'.format(
-        *make_hms(t[2]-t[1])
-    )
+    print 'Average processing speed: {:.0f} files/min'.format(N/(t/60))
 # END main
 
 #==============================================================================
@@ -122,8 +95,7 @@ def create_experiment_log(exp_fp, debug=False):
     cwd, exp_fn = os.path.split(exp_fp)
     cwd += '/'
     ex = Experiment(cwd + exp_fn, debug=debug)
-    if debug or True:
-        print exp_fn + ' loaded'
+    if debug: print exp_fn + ' loaded'
     
     # collect image files
     # (*image file must be in experiment file AND a file in the directory)
@@ -135,79 +107,123 @@ def create_experiment_log(exp_fp, debug=False):
         if fn_mat and fn in all_data:
             img_files.append(fn)
     # END for
-    if debug:
-        random.shuffle(img_files)
-        img_files = img_files[:5]
+    #f debug:
+    #    random.shuffle(img_files)
+    #    img_files = img_files[:5]
     # END if
     
-    #dname_lkup = { 0: '00 trace up',   1: '01 retrace up',
-    #               2: '10 trace down', 3: '11 retrace down'
-    #             }
+    dname_lkup = { 0: '00 trace up',   1: '01 retrace up',
+                   2: '10 trace down', 3: '11 retrace down'
+                 }
     IMG_entries = []
     STS_entries = []
     for fn in sorted(img_files, key=lambda f: os.path.getctime(cwd+f)):
-        if debug:
-            print 'loading "{}"'.format(fn)
+        if debug: print 'loading "{}"'.format(fn)
         # scns = [trace_up, retrace_up, trace_down, retrace_down] 
         scns = ex.import_scan(cwd + fn, calc_duration=True)
         for i in range(len(scns)):
-            #scns[i].props['direction'] = dname_lkup[i]
+            scns[i].props['direction'] = dname_lkup[i]
             IMG_entries.append(
                 make_scan_entry(scns[i], ex, image_check(ex, scns[i]))
             )
             STS_entries.extend(make_spectra_entries(scns[i], ex, debug=debug))
         # END for
     # END for
-    #IMG_entries.sort(key=lambda tup: tup[0])
-    #STS_entries.sort(key=lambda tup: tup[0])
+    IMG_entries.sort(key=lambda tup: tup[0])
+    STS_entries.sort(key=lambda tup: tup[0])
+    N_opened = len(IMG_entries) + len(STS_entries) + 1
     
-    return IMG_entries, STS_entries
+    save_name = re.sub(r'_0001\.mtrx$', '_settings.csv', exp_fn)
+    f = open(cwd+save_name, 'w')
+    columns = [ 'date/time (d)',
+                'sample', 'data set',
+                'index', 'rep', 'dir', 'channel',
+                'x (nm)', 'y (nm)',
+                'scan bias (V)', 'current setpoint (pA)',
+                'loop gain (%)', 'T_raster (ms)',
+                'points', 'lines',
+                'line width (nm)', 'image height (nm)', '', 'angle (deg)',
+                'No. STS',
+                'exp comment', 'img comment',
+                'file'
+              ]
+    f.write(','.join(columns))
+    f.write('\n')
+    for t, ln in IMG_entries:
+        f.write(ln)
+    f.close()
+    
+    save_name = re.sub(r'_0001\.mtrx$', '_settings_STS.csv', exp_fn)
+    f = open(cwd+save_name, 'w')
+    columns = [ 'date/time (d)',
+                'sample', 'data set',
+                'scan index', 'rep', 'dir', 'channel',
+                'spec index', 'rep', 'dir', 'channel',
+                'start voltage (V)', 'end voltage (V)',
+                'scan bias (V)', 'current setpoint (pA)',
+                'loop gain (%)', 'T_raster (ms)',
+                'points',
+                'exp comment', 'spectrum comments',
+                'file'
+              ]
+    f.write(','.join(columns))
+    f.write('\n')
+    for t, ln in STS_entries:
+        f.write(ln)
+    f.close()
+    if len(cwd+save_name) > 79:
+        print cwd + '\n    ' + save_name
+    else:
+        print cwd + ' ' + save_name
+    # END if
+    
+    return N_opened
 # END create_experiment_log
 
 #==============================================================================
 def make_scan_entry(scn, ex, no_warn=True):
     ls = []
     # time
-    ls.append('{},'.format((scn.props['time'])/86400.0 + 25569 - 4.0/24))
+    ls.append( str(scn.props['time']/86400.0 + 25569 - 4.0/24) )
     # experiment sample
-    ls.append('{0.sample},'.format(ex))
+    ls.append('{0.sample},{0.data_set}'.format(ex))
     # img index (scan, repetition, direction) and channel
     ls.append(
-        '{index:03d},{rep:04d},{direction:02b},{Channel},'.format(**scn.props)
+        '{index:03d},{rep:04d},{direction},{channel}'.format(**scn.props)
     )
     # scan location
-    ls.append('{},'.format(scn.props['XYScanner_X_Offset'] * 1e9))
-    ls.append('{},'.format(scn.props['XYScanner_Y_Offset'] * 1e9))
+    ls.append('{}'.format(scn.props['XYScanner_X_Offset'] * 1e9))
+    ls.append('{}'.format(scn.props['XYScanner_Y_Offset'] * 1e9))
     # scan voltage
-    ls.append('{},'.format(scn.props['GapVoltageControl_Voltage']))
+    ls.append('{}'.format(scn.props['GapVoltageControl_Voltage']))
     # scan current
-    ls.append('{:0.1f},'.format(scn.props['Regulator_Setpoint_1'] * 1e12))
+    ls.append('{:0.1f}'.format(scn.props['Regulator_Setpoint_1'] * 1e12))
     # scan loop gain
-    ls.append('{:0.2f},'.format(scn.props['Regulator_Loop_Gain_1_I']))
+    ls.append('{:0.2f}'.format(scn.props['Regulator_Loop_Gain_1_I']))
     # scan raster time
-    ls.append('{:0.3f},'.format(scn.props['XYScanner_Raster_Time'] * 1e3))
+    ls.append('{:0.3f}'.format(scn.props['XYScanner_Raster_Time'] * 1e3))
     # scan size in points and lines
-    ls.append('{},'.format(scn.props['XYScanner_Points']))
-    ls.append('{},'.format(scn.props['XYScanner_Lines']))
+    ls.append(str(scn.props['XYScanner_Points']))
+    ls.append(str(scn.props['XYScanner_Lines']))
     # scan size in physical units (nm)
-    ls.append('{:0.2f},'.format(scn.props['XYScanner_Width'] * 1e9))
-    ls.append('{:0.2f},'.format(scn.props['XYScanner_Height'] * 1e9))
+    ls.append('{:0.2f}'.format(scn.props['XYScanner_Width'] * 1e9))
+    ls.append('{:0.2f}'.format(scn.props['XYScanner_Height'] * 1e9))
     # alert flag for parameter errors
     if no_warn:
-        ls +=','
+        ls.append('')
     else:
-        ls.append('*,')
+        ls.append('*')
     # END if
     # scan angle
-    ls.append('{:0.1f},'.format(scn.props['XYScanner_Angle']))
+    ls.append('{:0.1f}'.format(scn.props['XYScanner_Angle']))
     # number of linked point spectra
-    ls.append('{},'.format(len(scn.spectra)))
+    ls.append(str(len(scn.spectra)))
     # experiment data set, comment, scan comment, and file name
     ls.append(
-        '{0.data_set},{0.comment},{comment},{file}\n'.format(ex, **scn.props)
+        '{0.comment},{1[comment]},{1[file]}\n'.format(ex, scn.props)
     )
     
-    return (scn.props['time'], ''.join(ls))
+    return (scn.props['time'], ','.join(ls))
 # END make_scan_entry
 
 #==============================================================================
@@ -220,46 +236,46 @@ def make_spectra_entries(scn, ex, no_warn=True, debug=False):
     if debug and len(scn.spectra) > 0:
         print (
             '{0:>3d} spectra in '.format(len(scn.spectra)) +
-            '{index}_{rep}_{direction:b}'.format(**scn.props)
+            '{index}_{rep}_{direction}'.format(**scn.props)
         )
     for crv in scn.spectra:
         ls = []
         # time (write time in DAYS since 1900Jan1, this is MS Excel friendly)
-        ls.append(
-            '{},'.format((crv.props['time'])/86400.0 + 25569 - 4.0/24)
-        )
+        ls.append( str(crv.props['time']/86400.0 + 25569 - 4.0/24) )
         # experiment sample
-        ls.append('{},'.format(ex.sample))
+        ls.append('{0.sample},{0.data_set}'.format(ex))
         # parent scan index (scan, repetition, direction) and channel
         ls.append(
-            '{index:03d},{rep:04d},{direction:02b},{Channel},'.format(
+            '{index:03d},{rep:04d},{direction},{channel}'.format(
                 **scn.props
             )
         )
         # spec index (scan, repetition, direction) and channel
         ls.append(
-            '{index:03d},{rep:04d},{direction},{Channel},'.format(**crv.props)
+            '{index:03d},{rep:04d},{direction},{channel}'.format(**crv.props)
         )
         # spec start, end
-        ls.append('{:0.3f},{:0.3f},'.format(crv.X[0], crv.X[-1]))
+        ls.append('{:0.3f},{:0.3f}'.format(crv.X[0], crv.X[-1]))
         # scan bias
-        ls.append('{},'.format(crv.props['GapVoltageControl_Voltage']))
+        ls.append('{}'.format(crv.props['GapVoltageControl_Voltage']))
         # scan current setpoint
         ls.append(
-            '{:0.1f},'.format(crv.props['Regulator_Setpoint_1'] * 1e12)
+            '{:0.1f}'.format(crv.props['Regulator_Setpoint_1'] * 1e12)
         )
         # scan loop gain
-        ls.append('{:0.2f},'.format(crv.props['Regulator_Loop_Gain_1_I']))
+        ls.append('{:0.2f}'.format(crv.props['Regulator_Loop_Gain_1_I']))
         # spec raster time
         ls.append(
-            '{:0.3f},'.format(crv.props['Spectroscopy_Raster_Time_1'] * 1e3)
+            '{:0.3f}'.format(crv.props['Spectroscopy_Raster_Time_1'] * 1e3)
         )
         # spec number of points
-        ls.append('{},'.format(len(crv)))
+        ls.append(str(len(crv)))
         # experiment data set and comment, sts file name
-        ls.append('{0.data_set},{0.comment},{1.sourcefile}\n'.format(ex, crv))
+        ls.append(
+            '{0.comment},{1[comment]},{1[file]}\n'.format(ex, crv.props)
+        )
         
-        out.append( (crv.props['time'], ''.join(ls)) )
+        out.append( (crv.props['time'], ','.join(ls)) )
     # END for
     return out
 # END make_spectra_entries

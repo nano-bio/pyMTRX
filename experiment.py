@@ -87,7 +87,7 @@ class Experiment(object):
         self.sample = ''
         self.data_set = ''
         self.comment = ''
-        self.img_comments = {}
+        self.cmnt_lkup = {}
         self.last_sts_mark = None
         self.unlinked_spectra = []
         self.free_spectra = []
@@ -297,7 +297,7 @@ class Experiment(object):
         img_mat = re.search(r'\.([^()]+)_mtrx$', fname)
         # this is to make sure spectra such as I(t) are not incorrectly treated
         # as linked point spectra
-        pointsts_mat = re.search(r'\..*?\(V\)_mtrx$', fname)
+        pointsts_mat = re.search(r'\.(.*?\(.+?\))_mtrx$', fname)
         if img_mat:
             # file is scan data
             img_chnl_name = img_mat.group(1)
@@ -352,18 +352,25 @@ class Experiment(object):
             # END while
             self.unlinked_spectra.pop(0)
             
-            if fname not in self.img_comments:
-                self.img_comments[fname] = []
-            if img_chnl_name in self.img_comments:
-                self.img_comments[img_chnl_name].append(None)
-                while self.img_comments[img_chnl_name][0] is not None:
-                    img_chnl, d, cmnt = self.img_comments[img_chnl_name].pop(0)
-                    self.img_comments[fname].append((d, cmnt))
-                # END while
-                self.img_comments[img_chnl_name].pop(0)
+            self.cmnt_lkup[fname] = []
+            if img_chnl_name in self.cmnt_lkup:
+                for _ in range(len(self.cmnt_lkup[chnl_name])):
+                    self.cmnt_lkup[fname].append(
+                        self.cmnt_lkup[img_chnl_name].pop(0)
+                    )
+                # END for
             # END if
         elif pointsts_mat:
             # file is for spectroscopy data
+            chnl_name = pointsts_mat.group(1)
+            self.cmnt_lkup[fname] = []
+            if chnl_name in self.cmnt_lkup:
+                for _ in range(len(self.cmnt_lkup[chnl_name])):
+                    self.cmnt_lkup[fname].append(
+                        self.cmnt_lkup[chnl_name].pop(0)
+                    )
+                # END for
+            # END if
             self.unlinked_spectra.append( (fname, self.last_sts_mark) )
             self.last_sts_mark = None
         # END if
@@ -416,25 +423,22 @@ class Experiment(object):
             # Example:
             # "MTRX$IMAGE_COMMENT-Z.-493925695555-2-0-2%this is only a test"
             # "MTRX$IMAGE_COMMENT-I(V).-47249096771-1-0--1%added -2.6 V offset manually"
-            # NOTE: ii not correctly assigned
             # NOTE: d may be correct
-            chnl_name, chnl_key, _unknown, ii, d, comment = re.search(
-                r'^MTRX\$IMAGE_COMMENT-(.+?)\.-(\w+)-(\d+)-(\d+)-+(\d+)%(.*)',
-                markstr
+            chnl_key, d, comment = re.search(
+                r'COMMENT.+?(\d+).+?\d+.+?\d+.+?(\d+)%(.*)', markstr
             ).groups()
             d = int(d)
-            chnl_key = int(chnl_key) #Used to be base 16
+            chnl_key = int(chnl_key)
             depn_ax = self.axch[chnl_key].depn_ax
             self.log.write(
                 '    {} --> {}\n'.format( chnl_key, 
                                           self.axch[chnl_key].descrip
                                         )
             )
-            chnl_name = depn_ax.name
-            if chnl_name in self.img_comments:
-                self.img_comments[chnl_name].append( (chnl_name, d, comment) )
+            if depn_ax.name in self.cmnt_lkup:
+                self.cmnt_lkup[depn_ax.name].append( (d, comment) )
             else:
-                self.img_comments[depn_ax.name] = [(chnl_name, d, comment),]
+                self.cmnt_lkup[depn_ax.name] = [(d, comment),]
             # END if
         # END if
     # END _init_read_MARK
@@ -715,30 +719,19 @@ class Experiment(object):
         Nscn, Nrun = re.search(r'--(\d+)_(\d+)\.', file_name).groups()
         params_alt = { 'file': file_name, 'time': t,
                        'index': int(Nscn), 'rep': int(Nrun),
-                       'Channel': depn_ax.name
+                       'channel': depn_ax.name
                      }
-        for pname in params:
-            params_alt[pname] = params[pname].value
+        for k in params: params_alt[k] = params[k].value
         scans = []
         
         # retrieve all image comments
-        if file_name in self.img_comments:
-            comments = sorted(
-                self.img_comments[file_name], key=lambda tup: tup[0]
-            )
-        else:
-            comments = []
-        # END if
+        comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
         # TODO: correct this, it is a temporary soution
         #       comments should be attached to the specific direction they
         #       do with
-        all_cmnt = ''
-        for d, cmnt in comments:
-            all_cmnt += ' ' + cmnt
-        # END for
-        if all_cmnt:
-            all_cmnt = re.sub(r'[\n\r]+', ' ', all_cmnt[1:])
-        params_alt['Comment'] = all_cmnt
+        all_cmnt = ' '.join([c for _, c in comments])
+        all_cmnt = re.sub(r'[\n\r]+', ' ', all_cmnt)
+        params_alt['comment'] = all_cmnt
         
         for i in range(len(Zs)):
             params_alt['duration'] = scn_t[i]
@@ -936,10 +929,12 @@ class Experiment(object):
         # END if
         
         # make a simplified version of the params dict
-        params_alt = {k: params[k].value for k in params}
-        # Channel = Z(V) <-- read this when you look for the TF
-        params_alt['channel'] = depn_ax.name
-        params_alt['time'] = t
+        index, rep = re.search(r'^.*?--(\d+)_(\d+).*$', file_name).groups()
+        params_alt = { 'file': file_name, 'time': t,
+                       'index': int(index), 'rep': int(rep),
+                       'channel': depn_ax.name
+                     }
+        for k in params: params_alt[k] = params[k].value
         try:
             # stslinks[spectra_fname] = ((ii, i, d, locstr, chnl_hash), scn_fname)
             params_alt['parent'] = self.stslinks[file_name][1]
@@ -956,13 +951,19 @@ class Experiment(object):
             params_alt['coord_px'] = None
             params_alt['coord_phys'] = None
         # END try
-        spec_indices = re.search(r'^.*?--(\d+)_(\d+).*$', file_name).groups()
-        params_alt['index'] = int(spec_indices[0])
-        params_alt['rep'] = int(spec_indices[1])
         
         if re.search('Clock2', indp_ax.qual_name):
             X += (params_alt['rep']-1) * len(X) * tstep
         # END if
+        
+        # retrieve all image comments
+        comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
+        # TODO: correct this, it is a temporary soution
+        #       comments should be attached to the specific direction they
+        #       do with
+        all_cmnt = ' '.join([c for _, c in comments])
+        all_cmnt = re.sub(r'[\n\r]+', ' ', all_cmnt)
+        params_alt['comment'] = all_cmnt
         
         for i, Y in enumerate(all_Ys):
             params_alt['direction'] = i

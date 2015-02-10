@@ -48,10 +48,12 @@ def main(*args):
         )
     # END for
     
+    print ''
     print 'Testing scripts...'
     print '    notebook_sheet.py'
-    from scripts.notebook_sheet import main as nb_sheet
-    nb_sheet('test_data/', r=False, debug=True)
+    from pyMTRX.scripts.notebook_sheet import main as nb_sheet
+    nb_sheet('test_data/', r=False, debug=False)
+    quit()
     
     scans = PngMaker.main(save_dir=sdir)
     print 'len(main.scans) = {}'.format(len(scans))
