@@ -354,7 +354,7 @@ class Experiment(object):
             
             self.cmnt_lkup[fname] = []
             if img_chnl_name in self.cmnt_lkup:
-                for _ in range(len(self.cmnt_lkup[chnl_name])):
+                for _ in range(len(self.cmnt_lkup[img_chnl_name])):
                     self.cmnt_lkup[fname].append(
                         self.cmnt_lkup[img_chnl_name].pop(0)
                     )
