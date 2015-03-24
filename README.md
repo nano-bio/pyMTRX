@@ -5,7 +5,7 @@ A Python module for reading the results files from Omicron NanoTechnology's MATR
 
 **Author:** *Dr. Alex M. Pronschinske*
 
-**Version:** *development*
+**Version:** *1.1.0*
 
 Software Requirements
 =====================

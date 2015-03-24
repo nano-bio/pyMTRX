@@ -14,4 +14,4 @@ from curves import *
 from scan import *
 
 # Still in development
-__version__ = '0.0.0'
+__version__ = '1.1.0'
