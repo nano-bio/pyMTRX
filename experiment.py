@@ -393,7 +393,9 @@ class Experiment(object):
         
         markstr = buff.next_mtrxstr()
         self.log.write('    ' + markstr + '\n')
-        if re.search(r'^MTRX\$STS_LOCATION', markstr):
+        if re.search(r'Instrument information', markstr):
+            self.inst_info = re.sub(r'^.*?: ', '', markstr)
+        elif re.search(r'^MTRX\$STS_LOCATION', markstr):
             # Example:
             # MTRX$STS_LOCATION-192,94;7e-009,-9.33333e-009%%7800440043-1-4-0%%
             # locstr: string containing physical and pixel coordinates of the

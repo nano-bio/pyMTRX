@@ -29,31 +29,46 @@ def main(*args):
     print '*** BEGIN TESTS FOR Experiment CLASS ***'
     print ''
     
-    ex = Experiment('test_data/2014Oct09-090049_0001.mtrx')
-    files = [ '2014Oct09-090049--438_1.I(V)_mtrx',
-              '2014Oct09-090049--439_1.I(V)_mtrx',
-              '2014Oct09-090049--440_1.I(V)_mtrx',
-              '2014Oct09-090049--441_1.I(V)_mtrx',
-              '2014Oct09-090049--442_1.I(V)_mtrx',
-              '2014Oct09-090049--1_122.Z_mtrx'
-            ]
-    for fn in files:
-        scn_st = ex.datafile_st[fn]
-        print 'Settings for "{}"'.format(fn)
-        print '    V= {0.value:0.3f} {0.unit}'.format(
-            scn_st['GapVoltageControl_Voltage']
-        )
-        print '    I= {0.value:0.2e} {0.unit}'.format(
-            scn_st['Regulator_Setpoint_1']
-        )
-    # END for
+    #ex = Experiment('test_data/2014Oct09-090049_0001.mtrx')
+    #files = [ '2014Oct09-090049--438_1.I(V)_mtrx',
+    #          '2014Oct09-090049--439_1.I(V)_mtrx',
+    #          '2014Oct09-090049--440_1.I(V)_mtrx',
+    #          '2014Oct09-090049--441_1.I(V)_mtrx',
+    #          '2014Oct09-090049--442_1.I(V)_mtrx',
+    #          '2014Oct09-090049--1_122.Z_mtrx'
+    #        ]
+    #for fn in files:
+    #    scn_st = ex.datafile_st[fn]
+    #    print 'Settings for "{}"'.format(fn)
+    #    print '    V= {0.value:0.3f} {0.unit}'.format(
+    #        scn_st['GapVoltageControl_Voltage']
+    #    )
+    #    print '    I= {0.value:0.2e} {0.unit}'.format(
+    #        scn_st['Regulator_Setpoint_1']
+    #    )
+    ## END for
     
     print ''
     print 'Testing scripts...'
+    print '    notebook_slides.py'
+    from pyMTRX.scripts.notebook_slides import main as nb_slide
+    nb_slide('test_data/')
+    quit()
+    
+    scans = PngMaker.main(save_dir=sdir)
+    print 'len(main.scans) = {}'.format(len(scans))
+    with open(sdir+'Scan.__dict__.txt', 'w') as f:
+        f.write( pformat(scans[0].__dict__) )
+    for scn in scans:
+        if scn.spectra:
+            break
+    with open(sdir+'CurveData.__dict__.txt', 'w') as f:
+        f.write( pformat(scn.spectra[0].__dict__) )
+    
+    print ''
     print '    notebook_sheet.py'
     from pyMTRX.scripts.notebook_sheet import main as nb_sheet
     nb_sheet('test_data/', r=False, debug=False)
-    quit()
     
     scans = PngMaker.main(save_dir=sdir)
     print 'len(main.scans) = {}'.format(len(scans))

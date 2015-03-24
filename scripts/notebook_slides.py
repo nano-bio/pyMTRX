@@ -9,6 +9,7 @@ import os.path
 import re
 import struct
 from StringIO import StringIO
+from pprint import pprint
 
 # third-party modules
 #import numpy as np
@@ -17,7 +18,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from PIL import Image
-import omicron_matrix_v2_1_0 as om
+import pyMTRX.experiment as om
 
 import matplotlib.colors as mplcolors
 import matplotlib.cm as cm
@@ -213,8 +214,12 @@ def add_slide(prs, *scans):
         
         points = set()
         for crv in scn.spectra:
-            x = 16 + int( 336 * crv.px_coord(0)/float(scn.Z.shape[0]) )
-            y = 16 + int( 336 * crv.px_coord(1)/float(scn.Z.shape[1]) )
+            x = 16 + int( 336 * crv.props['coord_px'][0] /
+                          float(scn.Z.shape[0])
+                        )
+            y = 16 + int( 336 * crv.props['coord_px'][1] / 
+                          float(scn.Z.shape[1])
+                        )
             if (x,y) not in points:
                 circ = slide.shapes.add_shape( MSO_SHAPE.OVAL,
                                             Pt(x), Pt(y), Pt(6), Pt(6)
@@ -222,6 +227,14 @@ def add_slide(prs, *scans):
                 circ.fill.solid()
                 circ.fill.fore_color.rgb = RGBColor(0, 176, 240)
                 circ.line.fill.background()
+                circ.text = (
+                    '{index}-{rep} {channel}\n'.format(**crv.props) #+
+                    #'{:+0.3f} -> {:+0.3f} V\n'.format(crv.X[0], crv.X[-1]) +
+                    #'I= {:0.3f} nA\n'.format(crv.props['Regulator_Setpoint_1'])
+                )
+                circ.text_frame.word_wrap = False
+                circ.text_frame.paragraphs[0].font.size = Pt(1)
+                    
                 points.add((x,y))
             # END if
         # END for
