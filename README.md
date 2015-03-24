@@ -28,6 +28,8 @@ Improvement Goals
 =================
 
  * Change handling of comment modifications to where each version of a comment is saved as a new paragraph with a time stamp
+ * Add options to notebook_slides script: colormaps, leveling
+ * Add a script for converting spectra into csv files
 
 
 Installation Instructions (Windows 7)
