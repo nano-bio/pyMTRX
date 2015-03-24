@@ -1,0 +1,20 @@
+[01] 2015Jan21-085030_0001.mtrx
+     ./alex/Dropbox/ampPy/spm_dev/test_data
+     sample: 4-Bromo-1-ethyl-2-fluorobenzene, Cu(111), 5K
+     data set: 
+     comment: 
+[04] 2014Dec11-180322_0001.mtrx
+     ./alex/scratch/movie test
+     sample: Step diffusion phenly alcohol
+     data set: 
+     comment: 
+[06] 2014Oct09-090049_0001.mtrx
+     ./alex/scratch/iv_error_data
+     sample: Ethyl br benzene
+     data set: 5 K
+     comment: 
+[182] 2013Nov13-083400_0001.mtrx
+     ./alex/It_data
+     sample: 4ethylbromobenzene
+     data set: 
+     comment: 

@@ -1,0 +1,55 @@
+Snippet from 2014Oct09-090049
+-------------------------------------------------------------------------------
+This should be a series of "I(t)"s (really I(V)) where the scan parameters
+are switched for before the STS and then back to the imaging settings.
+-------------------------------------------------------------------------------
+
+14:40:10 PMOD     GapVoltageControl_Voltage = -0.5 Volt
+14:40:12 PMOD     Regulator_Setpoint_1 = 7.5e-12 Ampere
+14:40:14 MARK     MTRX$STS_LOCATION-144,128;-1e-010,-3.66667e-010%%100440043-122-1-0%%
+14:40:29 BREF     2014Oct09-090049--438_1.I(V)_mtrx
+
+14:40:32 MARK     MTRX$STS_LOCATION-144,128;-1e-010,-3.66667e-010%%100440043-122-1-0%%
+14:40:48 BREF     2014Oct09-090049--439_1.I(V)_mtrx
+
+14:40:49 MARK     MTRX$STS_LOCATION-144,128;-1e-010,-3.66667e-010%%100440043-122-1-0%%
+14:41:04 BREF     2014Oct09-090049--440_1.I(V)_mtrx
+
+14:41:07 MARK     MTRX$STS_LOCATION-144,128;-1e-010,-3.66667e-010%%100440043-122-1-0%%
+14:41:22 BREF     2014Oct09-090049--441_1.I(V)_mtrx
+
+14:41:26 PMOD     GapVoltageControl_Voltage = 0.03 Volt
+14:41:28 PMOD     Regulator_Setpoint_1 = 2e-11 Ampere
+14:41:37 PMOD     GapVoltageControl_Voltage = -0.5 Volt
+14:41:39 PMOD     Regulator_Setpoint_1 = 7.5e-12 Ampere
+14:41:41 MARK     MTRX$STS_LOCATION-144,128;-1e-010,-3.66667e-010%%100440043-122-1-2%%
+14:41:56 BREF     2014Oct09-090049--442_1.I(V)_mtrx
+
+14:41:59 PMOD     GapVoltageControl_Voltage = 0.03 Volt
+14:42:00 PMOD     Regulator_Setpoint_1 = 2e-11 Ampere
+14:42:46 BREF     2014Oct09-090049--1_122.Z_mtrx
+
+
+
+14:42:49 PMOD     Regulator_Setpoint_1 = 1e-11 Ampere
+14:42:52 PMOD     Regulator_Setpoint_1 = 2e-11 Ampere
+14:43:16 PMOD     GapVoltageControl_Voltage = -0.5 Volt
+14:43:18 PMOD     Regulator_Setpoint_1 = 1e-11 Ampere
+14:43:20 MARK     MTRX$STS_LOCATION-144,128;-1e-010,-3.66667e-010%%100440043-123-1-0%%
+14:43:35 BREF     2014Oct09-090049--443_1.I(V)_mtrx
+
+14:43:38 MARK     MTRX$STS_LOCATION-143,126;-1.16667e-010,-4e-010%%100440043-123-1-0%%
+14:43:53 BREF     2014Oct09-090049--444_1.I(V)_mtrx
+
+14:43:58 MARK     MTRX$STS_LOCATION-143,126;-1.16667e-010,-4e-010%%100440043-123-1-0%%
+14:44:13 BREF     2014Oct09-090049--445_1.I(V)_mtrx
+
+14:44:15 MARK     MTRX$STS_LOCATION-143,126;-1.16667e-010,-4e-010%%100440043-123-1-0%%
+14:44:31 BREF     2014Oct09-090049--446_1.I(V)_mtrx
+
+14:44:33 MARK     MTRX$STS_LOCATION-143,126;-1.16667e-010,-4e-010%%100440043-123-1-0%%
+14:44:48 BREF     2014Oct09-090049--447_1.I(V)_mtrx
+
+14:44:53 PMOD     Regulator_Setpoint_1 = 2e-11 Ampere
+14:44:55 PMOD     GapVoltageControl_Voltage = 0.03 Volt
+14:45:50 BREF     2014Oct09-090049--1_123.Z_mtrx
