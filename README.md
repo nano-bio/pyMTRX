@@ -24,12 +24,6 @@ Known Bug List
  * notebook_sheets.py script ignores "free" point spectra (e.g. I(t))
 
 
-Improvement Goals
-=================
-
- * Change handling of comment modifications to where each version of a comment is saved as a new paragraph with a time stamp
-
-
 Installation Instructions (Windows 7)
 =====================================
 
