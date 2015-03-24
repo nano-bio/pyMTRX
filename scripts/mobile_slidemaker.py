@@ -10,5 +10,5 @@ scan_file_extentions = '[^.()]+_mtrx'
 # Uncomment this to only accept Z images
 #scan_file_extentions = 'Z_mtrx'
 
-nb_sheet.main('.', dir_filter=directions_to_use, fext=scan_file_extentions)
+nb_slide('.', dir_filter=directions_to_use, fext=scan_file_extentions)
 raw_input('Press Eneter to close')
