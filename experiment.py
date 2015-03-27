@@ -24,6 +24,7 @@ import time
 from StringIO import StringIO
 from pprint import pprint, pformat
 import pdb
+from collections import namedtuple
 
 # third-party modules
 import numpy as np
@@ -262,8 +263,8 @@ class Experiment(object):
         for _ in range(buff.next_uint()):
             chnl = buff.next_mtrxstr()
             for _ in range(buff.next_uint()):
-                param = buff.next_mtrxparam(chnl)
-                self.init_st[param.name] = param
+                prop, x = buff.next_mtrxparam(chnl)
+                self.init_st[chnl+'_'+prop] = x
             # END for
         # END for
         
@@ -278,10 +279,12 @@ class Experiment(object):
         buff.next(4)
         
         chnl = buff.next_mtrxstr()
-        param = buff.next_mtrxparam(chnl)
-        self.st_hist.append( (self._t_bk, param) )
-        self._curr_st[param.name] = param
-        self.log.write(4*' ' + str(param) + '\n')
+        prop, x = buff.next_mtrxparam()
+        self.st_hist.append( (self._t_bk, prop, x) )
+        self._curr_st[chnl+'_'+prop] = x
+        self.log.write(
+            '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
+        )
     # END _init_read_PMOD
     
     def _init_read_BREF(self, buff):
@@ -646,237 +649,12 @@ class Experiment(object):
             (list(ScanData)) [trace_up, retrace_up, trace_down, retrace_down]
         '''
         
-        file_dir, file_name = os.path.split(file_path)
-        file_dir += '/'
-        params = self.datafile_st[file_name]
-        if debug:
-            fdebug = open(file_name + '-debug.txt', 'w')
-        else:
-            fdebug = None
-        # END if
-        filebuff, _, t = MatrixBuffer.from_file(file_path)
-        timestr = time.ctime(t)
-        
-        if fdebug:
-            fdebug.write(timestr+'\n')
-        # END if
-        
-        # Skip empty space
-        filebuff.advance(4)
-        if fdebug:
-            fdebug.write('empty 4B\n')
-        # END if
-        # Read blocks
-        while filebuff:
-            bkbuff, bkname = filebuff.next_bk()
-            if fdebug:
-                fdebug.write('{} {}B\n'.format(bkname, len(bkbuff)))
-            # END if
-            if re.search(r'DESC', bkname):
-                chnl_key, _, N_act, _ = self._read_DESC(bkbuff, fdebug)
-                # Look up transfer function and convert values in Zs
-                depn_ax = self.axch[chnl_key].depn_ax
-            elif re.search(r'DATA', bkname):
-                Zs = self._read_DATA_scan(bkbuff, depn_ax)
-                # Heuristic to force the file closed after the data block
-            # END if
-            bkbuff.advance()
-        # END while
-        filebuff.close()
-        
-        if fdebug:
-            fdebug.close()
-        # END if
-        
-        # Calculate how long it took to take the scan
-        scn_t = [0.0, 0.0]
-        fast_ax = depn_ax.indp_ax
-        if calc_duration:
-            N = 1
-            while N <= N_act:
-                i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
-                scn_t[i] += params['XYScanner_Raster_Time'].value
-                N += 1
-            # END while
-        # END if
-        
-        # X & Y offset specify where the center of the map is
-        N = params['XYScanner_Points'].value
-        a = -1*(N-1)/2.0
-        b = -1*a
-        dx = float(params['XYScanner_Width'].value) / (N-1)
-        X_ax = params['XYScanner_X_Offset'].value + np.linspace(a, b, N)*dx
-        #print 'width = {} nm'.format(params['XYScanner_Width'].value*1E9)
-        #print 'X_ax = [{:+0.2e}, {:+0.2e}]'.format(X_ax[0], X_ax[-1])
-        N = params['XYScanner_Lines'].value
-        a = -1*(N-1)/2.0
-        b = -1*a
-        dy = float(params['XYScanner_Height'].value) / (N-1)
-        Y_ax = params['XYScanner_Y_Offset'].value + np.linspace(a, b, N)*dy
-        #print 'height = {} nm'.format(params['XYScanner_Height'].value*1E9)
-        #print 'Y_ax = [{:+0.2e}, {:+0.2e}]'.format(Y_ax[0], Y_ax[-1])
-        
-        # order of scns list will be:
-        #   [trace_up, retrace_up, trace_down, retrace_down]
-        Nscn, Nrun = re.search(r'--(\d+)_(\d+)\.', file_name).groups()
-        params_alt = { 'file': file_name, 'time': t,
-                       'index': int(Nscn), 'rep': int(Nrun),
-                       'channel': depn_ax.name
-                     }
-        for k in params: params_alt[k] = params[k].value
-        scans = []
-        
-        # retrieve all image comments
-        comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
-        # TODO: correct this, it is a temporary soution
-        #       comments should be attached to the specific direction they
-        #       do with
-        all_cmnt = ' '.join([c for _, c in comments])
-        all_cmnt = re.sub(r'[\n\r]+', ' ', all_cmnt)
-        params_alt['comment'] = all_cmnt
-        
-        for i in range(len(Zs)):
-            params_alt['duration'] = scn_t[i]
-            for j in range(len(Zs[i])):
-                params_alt['direction'] = 2*i + j
-                scans.append( ScanData(X_ax, Y_ax, Zs[i][j], params_alt) )
-            # END for
-        # END for
-        for s in scans:
-            s.spectra = []
-        # END for
-        
-        if scan_only:
-            # return prematurely and skip attachment of linked spectra
-            return scans
-        # END if
-        
-        # import any linked spectra and attach them in the .spectra attribute
-        # stslinks[fname] = [(mrk, spectra_fname), (mrk, spectra_fname), ...]
-        # mrk = ('ii', 'i', 'd', 'xpx,ypx;xpy,ypy', chnl_name)
-        file_sts_links = []
-        if file_name in self.stslinks:
-            file_sts_links = self.stslinks[file_name]
-        for mrk, spec_file in file_sts_links:
-            d = int(mrk[2])
-            try:
-                scans[d].spectra.extend(
-                    self.import_spectra(file_dir+spec_file)
-                )
-                for c in scans[d].spectra:
-                    # TODO: try to find a solution where you don't have to
-                    # change a private attribute
-                    #c._xphys  = c.px_coord(0)*dx + X_ax[0]
-                    #c._yphys  = c.px_coord(1)*dy + Y_ax[0]
-                    pass
-            except IOError:
-                pass
-            # END try
-        # END for 
-        
-        return scans
+        return import_scan(
+            file_path, scan_only=scan_only, ex=self,
+            calc_duration=calc_duration,
+            debug=debug
+        )
     # END import_scan
-    
-    def _read_DESC(self, buff, fdebug=None):
-        chnl_hash = struct.unpack('<Q', buff.next(8))[0]
-        # Unknown 12B
-        buff.advance(12)
-        # Number of data points set to be recorded in the DATA block
-        Npoints_set = buff.next_uint()
-        # Actual number of data points recorded in the DATA block
-        Npoints_act = buff.next_uint()
-        # data type as a string, should be "SI32" (32-bit Signed Integer)
-        data_type_str = buff.next_mtrxstr()
-        # Number of images recorded? (i.e. tu, ru, td, and rd would be 4)
-        Nimages = buff.next_uint()
-        # Unknown, 1? could be bool
-        buff.advance(4)
-        # Unknown, 0? could be bool
-        buff.advance(4)
-        # set data point count is repeated, again
-        Npoints_set_alt = buff.next_uint()
-        
-        if fdebug:
-            fdebug.write('<x{:08X}>\n'.format(chnl_hash))
-            fdebug.write('Max No. points {}\n'.format(Npoints_set))
-            fdebug.write('No. points {}\n'.format(Npoints_act))
-            fdebug.write('Data type {}\n'.format(data_type_str))
-            fdebug.write('No. recorded axes {}\n'.format(Nimages))
-            fdebug.write(
-                'Max No. points (again?) {}\n'.format(Npoints_set_alt)
-            )
-        # END if
-        
-        return chnl_hash, Npoints_set, Npoints_act, Nimages
-    # END _read_DESC
-    
-    def _read_DATA_scan(self, bkbuff, depn_ax):
-        '''ScanData data reading function for import_scan
-        
-        Args:
-            buff (ByteBuffer): binary data buffer
-            params (dict): settings state dict for the scan
-        Returns:
-            (list)(list)(NxM ndarray) [ [Z_traceup,   Z_retraceup  ],
-                                        [Z_tracedown, Z_retracedown]
-                                      ]
-        '''
-        
-        # axes
-        fast_ax = depn_ax.indp_ax
-        slow_ax = fast_ax.next_ax
-        
-        if len(bkbuff)%4 != 0:
-            raise RuntimeError('Hanging bytes')
-        try:
-            Z_tree = np.zeros(slow_ax.len*fast_ax.len)
-        except TypeError as err:
-            pdb.set_trace()
-            quit()
-        i = 0
-        # TODO: test that this doesn't fail on an incomplete scan
-        for j in range(len(bkbuff)/4):
-            Z_tree[j] = bkbuff.next_uint() #tf( bkbuff.next_uint() )
-        # END while
-        
-        if not slow_ax.mirrored:
-            Ypx = slow_ax.len
-            Z_tree = [Z_tree]
-        else:
-            Ypx = slow_ax.len / 2
-            Z_tree = [ Z_tree[:Ypx*fast_ax.len],
-                       Z_tree[Ypx*fast_ax.len:][::-1]
-                     ]
-        # END if
-        if not fast_ax.mirrored:
-            Xpx = fast_ax.len
-            for i in range(len(Z_tree)):
-                Z_tree[i] = [Z_tree[i]]
-        else:
-            Xpx = fast_ax.len / 2
-            for i in range(len(Z_tree)):
-                Z_tree[i] = np.split(Z_tree[i], Ypx*2)
-                Z_tree[i] = [ np.concatenate(Z_tree[i][::2]),
-                              np.concatenate(Z_tree[i][1::2])
-                            ]
-            # END for
-        # END if
-        
-        for i in range(len(Z_tree)):
-            for j in range(len(Z_tree[i])):
-                if j%2 == 0:
-                    Z_tree[i][j] = np.flipud(
-                        np.reshape(Z_tree[i][j], (Ypx,Xpx))
-                    )
-                else:
-                    Z_tree[i][j] = np.fliplr(np.flipud(
-                        np.reshape(Z_tree[i][j], (Ypx,Xpx))
-                    ))
-            # END for
-        # END for
-        
-        return Z_tree
-    # END _read_DATA_scan
     
     def import_spectra(self, file_path):
         '''Read a spectroscopy data file and return CurveData objects
@@ -886,8 +664,6 @@ class Experiment(object):
         Returns:
             (list) [CurveData, CurveData, ...]
         '''
-        # TODO: add transfer function, it will not be the same as a scan
-        # TODO: add parsing and storing of coordinates
         
         file_name = os.path.basename(file_path)
         params = self.datafile_st[file_name]
@@ -900,11 +676,11 @@ class Experiment(object):
         while filebuff:
             bkbuff, bkname = filebuff.next_bk()
             if re.search(r'DESC', bkname):
-                chnl_key, Npt_set, Npt_act, _ = self._read_DESC(bkbuff)
+                chnl_key, Npt_set, Npt_act, _ = _read_DESC(bkbuff)
                 depn_ax = self.axch[chnl_key].depn_ax
                 indp_ax = depn_ax.indp_ax
             elif re.search(r'DATA', bkname):
-                all_Ys = self._read_DATA_spectra(bkbuff, depn_ax, indp_ax)
+                all_Ys = _read_DATA_spectra(bkbuff, depn_ax)
                 # Heuristic to force the file closed after the data block
             # END if
             if len(bkbuff) > 0:
@@ -978,41 +754,54 @@ class Experiment(object):
         return all_Ys
     # END import_spectra
     
-    def _read_DATA_spectra(self, buff, depn_ax, indp_ax):
-        '''Reads DATA block of a spectroscopy data file
-        
-        Private helper function for import_spectra
-        
-        Args:
-            buff (ByteBuffer): file read buffer
-            depn_ax (tuple): dependent axis information
-        Returns:
-            (list) [y_0, y_1, y_2, ...]
-            y_i (ndarray)
+    def get_params(self, file_name):
         '''
-        if not depn_ax.indp_ax.mirrored:
-            Ncrv = 1
-            ppc = int(depn_ax.indp_ax.len)
-        else:
-            Ncrv = 2
-            ppc = int(depn_ax.indp_ax.len)/2
-        # END if
-        all_Ys = [np.zeros(ppc) for i in range(Ncrv)]
-        i = 0
-        while buff:
-            c = i/ppc
-            ii = (c%2)*(ppc-1-i) + ((c+1)%2)*i
-            all_Ys[c][ii] = depn_ax.trans_func( buff.next_int() )
-            i += 1
-        # END while
+        '''
+        params = dict( self.datafile_st[file_name] )
         
-        return all_Ys
-    # END _read_DATA_spectra
+        # retrieve all image comments
+        comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
+        # TODO: correct this, it is a temporary soution
+        #       comments should be attached to the specific direction they
+        #       go with
+        all_cmnt = '\n'.join([c for _, c in comments])
+        params['comment'] = all_cmnt
+        
+        return params
+    # END get_params
+    
+    def transfer_params(self, data_obj):
+        fn = data_obj.props['file']
+        for k in self.datafile_st[fn]:
+            data_obj.props[k] = self.datafile_st[fn][k]
+        
+        # retrieve all image comments
+        comments = sorted(self.cmnt_lkup[fn], key=lambda tup: tup[0])
+        # TODO: correct this, it is a temporary soution
+        #       comments should be attached to the specific direction they
+        #       go with
+        all_cmnt = '\n'.join([c for _, c in comments])
+        data_obj.props['comment'] = all_cmnt
+    # END transfer_params
 # END Experiment
 
 #==============================================================================
-def import_scan(file_path, lp=('triangular', 'triangular'), debug=False):
-    '''
+def import_scan( file_path,
+                 scan_only=False,
+                 ex=None, mirroring=(True, True),
+                 calc_duration=False,
+                 debug=False
+               ):
+    '''Read a scan file and return ScanData objects
+    
+    Args:
+        file_path (str): path to .*_mtrx scan data file
+        scan_only (bool): When True function will not attach linked spectra
+                          to the ScanData objects
+        debug (bool): switch for writing a debugging file describing
+                      how the data file was interpreted
+    Returns:
+        (list(ScanData)) [trace_up, retrace_up, trace_down, retrace_down]
     '''
     
     file_dir, file_name = os.path.split(file_path)
@@ -1024,167 +813,221 @@ def import_scan(file_path, lp=('triangular', 'triangular'), debug=False):
     # END if
     filebuff, _, t = MatrixBuffer.from_file(file_path)
     
-    if fdebug:
-        #fdebug.write(magicword+'\n')
-        timestr = time.ctime(t)
-        fdebug.write(timestr+'\n')
-    # END if
+    if fdebug: fdebug.write(time.ctime(t)+'\n')
     
     # Skip empty space
-    filebuff.next(4)
+    filebuff.advance(4)
+    if fdebug: fdebug.write('empty 4B\n')
     # Read blocks
     while filebuff:
         bkbuff, bkname = filebuff.next_bk()
-        if fdebug:
-            fdebug.write( '{} {}B\n'.format(bkname, len(bkbuff)) )
-        # END if
+        if fdebug: fdebug.write( '{} {}B\n'.format(bkname, len(bkbuff)) )
         if re.search(r'DESC', bkname):
-            _, Npnt_set, Npnt_act = list( _read_DESC(bkbuff, fdebug) )
+            chnl_key, Npnt_set, Npnt_act, _ = _read_DESC(bkbuff, fdebug)
+            # check for a link to an existing Experiment object
+            # or make up false axes
+            try:
+                depn_ax = ex.axch[chnl_key].depn_ax
+            except AttributeError:
+                Nimg = 1
+                if mirroring[0]: Nimg *= 2
+                if mirroring[1]: Nimg *= 2
+                slow_len = int( np.sqrt(float(Npnt_set)/Nimg) )
+                fast_len = int(slow_len)
+                if mirroring[0]: slow_len *= 2
+                if mirroring[1]: fast_len *= 2
+                slow_ax = IndependentAxis(
+                    None, qual_name='Y', mirrored=mirroring[0], len=slow_len, next_ax=None
+                )
+                fast_ax = IndependentAxis(
+                    None, qual_name='X', mirrored=mirroring[1], len=fast_len, next_ax=slow_ax
+                )
+                depn_ax = DependentAxis(
+                    None,
+                    name=re.search(r'[^._]+(?=_mtrx$)', file_name).group(0),
+                    unit='',
+                    trans_func=TransferFunction('TFF_Identity', ''),
+                    indp_ax=fast_ax
+                )
+            # END try
         elif re.search(r'DATA', bkname):
-            Zs = _read_DATA_scan(bkbuff, lp, Npnt_set, Npnt_act)
-            # Heuristic to force the file closed after the data block
+            scans = _read_DATA_scan(bkbuff, depn_ax)
         # END if
+        # Heuristic to force the file closed after the data block
         bkbuff.advance()
     # END while
     filebuff.close()
     
-    if fdebug:
-        fdebug.close()
-    # END if
+    if fdebug: fdebug.close()
     
-    Nscn, Nrun = re.search(r'--(\d+)_(\d+)\.', file_name).groups()
-    params = { 'file': file_name, 'time': t,
-                   'index': int(Nscn), 'rep': int(Nrun)
-                 }
-    scans = []
+    # Create parameters dictionary
+    try:
+        # make param dict from Experiment object
+        params = ex.get_params(file_name)
+    except (AttributeError, KeyError):
+        # make an incomplete param dict from available information
+        params = {}
+    # END try
+    params['file'] = file_name
+    # pull index and repetition values from file_name
+    index_str, rep_str = re.search(r'--(\d+)_(\d+)\.', file_name).groups()
+    params['index'] = int(index_str)
+    params['rep'] = int(rep_str)
+    params['channel'] = depn_ax.name
+    params['time'] = t
+        
+    # Calculate how long it took to take the scan
+    scn_t = [0.0, 0.0]
+    fast_ax = depn_ax.indp_ax
+    try:
+        if calc_duration:
+            N = 1
+            while N <= Npnt_act:
+                i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
+                scn_t[i] += params['XYScanner_Raster_Time'].value
+                N += 1
+            # END while
+        # END if
+    except KeyError:
+        pass
+    # END try
     
-    for i in range(len(Zs)):
-        for j in range(len(Zs[i])):
+    # create X & Y axes
+    try:
+        # X & Y offset specify where the center of the map is
+        N = params['XYScanner_Points'].value
+        a = -1*(N-1)/2.0
+        b = -1*a
+        dx = float(params['XYScanner_Width'].value) / (N-1)
+        X_ax = params['XYScanner_X_Offset'].value + np.linspace(a, b, N)*dx
+        N = params['XYScanner_Lines'].value
+        a = -1*(N-1)/2.0
+        b = -1*a
+        dy = float(params['XYScanner_Height'].value) / (N-1)
+        Y_ax = params['XYScanner_Y_Offset'].value + np.linspace(a, b, N)*dy
+    except KeyError:
+        X_ax = np.arange(float(fast_ax.len))
+        Y_ax = np.arange(float(slow_ax.len))
+    # END try
+    
+    # Create tree of ScanData objects
+    scans_flat = []
+    for i in range(len(scans)):
+        params['duration'] = scn_t[i]
+        for j in range(len(scans[i])):
             params['direction'] = 2*i + j
-            scans.append(
-                ScanData( range(Zs[i][j].shape[0]), range(Zs[i][j].shape[1]),
-                      Zs[i][j], params
-                    )
-            )
+            scans[i][j] = ScanData( X_ax, Y_ax, scans[i][j], params)
+            scans[i][j].spectra = []
+            scans_flat.append(scans[i][j])
         # END for
     # END for
-    for s in scans:
-        s.spectra = []
-    # END for
+    
+    # return prematurely and skip attachment of linked spectra
+    if scan_only or ex is None: return scans
+        
+    # import any linked spectra and attach them in the .spectra attribute
+    # stslinks[fname] = [(mrk, spectra_fname), (mrk, spectra_fname), ...]
+    # mrk = ('ii', 'i', 'd', 'xpx,ypx;xpy,ypy', chnl_name)
+    file_sts_links = []
+    if file_name in ex.stslinks:
+        file_sts_links = ex.stslinks[file_name]
+    for mrk, spec_file in file_sts_links:
+        try:
+            # TODO: fix error; this should work for a tree
+            scans_flat[mrk[2]].spectra.extend(
+                ex.import_spectra(file_dir+spec_file)
+            )
+        except IOError:
+            pass
+        # END try
+    # END for 
     
     return scans
 # END import_scan
     
 def _read_DESC(buff, fdebug=None):
-    x = buff.next(8)
-    chnl_hash = struct.unpack('<Q', x)[0]
+    chnl_hash = struct.unpack('<Q', buff.next(8))[0]
     # Unknown 12B
-    buff.next(12)
-    #a = buff.next_uint()
-    #b = buff.next_uint()
-    #c = buff.next_uint()
+    buff.advance(12)
     # Number of data points set to be recorded in the DATA block
     Npoints_set = buff.next_uint()
     # Actual number of data points recorded in the DATA block
     Npoints_act = buff.next_uint()
     # data type as a string, should be "SI32" (32-bit Signed Integer)
     data_type_str = buff.next_mtrxstr()
-    buff.next(12)
-    # Unknown, 4?
-    #unbytes_4 = buff.next_uint()
+    # Number of images recorded? (i.e. tu, ru, td, and rd would be 4)
+    Nimages = buff.next_uint()
     # Unknown, 1? could be bool
-    #unbytes_2 = buff.next_uint()
+    buff.advance(4)
     # Unknown, 0? could be bool
-    #unbytes_3 = buff.next_uint()
+    buff.advance(4)
     # set data point count is repeated, again
     Npoints_set_alt = buff.next_uint()
     
     if fdebug:
-        fdebug.write('channel hash <x{:08X}>\n'.format(chnl_hash))
-        #fdebug.write('{} {} {}'.format(a,b,c)+'\n')
+        fdebug.write('<x{:08X}>\n'.format(chnl_hash))
         fdebug.write('Max No. points {}\n'.format(Npoints_set))
         fdebug.write('No. points {}\n'.format(Npoints_act))
         fdebug.write('Data type {}\n'.format(data_type_str))
-        #fdebug.write('{}\n'.format(unbytes_4))
-        #fdebug.write('{} \n'.format(unbytes_2))
-        #fdebug.write('{} \n'.format(unbytes_3))
+        fdebug.write('No. recorded axes {}\n'.format(Nimages))
         fdebug.write(
             'Max No. points (again?) {}\n'.format(Npoints_set_alt)
         )
     # END if
     
-    return chnl_hash, Npoints_set, Npoints_act
+    return chnl_hash, Npoints_set, Npoints_act, Nimages
 # END _read_DESC
-
-def _read_DATA_scan(bkbuff, lp, Npnts_set, Npnts_act):
+    
+def _read_DATA_scan(bkbuff, depn_ax):
     '''ScanData data reading function for import_scan
     
     Args:
         buff (ByteBuffer): binary data buffer
-        lp (tup): looping pattern (lp[0], lp[1])
-        Npnt_set (int)
-        Npnt_act (int)
+        params (dict): settings state dict for the scan
     Returns:
-        (list)(list)(NxN ndarray) [ [Z_traceup,   Z_retraceup  ],
+        (list)(list)(NxM ndarray) [ [Z_traceup,   Z_retraceup  ],
                                     [Z_tracedown, Z_retracedown]
                                   ]
     '''
     
-    # ***This function assumes that the scan image is square ***
-    Nimg = 1
-    if lp[0] == 'triangular':
-        Nimg *= 2
-    if lp[1] == 'triangular':
-        Nimg *= 2
-    slow_Npnts = int( np.sqrt(float(Npnts_set)/Nimg) )
-    fast_Npnts = int(slow_Npnts)
-    if lp[0] == 'triangular':
-        slow_Npnts *= 2
-    if lp[1] == 'triangular':
-        fast_Npnts *= 2
+    # axes
+    fast_ax = depn_ax.indp_ax
+    slow_ax = fast_ax.next_ax
     
-    Z_tree = np.zeros(slow_Npnts*fast_Npnts)
-    if len(Z_tree) < len(bkbuff)/4:
-        raise RuntimeError(
-            '{}B in block, len(Z_tree) = {}'.format( len(bkbuff)/4,
-                                                     len(Z_tree)
-                                                   )
-        )
-    for i in range(len(bkbuff)/4):
-        Z_tree[i] = bkbuff.next_uint()
+    if len(bkbuff)%4 != 0:
+        raise RuntimeError('Hanging bytes')
+    try:
+        Z_tree = np.zeros(slow_ax.len*fast_ax.len)
+    except TypeError as err:
+        pdb.set_trace()
+        quit()
+    i = 0
+    # TODO: test that this doesn't fail on an incomplete scan
+    for j in range(len(bkbuff)/4):
+        Z_tree[j] = bkbuff.next_uint() #tf( bkbuff.next_uint() )
     # END while
     
-    if lp[0] == 'linear':
-        Ypx = slow_Npnts
+    if not slow_ax.mirrored:
+        Ypx = slow_ax.len
         Z_tree = [Z_tree]
-    elif lp[0] == 'triangular':
-        Ypx = slow_Npnts / 2
-        Z_tree = [Z_tree[:Ypx*fast_Npnts], Z_tree[Ypx*fast_Npnts:][::-1]]
-        #Z_tree = unwind_split(Z_tree, Ypx*fast_Npnts)
     else:
-        raise RuntimeError(
-            'Cannot understand value of {}'.format(lp[0])
-            + 'for slow scan axis looping pattern.'
-        )
+        Ypx = slow_ax.len / 2
+        Z_tree = [ Z_tree[:Ypx*fast_ax.len],
+                   Z_tree[Ypx*fast_ax.len:][::-1]
+                 ]
     # END if
-    if lp[1] == 'linear':
-        Xpx = fast_Npnts
+    if not fast_ax.mirrored:
+        Xpx = fast_ax.len
         for i in range(len(Z_tree)):
             Z_tree[i] = [Z_tree[i]]
-    elif lp[1] == 'triangular':
-        Xpx = fast_Npnts / 2
+    else:
+        Xpx = fast_ax.len / 2
         for i in range(len(Z_tree)):
             Z_tree[i] = np.split(Z_tree[i], Ypx*2)
             Z_tree[i] = [ np.concatenate(Z_tree[i][::2]),
                           np.concatenate(Z_tree[i][1::2])
                         ]
-            #Z_tree[i] = unwind_split(Z_tree[i], Xpx)
         # END for
-    else:
-        raise RuntimeError(
-            'Cannot understand value of {}'.format(lp[1])
-            + 'for fast scan axis looping pattern.'
-        )
     # END if
     
     for i in range(len(Z_tree)):
@@ -1197,12 +1040,13 @@ def _read_DATA_scan(bkbuff, lp, Npnts_set, Npnts_act):
                 Z_tree[i][j] = np.fliplr(np.flipud(
                     np.reshape(Z_tree[i][j], (Ypx,Xpx))
                 ))
+        # END for
     # END for
     
     return Z_tree
 # END _read_DATA_scan
     
-def import_spectra(self, file_path, lp='linear', debug=True):
+def import_spectra(file_path, ex=None, mirroring=False, debug=False):
     '''Read a spectroscopy data file and return CurveData objects
     
     Args:
@@ -1210,10 +1054,13 @@ def import_spectra(self, file_path, lp='linear', debug=True):
     Returns:
         (list) [CurveData, CurveData, ...]
     '''
-    # TODO: add transfer function, it will not be the same as a scan
-    # TODO: add parsing and storing of coordinates
     
     file_name = os.path.basename(file_path)
+    if debug:
+        fdebug = open(file_name + '-debug.txt', 'w')
+    else:
+        fdebug = None
+    # END if
     
     filebuff, _, t = MatrixBuffer(file_path)
     
@@ -1222,43 +1069,99 @@ def import_spectra(self, file_path, lp='linear', debug=True):
     # Read sub-blocks (DESC & DATA)
     while filebuff:
         bkbuff, bkname = filebuff.next_bk()
+        if fdebug: fdebug.write( '{} {}B\n'.format(bkname, len(bkbuff)) )
         if re.search(r'DESC', bkname):
-            _, Npnt_set, Npnt_act = _read_DESC(bkbuff)
+            chnl_key, Npnt_set, Npnt_act, _ = _read_DESC(bkbuff, fdebug)
+            # check for a link to an existing Experiment object
+            # or make up false axes
+            try:
+                depn_ax = ex.axch[chnl_key].depn_ax
+            except AttributeError:
+                Ncrv = 1
+                if mirroring: Ncrv *= 2
+                indp_len = Npnt_set / Ncrv
+                xnm, ynm = re.search(
+                    r'([^._()]+)\((\w)\)(?=_mtrx$)', file_name
+                ).groups()
+                indp_ax = IndependentAxis(
+                    None, qual_name=xnm, mirrored=mirroring, len=indp_len, next_ax=None
+                )
+                depn_ax = DependentAxis(
+                    None, name=ynm, unit='',
+                    trans_func=TransferFunction('TFF_Identity', ''),
+                    indp_ax=indp_ax
+                )
+            # END try
         elif re.search(r'DATA', bkname):
-            all_Ys = _read_DATA_spectra(bkbuff, lp, Npnt_set, Npnt_act)
-            # Heuristic to force the file closed after the data block
-            filebuff.next(len(filebuff))
+            all_Ys = _read_DATA_spectra(bkbuff, depn_ax)
         # END if
+        # Heuristic to force the file closed after the data block
+        bkbuff.advance()
     # END while
     filebuff.close()
     
-    # make X array
-    X = np.arange( float(len(all_Ys[0])) )
+    if fdebug: fdebug.close()
     
-    # make a simplified version of the DELETE_params dict
-    params = {}
-    # Channel = Z(V) <-- read this when you look for the TF
+    # Create parameters dictionary
+    try:
+        # make param dict from Experiment object
+        params = ex.get_params(file_name)
+        # stslinks[spectra_fname] = ((ii, i, d, locstr, chnl_hash), scn_fname)
+        params['parent'] = ex.stslinks[file_name][1]
+        # Example locstr:
+        #  "-193,205;7.16667e-009,9.16667e-009"
+        # pixel coordinates are relative to bottom left corner
+        # physical coordinates are relative to scan center
+        coords = re.split(r';|,', ex.stslinks[file_name][0][3])
+        params['coord_px'] = ( int(coords[0]), int(coords[1]) )
+        params['coord_phys'] = ( float(coords[2]), float(coords[3]) )
+    except (AttributeError, KeyError):
+        # make an incomplete param dict from available information
+        params = {}
+    # END try
+    params['file'] = file_name
+    # pull index and repetition values from file_name
+    index_str, rep_str = re.search(r'--(\d+)_(\d+)\.', file_name).groups()
+    params['index'] = int(index_str)
+    params['rep'] = int(rep_str)
+    params['channel'] = depn_ax.name
     params['time'] = t
-    spec_indices = re.search(r'^.*?--(\d+)_(\d+).*$', file_name).groups()
-    params['Spec Index'] = '{0:0>3s}-{1:0>2s}'.format(*spec_indices)
     
-    d = ['f', 'r']
-    all_Ys.append(None)
-    while all_Ys[0] is not None:
-        Y = all_Ys.pop(0)
-        params['Spec Index'] = params['Spec Index'] + d[0]
-        d.append( d.pop(0) )
-        crv = CurveData(
-            X, Y, sourcefile=file_name, eqpsets=params
+    # make X array
+    try:
+        #if indp_ax.elem == 'Spectroscopy' and indp_ax.name == 'V':
+        if indp_ax.qual_name[-1] == 'V':
+            x0 = params['Spectroscopy_Device_1_Start'].value
+            xf = params['Spectroscopy_Device_1_End'].value
+            X = np.linspace(x0, xf, len(all_Ys[0]))
+            x_units = params['Spectroscopy_Device_1_Start'].unit
+        elif re.search('Clock2', indp_ax.qual_name):
+            tstep = params['Clock2_Period'].value
+            N = params['Clock2_Samples'].value
+            X = (np.arange(N) + N*(params['rep'] - 1)) * tstep
+            x_units = 's'
+        else:
+            raise ValueError(
+                'Cannot parse independent axis {}'.format(indp_ax.__dict__)
+            )
+        # END if
+    except KeyError:
+        X = np.arange( float(len(all_Ys[0])) )
+        x_units = ''
+    # END try
+    
+    for i, Y in enumerate(all_Ys):
+        params['direction'] = i
+        all_Ys[i] = CurveData(
+            X, Y, x_units=x_units, y_units=depn_ax.unit,
+            props=params
         )
-        all_Ys.append(crv)
     # END for
-    all_Ys.pop(0)
     
     return all_Ys
 # END import_spectra
-
-def _read_DATA_spectra(self, buff, lp, Npnts_set, Npnts_act):
+    
+def _read_DATA_spectra(buff, depn_ax):
     '''Reads DATA block of a spectroscopy data file
     
     Private helper function for import_spectra
@@ -1266,28 +1169,23 @@ def _read_DATA_spectra(self, buff, lp, Npnts_set, Npnts_act):
     Args:
         buff (ByteBuffer): file read buffer
         depn_ax (tuple): dependent axis information
-        indp_ax (tuple): independent axis information
     Returns:
         (list) [y_0, y_1, y_2, ...]
         y_i (ndarray)
     '''
-    #  depn_ax = (chnl_name, chnl_unit, TransferFunction, h_indp_ax)
-    #  indp_ax = (device_name, device_looping_pattern, ppl, 0)
-    if lp == 'linear':
+    if not depn_ax.indp_ax.mirrored:
         Ncrv = 1
-        ppc = int(Npnts_set)
-    elif lp == 'triangular':
-        Ncrv = 2
-        ppc = int(Npnts_set)/2
+        ppc = int(depn_ax.indp_ax.len)
     else:
-        raise RuntimeError('Cannont parse independent axis looping pattern')
+        Ncrv = 2
+        ppc = int(depn_ax.indp_ax.len)/2
     # END if
     all_Ys = [np.zeros(ppc) for i in range(Ncrv)]
     i = 0
     while buff:
         c = i/ppc
         ii = (c%2)*(ppc-1-i) + ((c+1)%2)*i
-        all_Ys[c][ii] = buff.next_uint()
+        all_Ys[c][ii] = depn_ax.trans_func( buff.next_int() )
         i += 1
     # END while
     
@@ -1351,12 +1249,12 @@ class IndependentAxis(object):
     def __init__( self, mtrx_hash_value, qual_name='', mirrored=False, len=0,
                   next_ax=None
                 ):
+        self._mtrx_hash_value = mtrx_hash_value
         self.qual_name = qual_name
         #self.instr, self.elem, self.name = qual_name.split('::')
         self.mirrored = mirrored
         self.len = len
         self.next_ax = next_ax
-        self._mtrx_hash_value = mtrx_hash_value
     # END __init__
     
     def __hash__(self): return self._mtrx_hash_value
@@ -1365,55 +1263,8 @@ class IndependentAxis(object):
 # END IndependentAxis
 
 #==============================================================================
-class MatrixProperty(object):
-    '''Class structure for storing property settings in an Experiment
+PhysicalValue = namedtuple('PhysicalValue', ['value', 'unit'])
     
-    MatrixProperty objects can be used to represent settings or physical
-    quantities.  They will have hash values equal to the hash value of their
-    name string.
-    
-    Instantiation Args:
-        channel (str)
-        name (str)
-        unit (str)
-        value (str)
-    Instance Attributes:
-        name (str): property name, this will be a concat. of channel_name
-        unit (str): property units
-        value (str): property value
-    '''
-    
-    def __init__(self, channel, name, unit, value):
-        self._ptup = (channel + '_' + name, unit, value)
-    # END __init__
-    
-    def __getitem__(self, i):
-        return self._ptup[i]
-    # END __getitem__
-    
-    def __hash__(self):
-        return str(self)
-    # END __hash__
-    
-    def __str__(self):
-        return '{0} = {2} {1}'.format(*self._ptup)
-    # END __str__
-    
-    @property
-    def name(self):
-        return self._ptup[0]
-    # END name
-    
-    @property
-    def unit(self):
-        return self._ptup[1]
-    # END unit
-    
-    @property
-    def value(self):
-        return self._ptup[2]
-    # END value
-# END MatrixProperty
 
 #==============================================================================
 class MatrixBuffer(object):
@@ -1629,14 +1480,14 @@ class MatrixBuffer(object):
         return value
     # END next_mtrxtype
     
-    def next_mtrxparam(self, chnl):
+    def next_mtrxparam(self):
         prop = self.next_mtrxstr()
         unit = self.next_mtrxstr()
         #skip empty space
         self.next(4)
         value = self.next_mtrxtype()
         
-        return MatrixProperty(chnl, prop, unit, value)
+        return prop, PhysicalValue(value, unit)
     # END next_mtrxparam
 # END MatrixBuffer
 
