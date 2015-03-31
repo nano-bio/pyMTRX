@@ -493,8 +493,7 @@ class CurveData(object):
         
         # local copy of the properties dict
         props = dict(crv.props)
-        if imgindex is not None:
-            props['Image Index'] = imgindex
+        if imgindex is not None: props['Image Index'] = imgindex
         
         f = open(save_path, 'w')
         

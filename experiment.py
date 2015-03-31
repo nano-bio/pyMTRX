@@ -25,6 +25,7 @@ from StringIO import StringIO
 from pprint import pprint, pformat
 import pdb
 from collections import namedtuple
+from copy import copy
 
 # third-party modules
 import numpy as np
@@ -155,22 +156,28 @@ class Experiment(object):
                     key=lambda s: re.sub(r'(^.*?)(\..*$)', r'\2\1', s)
                 )
                 for k in skeys:
-                    if re.search(r'\.[ZI]_mtrx$', k):
+                    if re.search(r'\.[^()]+_mtrx$', k):
                         f.write('    ')
                         kdisp = re.search(r'--.*$', k).group(0)
                         v = self.stslinks[k]
                         f.write(str(kdisp) + ': ')
                         for x in v:
-                            specindex = re.search(r'--([\d_]+)\.', x[-1]).group(1)
+                            specindex = re.search(
+                                r'--([\d_]+)\.', x.spec_fn
+                            ).group(1)
                             f.write(specindex + ', ')
                         f.write('\n')
                     else:
                         f.write('    ')
                         kdisp = re.search(r'--.*$', k).group(0)
                         v = self.stslinks[k]
-                        f.write(str(kdisp) + ': ' + str(v[0][:3]) + ', ')
-                        scnindex = re.search(r'--.*$', v[1]).group(0)
-                        f.write(scnindex + '\n')
+                        scnindex = re.search(r'--.*$', v.parent_fn).group(0)
+                        f.write(str(kdisp))
+                        f.write(': ')
+                        f.write(scnindex)
+                        f.write(' ')
+                        f.write(str(v.dir))
+                        f.write('\n')
             except Exception:
                 pass
             # END try
@@ -263,7 +270,7 @@ class Experiment(object):
         for _ in range(buff.next_uint()):
             chnl = buff.next_mtrxstr()
             for _ in range(buff.next_uint()):
-                prop, x = buff.next_mtrxparam(chnl)
+                prop, x = buff.next_mtrxparam()
                 self.init_st[chnl+'_'+prop] = x
             # END for
         # END for
@@ -280,7 +287,7 @@ class Experiment(object):
         
         chnl = buff.next_mtrxstr()
         prop, x = buff.next_mtrxparam()
-        self.st_hist.append( (self._t_bk, prop, x) )
+        self.st_hist.append( (self._t_bk, chnl, prop, x) )
         self._curr_st[chnl+'_'+prop] = x
         self.log.write(
             '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
@@ -304,54 +311,46 @@ class Experiment(object):
         if img_mat:
             # file is scan data
             img_chnl_name = img_mat.group(1)
-            # NOTE: unable to parse which channel window the point-STS was
-            #       taken in, so all spectra will be attached to Z_mtrx files
             self.unlinked_spectra.append(None)
             while self.unlinked_spectra[0] is not None:
-                spectra_fname, mrk = self.unlinked_spectra.pop(0)
-                if mrk is None:
+                mrk = self.unlinked_spectra.pop(0)
+                if not mrk.parent_hash:
+                    # the spectrum is either a repeat or a from a non-specific
+                    # point
                     first_name, repeat = re.subn(
-                        r'(--\d+_)\d+(\.[^.]$)', '\g<1>1\g<2>', spectra_fname
+                        r'(\d+_)\d+(\.[^.]+$)', '\g<1>1\g<2>', mrk.spec_fn
                     )
-                    if repeat:
+                    if repeat: 
                         # copy over mark for following spectra
-                        self.unlinked_spectra.insert(
-                            0,
-                            (spectra_fname, self.stslinks[first_name][0])
-                        )
+                        new_mrk = copy(self.stslinks[first_name])
+                        new_mrk.spec_fn = mrk.spec_fn
+                        self.unlinked_spectra.insert(0, new_mrk)
                     else:
                         # this is a "free-range" spectra
                         # e.g. an I(t) spectra
-                        self.free_spectra.append(spectra_fname)
+                        self.free_spectra.append(mrk.spec_fn)
                     # END if
                     continue
                 # END if
-                try:
-                    sts_parent_ax = self.axch[mrk[4]].depn_ax
-                except KeyError as err:
-                    self.unlinked_spectra.append( (spectra_fname, mrk) )
-                    continue
+                #try:
+                sts_parent_ax = self.axch[mrk.parent_hash].depn_ax
+                #except KeyError as err:
+                #    self.unlinked_spectra.append( (mrk.spec_fn, mrk) )
+                #    continue
                 # END try
                 if sts_parent_ax.name != img_chnl_name:
                     # this spectra was clicked in a different channel window
                     # e.g. user clicked in I window instead of Z
-                    self.unlinked_spectra.append( (spectra_fname, mrk) )
+                    self.unlinked_spectra.append(mrk)
                 # END if
                 # update the scan --> spec lookup
+                mrk.parent_fn = fname
                 if fname not in self.stslinks:
-                    self.stslinks[fname] = [ (mrk, spectra_fname) ]
+                    self.stslinks[fname] = [mrk,]
                 else:
-                    self.stslinks[fname].append( (mrk, spectra_fname) )
+                    self.stslinks[fname].append(mrk)
                 # END if
-                # make a link for spec --> scan lookup
-                i, ii = re.search(r'--(\d+)_(\d+)\.[^.]+$', fname).groups()
-                # This replaces the spectra's image indices so that they
-                # are correct.
-                # (NOTE: this makes the indices IMPLICIT data)
-                mrk = ( int(i), int(ii), mrk[2], mrk[3],
-                        sts_parent_ax.name
-                      )
-                self.stslinks[spectra_fname] = (mrk, fname)
+                self.stslinks[mrk.spec_fn] = mrk
             # END while
             self.unlinked_spectra.pop(0)
             
@@ -366,6 +365,7 @@ class Experiment(object):
         elif pointsts_mat:
             # file is for spectroscopy data
             chnl_name = pointsts_mat.group(1)
+            # collect all comments on the data object
             self.cmnt_lkup[fname] = []
             if chnl_name in self.cmnt_lkup:
                 for _ in range(len(self.cmnt_lkup[chnl_name])):
@@ -374,7 +374,14 @@ class Experiment(object):
                     )
                 # END for
             # END if
-            self.unlinked_spectra.append( (fname, self.last_sts_mark) )
+            # register the spectra as unlinked
+            try:
+                self.last_sts_mark.spec_fn = fname
+            except AttributeError:
+                self.last_sts_mark = STSMark(spec_fn=fname)
+            # END try
+            self.unlinked_spectra.append(self.last_sts_mark)
+            # clear the location of the most recent point spectrum
             self.last_sts_mark = None
         # END if
         
@@ -401,23 +408,25 @@ class Experiment(object):
         elif re.search(r'^MTRX\$STS_LOCATION', markstr):
             # Example:
             # MTRX$STS_LOCATION-192,94;7e-009,-9.33333e-009%%7800440043-1-4-0%%
-            # locstr: string containing physical and pixel coordinates of the
-            #  spectroscopy location
-            # img_chnl_hash
-            # _unknown: unknown, first suspected it to be run number, but
-            #     that is either not correct or, more likely, it is something
-            #     else
-            # TODO: figure out what ii is
-            # ii: MATRIX scan number index for the parent scan
-            # d: direction of the parent scan where the spectra was taken
-            locstr, img_chnl_hash, _unknown, ii, d = re.search(
+            # Breakdown of mark:
+            # MTRX$STS_LOCATION-192,94;______,_____________%%__________-_-_-_%%
+            # pixel coordinates ***,**
+            # MTRX$STS_LOCATION-___,__;7e-009,-9.33333e-009%%__________-_-_-_%%
+            #     physical coordinates ******,*************
+            # MTRX$STS_LOCATION-___,__;______,_____________%%7800440043-_-_-_%%
+            #                            parent channel hash **********
+            # MTRX$STS_LOCATION-___,__;______,_____________%%__________-1-4-_%%
+            #                                          unknown indicies * *
+            # MTRX$STS_LOCATION-___,__;______,_____________%%__________-_-_-0%%
+            #                                               direction index *
+            locstr, img_chnl_hash, _, _, d = re.search(
                 r'^MTRX\$STS_LOCATION-(.+?)%%([a-fA-F\d]+)-(\d+)-(\d+)-(\d+)',
                 markstr
             ).groups()
             img_chnl_hash = int(img_chnl_hash, 16)
-            self.last_sts_mark = ( int(ii), int(_unknown), int(d),
-                                    locstr, img_chnl_hash 
-                                 )
+            self.last_sts_mark = STSMark(
+                parent_hash=img_chnl_hash, dir=int(d), loc=locstr
+            )
         elif re.search(r'MTRX\$SAMPLE_NAME', markstr):
             self.sample = re.search(r'-(.*)$', markstr).group(1)
         elif re.search(r'MTRX\$DATA_SET_NAME', markstr):
@@ -656,102 +665,18 @@ class Experiment(object):
         )
     # END import_scan
     
-    def import_spectra(self, file_path):
+    def import_spectra(self, file_path, debug=False):
         '''Read a spectroscopy data file and return CurveData objects
         
         Args:
-            file_path (str): standard full path
+            file_path (str): path to .*_mtrx scan data file
+            debug (bool): switch for writing a debugging file describing
+                          how the data file was interpreted
         Returns:
             (list) [CurveData, CurveData, ...]
         '''
         
-        file_name = os.path.basename(file_path)
-        params = self.datafile_st[file_name]
-        
-        filebuff, _, t = MatrixBuffer.from_file(file_path)
-        
-        # Skip empty space
-        filebuff.next(4)
-        # Read sub-blocks (DESC & DATA)
-        while filebuff:
-            bkbuff, bkname = filebuff.next_bk()
-            if re.search(r'DESC', bkname):
-                chnl_key, Npt_set, Npt_act, _ = _read_DESC(bkbuff)
-                depn_ax = self.axch[chnl_key].depn_ax
-                indp_ax = depn_ax.indp_ax
-            elif re.search(r'DATA', bkname):
-                all_Ys = _read_DATA_spectra(bkbuff, depn_ax)
-                # Heuristic to force the file closed after the data block
-            # END if
-            if len(bkbuff) > 0:
-                raise RuntimeError('hanging bytes')
-        # END while
-        filebuff.close()
-        
-        # make X array
-        #if indp_ax.elem == 'Spectroscopy' and indp_ax.name == 'V':
-        if indp_ax.qual_name[-1] == 'V':
-            x0 = params['Spectroscopy_Device_1_Start'].value
-            xf = params['Spectroscopy_Device_1_End'].value
-            X = np.linspace(x0, xf, len(all_Ys[0]))
-            x_units = params['Spectroscopy_Device_1_Start'].unit
-        elif re.search('Clock2', indp_ax.qual_name):
-            tstep = params['Clock2_Period'].value
-            N = params['Clock2_Samples'].value
-            X = np.arange(N) * tstep
-            x_units = 's'
-        else:
-            raise ValueError(
-                'Cannot parse independent axis {}'.format(indp_ax.__dict__)
-            )
-        # END if
-        
-        # make a simplified version of the params dict
-        index, rep = re.search(r'^.*?--(\d+)_(\d+).*$', file_name).groups()
-        params_alt = { 'file': file_name, 'time': t,
-                       'index': int(index), 'rep': int(rep),
-                       'channel': depn_ax.name
-                     }
-        for k in params: params_alt[k] = params[k].value
-        try:
-            # stslinks[spectra_fname] = ((ii, i, d, locstr, chnl_hash), scn_fname)
-            params_alt['parent'] = self.stslinks[file_name][1]
-            # Example locstr:
-            #  "-193,205;7.16667e-009,9.16667e-009"
-            # pixel coordinates are relative to bottom left corner
-            # physical coordinates are relative to scan center
-            coords = re.split(r';|,', self.stslinks[file_name][0][3])
-            #coords = self.stslinks[file_name][0][3].split(';')
-            params_alt['coord_px'] = ( int(coords[0]), int(coords[1]) )
-            params_alt['coord_phys'] = ( float(coords[2]), float(coords[3]) )
-        except KeyError:
-            params_alt['parent'] = None
-            params_alt['coord_px'] = None
-            params_alt['coord_phys'] = None
-        # END try
-        
-        if re.search('Clock2', indp_ax.qual_name):
-            X += (params_alt['rep']-1) * len(X) * tstep
-        # END if
-        
-        # retrieve all image comments
-        comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
-        # TODO: correct this, it is a temporary soution
-        #       comments should be attached to the specific direction they
-        #       do with
-        all_cmnt = ' '.join([c for _, c in comments])
-        all_cmnt = re.sub(r'[\n\r]+', ' ', all_cmnt)
-        params_alt['comment'] = all_cmnt
-        
-        for i, Y in enumerate(all_Ys):
-            params_alt['direction'] = i
-            all_Ys[i] = CurveData(
-                X, Y, x_units=x_units, y_units=depn_ax.unit,
-                props=params_alt
-            )
-        # END for
-        
-        return all_Ys
+        return import_spectra(file_path, ex=self, debug=debug)
     # END import_spectra
     
     def get_params(self, file_name):
@@ -931,11 +856,10 @@ def import_scan( file_path,
     file_sts_links = []
     if file_name in ex.stslinks:
         file_sts_links = ex.stslinks[file_name]
-    for mrk, spec_file in file_sts_links:
+    for mrk in file_sts_links:
         try:
-            # TODO: fix error; this should work for a tree
-            scans_flat[mrk[2]].spectra.extend(
-                ex.import_spectra(file_dir+spec_file)
+            scans_flat[mrk.dir].spectra.extend(
+                ex.import_spectra( os.path.join(file_dir, mrk.spec_fn) )
             )
         except IOError:
             pass
@@ -1062,7 +986,7 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
         fdebug = None
     # END if
     
-    filebuff, _, t = MatrixBuffer(file_path)
+    filebuff, _, t = MatrixBuffer.from_file(file_path)
     
     # Skip empty space
     filebuff.next(4)
@@ -1076,6 +1000,7 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
             # or make up false axes
             try:
                 depn_ax = ex.axch[chnl_key].depn_ax
+                indp_ax = depn_ax.indp_ax
             except AttributeError:
                 Ncrv = 1
                 if mirroring: Ncrv *= 2
@@ -1107,17 +1032,17 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
         # make param dict from Experiment object
         params = ex.get_params(file_name)
         # stslinks[spectra_fname] = ((ii, i, d, locstr, chnl_hash), scn_fname)
-        params['parent'] = ex.stslinks[file_name][1]
+        params['parent'] = ex.stslinks[file_name].parent_fn
         # Example locstr:
         #  "-193,205;7.16667e-009,9.16667e-009"
         # pixel coordinates are relative to bottom left corner
         # physical coordinates are relative to scan center
-        coords = re.split(r';|,', ex.stslinks[file_name][0][3])
+        coords = re.split(r';|,', ex.stslinks[file_name].loc)
         params['coord_px'] = ( int(coords[0]), int(coords[1]) )
         params['coord_phys'] = ( float(coords[2]), float(coords[3]) )
-    except (AttributeError, KeyError):
+    except (AttributeError, KeyError) as err:
         # make an incomplete param dict from available information
-        params = {}
+        params = {'parent': ''}
     # END try
     params['file'] = file_name
     # pull index and repetition values from file_name
@@ -1246,8 +1171,8 @@ class DependentAxis(object):
 
 #==============================================================================
 class IndependentAxis(object):
-    def __init__( self, mtrx_hash_value, qual_name='', mirrored=False, len=0,
-                  next_ax=None
+    def __init__( self, mtrx_hash_value, qual_name='', mirrored=False,
+                  len=0, next_ax=None
                 ):
         self._mtrx_hash_value = mtrx_hash_value
         self.qual_name = qual_name
@@ -1261,6 +1186,19 @@ class IndependentAxis(object):
     
     def __len__(self): return self.len
 # END IndependentAxis
+
+#==============================================================================
+class STSMark(object):
+    def __init__( self, spec_fn='', parent_fn='', parent_hash=0,
+                  dir=0, loc=''
+                ):
+        self.spec_fn = spec_fn
+        self.parent_fn = parent_fn
+        self.parent_hash = parent_hash
+        self.dir = dir
+        self.loc = loc
+    # END __init__
+# END STSMark
 
 #==============================================================================
 PhysicalValue = namedtuple('PhysicalValue', ['value', 'unit'])

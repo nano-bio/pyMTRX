@@ -50,11 +50,23 @@ def main(*args):
     
     print ''
     print 'Testing scripts...'
+    print ''
+    print '    convert_all_pntspec_to_txt.py'
+    from pyMTRX.scripts.convert_spec import main as convert
+    convert('test_data/', debug=False)
+    
+    print ''
+    print '    notebook_sheet.py'
+    from pyMTRX.scripts.notebook_sheet import main as nb_sheet
+    nb_sheet('test_data/', debug=True)
+    
+    print ''
     print '    notebook_slides.py'
     from pyMTRX.scripts.notebook_slides import main as nb_slide
     nb_slide('test_data/')
-    quit()
     
+    print ''
+    print '    PngMaker'
     scans = PngMaker.main(save_dir=sdir)
     print 'len(main.scans) = {}'.format(len(scans))
     with open(sdir+'Scan.__dict__.txt', 'w') as f:
@@ -64,11 +76,6 @@ def main(*args):
             break
     with open(sdir+'CurveData.__dict__.txt', 'w') as f:
         f.write( pformat(scn.spectra[0].__dict__) )
-    
-    print ''
-    print '    notebook_sheet.py'
-    from pyMTRX.scripts.notebook_sheet import main as nb_sheet
-    nb_sheet('test_data/', r=False, debug=False)
     
     scans = PngMaker.main(save_dir=sdir)
     print 'len(main.scans) = {}'.format(len(scans))

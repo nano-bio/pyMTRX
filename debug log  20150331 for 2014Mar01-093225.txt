@@ -1,0 +1,1869 @@
+self.axch = 
+    68721573953 (x0000001000200041):
+        { '_mtrx_hash_value': 68721573953L,
+          'len': 10,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    68723933251 (x0000001000440043):
+        { '_mtrx_hash_value': 68723933251L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00C10>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    73016541249 (x0000001100200041):
+        { '_mtrx_hash_value': 73016541249L,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    73018900547 (x0000001100440043):
+        { '_mtrx_hash_value': 73018900547L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C000F0>,
+          'descrip': u'ChannelData: channel = I, storage = ResultStorage(BlockTransfer)'}
+    77311508547 (x0000001200200043):
+        { '_mtrx_hash_value': 77311508547L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00B50>,
+          'name': u'Aux2(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00A50>,
+          'unit': u'V'}
+    77313867843 (x0000001200440043):
+        { '_mtrx_hash_value': 77313867843L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00BF0>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    81606475843 (x0000001300200043):
+        { '_mtrx_hash_value': 81606475843L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00B50>,
+          'name': u'I(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00A30>,
+          'unit': u'A'}
+    81608835139 (x0000001300440043):
+        { '_mtrx_hash_value': 81608835139L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C000D0>,
+          'descrip': u'ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)'}
+    85901443139 (x0000001400200043):
+        { '_mtrx_hash_value': 85901443139L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00B70>,
+          'name': u'I(Z)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00990>,
+          'unit': u'A'}
+    85903802435 (x0000001400440043):
+        { '_mtrx_hash_value': 85903802435L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C000B0>,
+          'descrip': u'ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)'}
+    90198769731 (x0000001500440043):
+        { '_mtrx_hash_value': 90198769731L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00110>,
+          'descrip': u'ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)'}
+    94493737027 (x0000001600440043):
+        { '_mtrx_hash_value': 94493737027L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00BD0>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    98788704323 (x0000001700440043):
+        { '_mtrx_hash_value': 98788704323L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C002F0>,
+          'descrip': u'ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)'}
+    103083671619 (x0000001800440043):
+        { '_mtrx_hash_value': 103083671619L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00310>,
+          'descrip': u'ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)'}
+    107378638915 (x0000001900440043):
+        { '_mtrx_hash_value': 107378638915L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00330>,
+          'descrip': u'ChannelData: channel = I, storage = ResultStorage(BlockTransfer)'}
+    111673606211 (x0000001a00440043):
+        { '_mtrx_hash_value': 111673606211L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00350>,
+          'descrip': u'ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)'}
+    115966214209 (x0000001b00200041):
+        { '_mtrx_hash_value': 115966214209L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::XYScanner::Y'}
+    115968573507 (x0000001b00440043):
+        { '_mtrx_hash_value': 115968573507L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF0F10>,
+          'descrip': u'ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)'}
+    120261181505 (x0000001c00200041):
+        { '_mtrx_hash_value': 120261181505L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0FF0>,
+          'qual_name': u'Default::XYScanner::X'}
+    120263540803 (x0000001c00440043):
+        { '_mtrx_hash_value': 120263540803L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF0EF0>,
+          'descrip': u'ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)'}
+    124556148803 (x0000001d00200043):
+        { '_mtrx_hash_value': 124556148803L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00030>,
+          'name': u'Aux1',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF0E90>,
+          'unit': u'V'}
+    124558508099 (x0000001d00440043):
+        { '_mtrx_hash_value': 124558508099L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF0F30>,
+          'descrip': u'ChannelData: channel = I, storage = ResultStorage(BlockTransfer)'}
+    128851116099 (x0000001e00200043):
+        { '_mtrx_hash_value': 128851116099L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00030>,
+          'name': u'Aux2',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF0E30>,
+          'unit': u'V'}
+    128853475395 (x0000001e00440043):
+        { '_mtrx_hash_value': 128853475395L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF09B0>,
+          'descrip': u'ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)'}
+    133146083395 (x0000001f00200043):
+        { '_mtrx_hash_value': 133146083395L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00030>,
+          'name': u'I',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00150>,
+          'unit': u'A'}
+    133148442691 (x0000001f00440043):
+        { '_mtrx_hash_value': 133148442691L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00E90>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    137441050691 (x0000002000200043):
+        { '_mtrx_hash_value': 137441050691L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00030>,
+          'name': u'Z',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C001B0>,
+          'unit': u'm'}
+    137443409987 (x0000002000440043):
+        { '_mtrx_hash_value': 137443409987L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00EB0>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    141736017985 (x0000002100200041):
+        { '_mtrx_hash_value': 141736017985L,
+          'len': 800,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::XYScanner::Y'}
+    141738377283 (x0000002100440043):
+        { '_mtrx_hash_value': 141738377283L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03C00ED0>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    146030985281 (x0000002200200041):
+        { '_mtrx_hash_value': 146030985281L,
+          'len': 800,
+          'mirrored': True,
+          'next_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00250>,
+          'qual_name': u'Default::XYScanner::X'}
+    146033344579 (x0000002200440043):
+        { '_mtrx_hash_value': 146033344579L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF01D0>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    150325952579 (x0000002300200043):
+        { '_mtrx_hash_value': 150325952579L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00270>,
+          'name': u'Aux1',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00470>,
+          'unit': u'V'}
+    150328311875 (x0000002300440043):
+        { '_mtrx_hash_value': 150328311875L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF0A10>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    154620919875 (x0000002400200043):
+        { '_mtrx_hash_value': 154620919875L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00270>,
+          'name': u'Aux2',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00490>,
+          'unit': u'V'}
+    154623279171 (x0000002400440043):
+        { '_mtrx_hash_value': 154623279171L,
+          'depn_ax': <pyMTRX.experiment.DependentAxis object at 0x03BF00B0>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    158915887171 (x0000002500200043):
+        { '_mtrx_hash_value': 158915887171L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00270>,
+          'name': u'I',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C004D0>,
+          'unit': u'A'}
+    163210854467 (x0000002600200043):
+        { '_mtrx_hash_value': 163210854467L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00270>,
+          'name': u'Z',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00530>,
+          'unit': u'm'}
+    167505821761 (x0000002700200041):
+        { '_mtrx_hash_value': 167505821761L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::XYScanner::Y'}
+    171800789057 (x0000002800200041):
+        { '_mtrx_hash_value': 171800789057L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0E50>,
+          'qual_name': u'Default::XYScanner::X'}
+    176095756355 (x0000002900200043):
+        { '_mtrx_hash_value': 176095756355L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0F50>,
+          'name': u'Aux1',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C007B0>,
+          'unit': u'V'}
+    180390723651 (x0000002a00200043):
+        { '_mtrx_hash_value': 180390723651L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0F50>,
+          'name': u'Aux2',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00430>,
+          'unit': u'V'}
+    184685690947 (x0000002b00200043):
+        { '_mtrx_hash_value': 184685690947L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0F50>,
+          'name': u'I',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C007D0>,
+          'unit': u'A'}
+    188980658243 (x0000002c00200043):
+        { '_mtrx_hash_value': 188980658243L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0F50>,
+          'name': u'Z',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00790>,
+          'unit': u'm'}
+    193275625537 (x0000002d00200041):
+        { '_mtrx_hash_value': 193275625537L,
+          'len': 300,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    197570592833 (x0000002e00200041):
+        { '_mtrx_hash_value': 197570592833L,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    201865560131 (x0000002f00200043):
+        { '_mtrx_hash_value': 201865560131L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00DB0>,
+          'name': u'Aux2(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00FD0>,
+          'unit': u'V'}
+    206160527427 (x0000003000200043):
+        { '_mtrx_hash_value': 206160527427L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00DB0>,
+          'name': u'I(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C4D030>,
+          'unit': u'A'}
+    210455494723 (x0000003100200043):
+        { '_mtrx_hash_value': 210455494723L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03C00DD0>,
+          'name': u'I(Z)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C4D090>,
+          'unit': u'A'}
+    214750462017 (x0000003200200041):
+        { '_mtrx_hash_value': 214750462017L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    219045429313 (x0000003300200041):
+        { '_mtrx_hash_value': 219045429313L,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    223340396611 (x0000003400200043):
+        { '_mtrx_hash_value': 223340396611L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0DF0>,
+          'name': u'Aux2(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03C00750>,
+          'unit': u'V'}
+    227635363907 (x0000003500200043):
+        { '_mtrx_hash_value': 227635363907L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0DF0>,
+          'name': u'I(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF0790>,
+          'unit': u'A'}
+    231930331203 (x0000003600200043):
+        { '_mtrx_hash_value': 231930331203L,
+          'indp_ax': <pyMTRX.experiment.IndependentAxis object at 0x03BF0EB0>,
+          'name': u'I(Z)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF0690>,
+          'unit': u'A'}
+
+self.stslinks = 
+    --1_1.I(V)_mtrx: --6_1.Z_mtrx 2
+    --2_1.I(V)_mtrx: --6_1.Z_mtrx 2
+    --3_1.I(V)_mtrx: --7_1.Z_mtrx 0
+    --3_2.I(V)_mtrx: --7_1.Z_mtrx 0
+    --4_1.I(V)_mtrx: --7_1.Z_mtrx 0
+    --4_2.I(V)_mtrx: --7_1.Z_mtrx 0
+    --5_1.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_10.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_11.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_12.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_13.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_14.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_15.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_16.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_17.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_18.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_19.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_2.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_20.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_3.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_4.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_5.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_6.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_7.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_8.I(V)_mtrx: --7_1.Z_mtrx 2
+    --5_9.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_1.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_10.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_2.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_3.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_4.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_5.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_6.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_7.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_8.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_9.I(V)_mtrx: --7_1.Z_mtrx 2
+    --6_1.Z_mtrx: 1_1, 2_1, 
+    --7_1.Z_mtrx: 3_1, 3_2, 4_1, 4_2, 5_1, 5_2, 5_3, 5_4, 5_5, 5_6, 5_7, 5_8, 5_9, 5_10, 5_11, 5_12, 5_13, 5_14, 5_15, 5_16, 5_17, 5_18, 5_19, 5_20, 6_1, 6_2, 6_3, 6_4, 6_5, 6_6, 6_7, 6_8, 6_9, 6_10, 
+09:35:28 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        115966214209, 0, Default::XYScanner::Y, True
+        120261181505, 115966214209, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        124556148803, 120261181505, Aux1, V
+        128851116099, 120261181505, Aux2, V
+        133146083395, 120261181505, I, A
+        137441050691, 120261181505, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        73018900547, 133146083395, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        81608835139, 128851116099, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        85903802435, 124556148803, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        90198769731, 137441050691, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        115966214209, 600, 0, 0
+        120261181505, 600, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        124556148803, 1, 0
+        128851116099, 1, 0
+        133146083395, 1, 0
+        137441050691, 1, 0
+        ---
+        68723933251, 1, 32
+        73018900547, 2, 32
+        77313867843, 1, 32
+        81608835139, 2, 32
+        85903802435, 2, 32
+        90198769731, 2, 32
+        94493737027, 1, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        124556148803: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        128851116099: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        133146083395: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        137441050691: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+09:42:41 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        115966214209, 0, Default::XYScanner::Y, True
+        120261181505, 115966214209, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        124556148803, 120261181505, Aux1, V
+        128851116099, 120261181505, Aux2, V
+        133146083395, 120261181505, I, A
+        137441050691, 120261181505, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        73018900547, 133146083395, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        81608835139, 128851116099, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        85903802435, 124556148803, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        90198769731, 137441050691, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        115966214209, 600, 0, 0
+        120261181505, 600, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        124556148803, 1, 0
+        128851116099, 1, 0
+        133146083395, 1, 0
+        137441050691, 1, 0
+        ---
+        68723933251, 1, 32
+        73018900547, 2, 32
+        77313867843, 1, 32
+        81608835139, 2, 32
+        85903802435, 2, 32
+        90198769731, 2, 32
+        94493737027, 1, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        124556148803: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        128851116099: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        133146083395: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        137441050691: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+09:43:17 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        115966214209, 0, Default::XYScanner::Y, True
+        120261181505, 115966214209, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        124556148803, 120261181505, Aux1, V
+        128851116099, 120261181505, Aux2, V
+        133146083395, 120261181505, I, A
+        137441050691, 120261181505, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        73018900547, 133146083395, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        81608835139, 128851116099, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        85903802435, 124556148803, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        90198769731, 137441050691, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        115966214209, 600, 0, 0
+        120261181505, 600, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        124556148803, 1, 0
+        128851116099, 1, 0
+        133146083395, 1, 0
+        137441050691, 1, 0
+        ---
+        68723933251, 1, 32
+        73018900547, 2, 32
+        77313867843, 1, 32
+        81608835139, 2, 32
+        85903802435, 2, 32
+        90198769731, 2, 32
+        94493737027, 1, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        124556148803: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        128851116099: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        133146083395: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        137441050691: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+09:49:01 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        141736017985, 0, Default::XYScanner::Y, True
+        146030985281, 141736017985, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        150325952579, 146030985281, Aux1, V
+        154620919875, 146030985281, Aux2, V
+        158915887171, 146030985281, I, A
+        163210854467, 146030985281, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        98788704323, 150325952579, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        103083671619, 154620919875, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        107378638915, 158915887171, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        111673606211, 163210854467, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        141736017985, 800, 0, 0
+        146030985281, 800, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        150325952579, 1, 0
+        154620919875, 1, 0
+        158915887171, 1, 0
+        163210854467, 1, 0
+        ---
+        68723933251, 1, 32
+        77313867843, 1, 32
+        94493737027, 1, 32
+        98788704323, 2, 32
+        103083671619, 2, 32
+        107378638915, 2, 32
+        111673606211, 2, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        150325952579: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        154620919875: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        158915887171: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        163210854467: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+09:52:06 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        167505821761, 0, Default::XYScanner::Y, True
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        167505821761, 600, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        ---
+        68723933251, 1, 32
+        77313867843, 1, 32
+        94493737027, 1, 32
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+10:08:00 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        167505821761, 0, Default::XYScanner::Y, True
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        167505821761, 600, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        ---
+        68723933251, 1, 32
+        77313867843, 1, 32
+        94493737027, 1, 32
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+10:11:49 CCSY 
+    DICT
+        68721573953, 0, Default::Spectroscopy::V, False
+        73016541249, 0, Default::Spectroscopy::Z, False
+        167505821761, 0, Default::XYScanner::Y, True
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        77311508547, 68721573953, Aux2(V), V
+        81606475843, 68721573953, I(V), A
+        85901443139, 73016541249, I(Z), A
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        ---
+        68723933251, 85901443139, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        77313867843, 81606475843, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        94493737027, 77311508547, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        68721573953, 10, 0, 0
+        73016541249, 1000, 0, 0
+        167505821761, 600, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        77311508547, 1, 0
+        81606475843, 1, 0
+        85901443139, 1, 0
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        ---
+        68723933251, 1, 32
+        77313867843, 1, 32
+        94493737027, 1, 32
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        ---
+    SCAN
+    XFER
+        77311508547: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        81606475843: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        85901443139: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+10:13:49 CCSY 
+    DICT
+        167505821761, 0, Default::XYScanner::Y, True
+        193275625537, 0, Default::Spectroscopy::V, False
+        197570592833, 0, Default::Spectroscopy::Z, False
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        201865560131, 193275625537, Aux2(V), V
+        206160527427, 193275625537, I(V), A
+        210455494723, 197570592833, I(Z), A
+        ---
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        133148442691, 201865560131, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        137443409987, 206160527427, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        141738377283, 210455494723, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        167505821761, 600, 0, 0
+        193275625537, 300, 0, 0
+        197570592833, 1000, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        201865560131, 1, 0
+        206160527427, 1, 0
+        210455494723, 1, 0
+        ---
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        133148442691, 1, 32
+        137443409987, 1, 32
+        141738377283, 1, 32
+        ---
+    SCAN
+    XFER
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        201865560131: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        206160527427: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        210455494723: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+10:14:53 CCSY 
+    DICT
+        167505821761, 0, Default::XYScanner::Y, True
+        214750462017, 0, Default::Spectroscopy::V, True
+        219045429313, 0, Default::Spectroscopy::Z, False
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        223340396611, 214750462017, Aux2(V), V
+        227635363907, 214750462017, I(V), A
+        231930331203, 219045429313, I(Z), A
+        ---
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        146033344579, 223340396611, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        150328311875, 227635363907, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        154623279171, 231930331203, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        167505821761, 600, 0, 0
+        214750462017, 600, 0, 0
+        219045429313, 1000, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        223340396611, 1, 0
+        227635363907, 1, 0
+        231930331203, 1, 0
+        ---
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        146033344579, 1, 32
+        150328311875, 1, 32
+        154623279171, 1, 32
+        ---
+    SCAN
+    XFER
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        223340396611: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        227635363907: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        231930331203: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+10:33:06 CCSY 
+    DICT
+        167505821761, 0, Default::XYScanner::Y, True
+        214750462017, 0, Default::Spectroscopy::V, True
+        219045429313, 0, Default::Spectroscopy::Z, False
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        223340396611, 214750462017, Aux2(V), V
+        227635363907, 214750462017, I(V), A
+        231930331203, 219045429313, I(Z), A
+        ---
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        146033344579, 223340396611, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        150328311875, 227635363907, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        154623279171, 231930331203, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        167505821761, 600, 0, 0
+        214750462017, 600, 0, 0
+        219045429313, 1000, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        223340396611, 1, 0
+        227635363907, 1, 0
+        231930331203, 1, 0
+        ---
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        146033344579, 1, 32
+        150328311875, 1, 32
+        154623279171, 1, 32
+        ---
+    SCAN
+    XFER
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        223340396611: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        227635363907: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        231930331203: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+20:32:03 CCSY 
+    DICT
+        167505821761, 0, Default::XYScanner::Y, True
+        214750462017, 0, Default::Spectroscopy::V, True
+        219045429313, 0, Default::Spectroscopy::Z, False
+        171800789057, 167505821761, Default::XYScanner::X, True
+        ---
+        176095756355, 171800789057, Aux1, V
+        180390723651, 171800789057, Aux2, V
+        184685690947, 171800789057, I, A
+        188980658243, 171800789057, Z, m
+        223340396611, 214750462017, Aux2(V), V
+        227635363907, 214750462017, I(V), A
+        231930331203, 219045429313, I(Z), A
+        ---
+        115968573507, 176095756355, ChannelData: channel = Aux1, storage = ResultStorage(BlockTransfer)
+        120263540803, 180390723651, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        124558508099, 184685690947, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        128853475395, 188980658243, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        146033344579, 223340396611, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        150328311875, 227635363907, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        154623279171, 231930331203, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        167505821761, 600, 0, 0
+        214750462017, 600, 0, 0
+        219045429313, 1000, 0, 0
+        171800789057, 600, 1, 0
+        ---
+        176095756355, 1, 0
+        180390723651, 1, 0
+        184685690947, 1, 0
+        188980658243, 1, 0
+        223340396611, 1, 0
+        227635363907, 1, 0
+        231930331203, 1, 0
+        ---
+        115968573507, 2, 32
+        120263540803, 2, 32
+        124558508099, 2, 32
+        128853475395, 2, 32
+        146033344579, 1, 32
+        150328311875, 1, 32
+        154623279171, 1, 32
+        ---
+    SCAN
+    XFER
+        176095756355: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        180390723651: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        184685690947: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        188980658243: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        223340396611: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        227635363907: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        231930331203: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+09:32:47 MARK     MTRX$CREATION_COMMENT-
+09:32:47 MARK     MTRX$SAMPLE_NAME-I-125/Au 20140225
+09:32:47 MARK     MTRX$DATA_SET_NAME-
+09:32:47 MARK     Instrument information: Instrument >Default< calibration data set >STM/AFM for SPM PRE 4< parameter set >LT STM< (variant: >LHe<)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-I_Reg
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux1(r)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux1(Z)
+09:32:47 MARK     MTRX$ENABLE_RECORDING-Z
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux2
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux1
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux1(V)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux2(V)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Z(r)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux2(Z)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux2(r)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Z(t)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-Aux2(t)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-I(t)
+09:32:47 MARK     MTRX$ENABLE_RECORDING-I(V)
+09:32:47 MARK     MTRX$DISABLE_RECORDING-I(r)
+09:32:47 MARK     MTRX$ENABLE_RECORDING-I
+09:32:47 MARK     MTRX$DISABLE_RECORDING-I(Z)
+09:35:28 BREF     2014Mar01-093225--1_1.I_mtrx
+09:35:28 BREF     2014Mar01-093225--1_1.Z_mtrx
+09:37:52 BREF     2014Mar01-093225--1_2.I_mtrx
+09:37:52 BREF     2014Mar01-093225--1_2.Z_mtrx
+09:40:16 BREF     2014Mar01-093225--1_3.I_mtrx
+09:40:16 BREF     2014Mar01-093225--1_3.Z_mtrx
+09:41:05 PMOD     XYScanner_Width <-- 3.16e-08 Meter
+09:41:05 PMOD     XYScanner_Height <-- 3.16e-08 Meter
+09:41:05 PMOD     XYScanner_X_Offset <-- 3.16e-08 Meter
+09:41:05 PMOD     XYScanner_Y_Offset <-- -3.6e-08 Meter
+09:41:09 PMOD     XYScanner_Width <-- 3e-08 Meter
+09:41:09 PMOD     XYScanner_Height <-- 3e-08 Meter
+09:42:41 BREF     2014Mar01-093225--1_4.I_mtrx
+09:42:41 BREF     2014Mar01-093225--1_4.Z_mtrx
+09:43:09 PMOD     XYScanner_Width <-- 1.42e-08 Meter
+09:43:09 PMOD     XYScanner_Height <-- 1.42e-08 Meter
+09:43:09 PMOD     XYScanner_X_Offset <-- 2.77e-08 Meter
+09:43:09 PMOD     XYScanner_Y_Offset <-- -2.87e-08 Meter
+09:43:12 PMOD     XYScanner_Height <-- 1.4e-08 Meter
+09:43:12 PMOD     XYScanner_Width <-- 1.4e-08 Meter
+09:43:17 BREF     2014Mar01-093225--1_5.Z_mtrx
+09:43:17 BREF     2014Mar01-093225--1_5.I_mtrx
+09:45:41 BREF     2014Mar01-093225--2_1.I_mtrx
+09:45:41 BREF     2014Mar01-093225--2_1.Z_mtrx
+09:48:05 BREF     2014Mar01-093225--2_2.I_mtrx
+09:48:05 BREF     2014Mar01-093225--2_2.Z_mtrx
+09:48:24 BREF     2014Mar01-093225--2_3.Z_mtrx
+09:48:24 BREF     2014Mar01-093225--2_3.I_mtrx
+09:48:28 PMOD     XYScanner_Points <-- 400 Count
+09:48:28 PMOD     XYScanner_Lines <-- 400 Count
+09:48:35 PMOD     Regulator_Loop_Gain_1_I <-- 6.0 Percent
+09:48:35 PMOD     Regulator_Alternate_Loop_Gain_1_I <-- 6.0 Percent
+09:49:01 BREF     2014Mar01-093225--3_1.I_mtrx
+09:49:01 BREF     2014Mar01-093225--3_1.Z_mtrx
+09:49:04 PMOD     XYScanner_Points <-- 300 Count
+09:49:04 PMOD     XYScanner_Lines <-- 300 Count
+09:49:09 PMOD     XYScanner_Raster_Time <-- 0.0005 Second
+09:49:09 PMOD     XYScanner_Move_Raster_Time <-- 0.0005 Second
+09:52:06 BREF     2014Mar01-093225--4_1.Z_mtrx
+09:52:06 BREF     2014Mar01-093225--4_1.I_mtrx
+09:55:06 BREF     2014Mar01-093225--4_2.I_mtrx
+09:55:06 BREF     2014Mar01-093225--4_2.Z_mtrx
+09:58:07 BREF     2014Mar01-093225--4_3.I_mtrx
+09:58:09 BREF     2014Mar01-093225--4_3.Z_mtrx
+10:01:07 BREF     2014Mar01-093225--4_4.I_mtrx
+10:01:07 BREF     2014Mar01-093225--4_4.Z_mtrx
+10:04:07 BREF     2014Mar01-093225--4_5.Z_mtrx
+10:04:07 BREF     2014Mar01-093225--4_5.I_mtrx
+10:07:08 BREF     2014Mar01-093225--4_6.I_mtrx
+10:07:08 BREF     2014Mar01-093225--4_6.Z_mtrx
+10:07:54 PMOD     Regulator_Loop_Gain_1_I <-- 5.0 Percent
+10:07:54 PMOD     Regulator_Alternate_Loop_Gain_1_I <-- 5.0 Percent
+10:07:57 PMOD     XYScanner_Width <-- 1.2e-08 Meter
+10:07:57 PMOD     XYScanner_Height <-- 1.2e-08 Meter
+10:08:00 BREF     2014Mar01-093225--4_7.I_mtrx
+10:08:00 BREF     2014Mar01-093225--4_7.Z_mtrx
+10:11:01 BREF     2014Mar01-093225--5_1.I_mtrx
+10:11:01 BREF     2014Mar01-093225--5_1.Z_mtrx
+10:11:15 PMOD     Regulator_Setpoint_1 <-- 1e-10 Ampere
+10:11:28 PMOD     Spectroscopy_Device_1_Start <-- -6.0 Volt
+10:11:28 PMOD     Spectroscopy_Device_1_End <-- 5.99999997709 Volt
+10:11:28 PMOD     Spectroscopy_Alternate_Device_1_Start <-- -6.0 Volt
+10:11:28 PMOD     Spectroscopy_Alternate_Device_1_End <-- 5.99999997709 Volt
+10:11:31 PMOD     Spectroscopy_Aux1_Range <-- -1;1 --
+10:11:31 PMOD     Spectroscopy_Device_1_Start <-- -0.599945999031 Volt
+10:11:31 PMOD     Spectroscopy_Device_1_End <-- 0.599945997169 Volt
+10:11:31 PMOD     Spectroscopy_Alternate_Aux1_Range <-- -1;1 --
+10:11:31 PMOD     Spectroscopy_Alternate_Device_1_Start <-- -0.599945999031 Volt
+10:11:31 PMOD     Spectroscopy_Alternate_Device_1_End <-- 0.599945997169 Volt
+10:11:34 PMOD     Spectroscopy_Device_1_Start <-- -0.15 Volt
+10:11:34 PMOD     Spectroscopy_Device_1_End <-- 0.599945996703 Volt
+10:11:34 PMOD     Spectroscopy_Alternate_Device_1_Start <-- -0.15 Volt
+10:11:34 PMOD     Spectroscopy_Alternate_Device_1_End <-- 0.599945996703 Volt
+10:11:37 PMOD     Spectroscopy_Device_1_End <-- 0.15 Volt
+10:11:37 PMOD     Spectroscopy_Device_1_Start <-- -0.149999997206 Volt
+10:11:37 PMOD     Spectroscopy_Alternate_Device_1_End <-- 0.15 Volt
+10:11:37 PMOD     Spectroscopy_Alternate_Device_1_Start <-- -0.149999997206 Volt
+10:11:42 PMOD     Spectroscopy_Disable_Feedback_Loop <-- False --
+10:11:42 PMOD     Spectroscopy_Disable_Feedback_Loop <-- True --
+10:11:49 BREF     2014Mar01-093225--5_2.I_mtrx
+10:11:49 BREF     2014Mar01-093225--5_2.Z_mtrx
+10:11:53 PMOD     Spectroscopy_Device_1_Points <-- 300 Count
+10:11:53 PMOD     Spectroscopy_Device_1_End <-- 0.149999973923 Volt
+10:13:49 MARK     MTRX$STS_LOCATION-125,225;-1e-009,3e-009%%1e00440043-10-6-2%%
+10:13:49 BREF     2014Mar01-093225--1_1.I(V)_mtrx
+10:14:02 PMOD     Spectroscopy_Raster_Time_1 <-- 0.005 Second
+10:14:02 PMOD     I_V_Oversampling_Factor <-- 1920 --
+10:14:02 PMOD     Aux1_V_Oversampling_Factor <-- 1920 --
+10:14:02 PMOD     Aux2_V_Oversampling_Factor <-- 1920 --
+10:14:08 MARK     MTRX$STS_LOCATION-201,163;2.04e-009,5.2e-010%%1e00440043-10-6-2%%
+10:14:09 BREF     2014Mar01-093225--2_1.I(V)_mtrx
+10:14:17 PMOD     Spectroscopy_Device_1_Repetitions <-- 2 Count
+10:14:18 PMOD     Spectroscopy_Device_1_Repetitions <-- 3 Count
+10:14:37 BREF     2014Mar01-093225--6_1.Z_mtrx
+10:14:37 BREF     2014Mar01-093225--6_1.I_mtrx
+10:14:40 PMOD     Spectroscopy_Enable_Device_1_Ramp_Reversal <-- True --
+10:14:43 PMOD     Spectroscopy_Device_1_Repetitions <-- 2 Count
+10:14:50 MARK     MTRX$STS_LOCATION-58,41;-3.68e-009,-4.36e-009%%1e00440043-11-7-0%%
+10:14:53 BREF     2014Mar01-093225--3_1.I(V)_mtrx
+10:14:56 BREF     2014Mar01-093225--3_2.I(V)_mtrx
+10:16:09 MARK     MTRX$STS_LOCATION-153,260;1.2e-010,4.4e-009%%1e00440043-11-7-0%%
+10:16:12 BREF     2014Mar01-093225--4_1.I(V)_mtrx
+10:16:16 BREF     2014Mar01-093225--4_2.I(V)_mtrx
+10:16:39 PMOD     Spectroscopy_Raster_Time_1 <-- 0.0005 Second
+10:16:39 PMOD     I_V_Oversampling_Factor <-- 128 --
+10:16:39 PMOD     Aux1_V_Oversampling_Factor <-- 128 --
+10:16:39 PMOD     Aux2_V_Oversampling_Factor <-- 128 --
+10:16:43 PMOD     Spectroscopy_Device_1_Repetitions <-- 20 Count
+10:17:00 MARK     MTRX$STS_LOCATION-120,184;-1.2e-009,1.36e-009%%1e00440043-11-7-2%%
+10:17:01 BREF     2014Mar01-093225--5_1.I(V)_mtrx
+10:17:01 BREF     2014Mar01-093225--5_2.I(V)_mtrx
+10:17:01 BREF     2014Mar01-093225--5_3.I(V)_mtrx
+10:17:02 BREF     2014Mar01-093225--5_4.I(V)_mtrx
+10:17:02 BREF     2014Mar01-093225--5_5.I(V)_mtrx
+10:17:02 BREF     2014Mar01-093225--5_6.I(V)_mtrx
+10:17:03 BREF     2014Mar01-093225--5_7.I(V)_mtrx
+10:17:03 BREF     2014Mar01-093225--5_8.I(V)_mtrx
+10:17:03 BREF     2014Mar01-093225--5_9.I(V)_mtrx
+10:17:04 BREF     2014Mar01-093225--5_10.I(V)_mtrx
+10:17:04 BREF     2014Mar01-093225--5_11.I(V)_mtrx
+10:17:04 BREF     2014Mar01-093225--5_12.I(V)_mtrx
+10:17:05 BREF     2014Mar01-093225--5_13.I(V)_mtrx
+10:17:05 BREF     2014Mar01-093225--5_14.I(V)_mtrx
+10:17:07 BREF     2014Mar01-093225--5_15.I(V)_mtrx
+10:17:07 BREF     2014Mar01-093225--5_16.I(V)_mtrx
+10:17:07 BREF     2014Mar01-093225--5_17.I(V)_mtrx
+10:17:07 BREF     2014Mar01-093225--5_18.I(V)_mtrx
+10:17:07 BREF     2014Mar01-093225--5_19.I(V)_mtrx
+10:17:07 BREF     2014Mar01-093225--5_20.I(V)_mtrx
+10:17:17 PMOD     Spectroscopy_Raster_Time_1 <-- 0.001 Second
+10:17:17 PMOD     I_V_Oversampling_Factor <-- 384 --
+10:17:17 PMOD     Aux2_V_Oversampling_Factor <-- 384 --
+10:17:17 PMOD     Aux1_V_Oversampling_Factor <-- 384 --
+10:17:19 PMOD     Spectroscopy_Device_1_Repetitions <-- 10 Count
+10:17:35 MARK     MTRX$STS_LOCATION-129,88;-8.4e-010,-2.48e-009%%1e00440043-11-7-2%%
+10:17:36 BREF     2014Mar01-093225--6_1.I(V)_mtrx
+10:17:36 BREF     2014Mar01-093225--6_2.I(V)_mtrx
+10:17:37 BREF     2014Mar01-093225--6_3.I(V)_mtrx
+10:17:37 BREF     2014Mar01-093225--6_4.I(V)_mtrx
+10:17:38 BREF     2014Mar01-093225--6_5.I(V)_mtrx
+10:17:39 BREF     2014Mar01-093225--6_6.I(V)_mtrx
+10:17:39 BREF     2014Mar01-093225--6_7.I(V)_mtrx
+10:17:40 BREF     2014Mar01-093225--6_8.I(V)_mtrx
+10:17:40 BREF     2014Mar01-093225--6_9.I(V)_mtrx
+10:17:41 BREF     2014Mar01-093225--6_10.I(V)_mtrx
+10:18:06 BREF     2014Mar01-093225--7_1.Z_mtrx
+10:18:07 BREF     2014Mar01-093225--7_1.I_mtrx
+10:18:21 PMOD     Regulator_Setpoint_1 <-- 1e-09 Ampere
+10:20:55 PMOD     XYScanner_Raster_Time <-- 0.0004 Second
+10:20:55 PMOD     XYScanner_Move_Raster_Time <-- 0.0004 Second
+10:21:04 BREF     2014Mar01-093225--7_2.Z_mtrx
+10:21:04 BREF     2014Mar01-093225--7_2.I_mtrx
+10:21:05 PMOD     Regulator_Loop_Gain_1_I <-- 4.0 Percent
+10:21:05 PMOD     Regulator_Alternate_Loop_Gain_1_I <-- 4.0 Percent
+10:21:38 PMOD     Regulator_Loop_Gain_1_I <-- 3.0 Percent
+10:21:38 PMOD     Regulator_Alternate_Loop_Gain_1_I <-- 3.0 Percent
+10:22:02 PMOD     Regulator_Loop_Gain_1_I <-- 3.5 Percent
+10:22:02 PMOD     Regulator_Alternate_Loop_Gain_1_I <-- 3.5 Percent
+10:23:29 BREF     2014Mar01-093225--7_3.I_mtrx
+10:23:32 BREF     2014Mar01-093225--7_3.Z_mtrx
+10:25:53 BREF     2014Mar01-093225--7_4.I_mtrx
+10:25:53 BREF     2014Mar01-093225--7_4.Z_mtrx
+10:28:17 BREF     2014Mar01-093225--7_5.Z_mtrx
+10:28:17 BREF     2014Mar01-093225--7_5.I_mtrx
+10:30:41 BREF     2014Mar01-093225--7_6.I_mtrx
+10:30:41 BREF     2014Mar01-093225--7_6.Z_mtrx
+10:30:46 PMOD     XYScanner_Width <-- 1.4e-08 Meter
+10:30:46 PMOD     XYScanner_Height <-- 1.4e-08 Meter
+10:31:12 PMOD     Regulator_Loop_Gain_1_I <-- 3.75 Percent
+10:31:12 PMOD     Regulator_Alternate_Loop_Gain_1_I <-- 3.75 Percent
+10:33:06 BREF     2014Mar01-093225--7_7.Z_mtrx
+10:33:06 BREF     2014Mar01-093225--7_7.I_mtrx
+10:35:30 BREF     2014Mar01-093225--7_8.I_mtrx
+10:35:30 BREF     2014Mar01-093225--7_8.Z_mtrx
+10:37:54 BREF     2014Mar01-093225--7_9.I_mtrx
+10:37:54 BREF     2014Mar01-093225--7_9.Z_mtrx
+10:40:19 BREF     2014Mar01-093225--7_10.I_mtrx
+10:40:19 BREF     2014Mar01-093225--7_10.Z_mtrx
+10:42:43 BREF     2014Mar01-093225--7_11.I_mtrx
+10:42:43 BREF     2014Mar01-093225--7_11.Z_mtrx
+10:45:07 BREF     2014Mar01-093225--7_12.I_mtrx
+10:45:07 BREF     2014Mar01-093225--7_12.Z_mtrx
+10:47:31 BREF     2014Mar01-093225--7_13.I_mtrx
+10:47:31 BREF     2014Mar01-093225--7_13.Z_mtrx
+10:49:56 BREF     2014Mar01-093225--7_14.Z_mtrx
+10:49:56 BREF     2014Mar01-093225--7_14.I_mtrx
+10:52:20 BREF     2014Mar01-093225--7_15.I_mtrx
+10:52:20 BREF     2014Mar01-093225--7_15.Z_mtrx
+10:54:44 BREF     2014Mar01-093225--7_16.Z_mtrx
+10:54:44 BREF     2014Mar01-093225--7_16.I_mtrx
+10:57:08 BREF     2014Mar01-093225--7_17.I_mtrx
+10:57:08 BREF     2014Mar01-093225--7_17.Z_mtrx
+10:59:33 BREF     2014Mar01-093225--7_18.I_mtrx
+10:59:33 BREF     2014Mar01-093225--7_18.Z_mtrx
+11:01:57 BREF     2014Mar01-093225--7_19.Z_mtrx
+11:01:57 BREF     2014Mar01-093225--7_19.I_mtrx
+11:04:21 BREF     2014Mar01-093225--7_20.Z_mtrx
+11:04:21 BREF     2014Mar01-093225--7_20.I_mtrx
+11:06:45 BREF     2014Mar01-093225--7_21.Z_mtrx
+11:06:45 BREF     2014Mar01-093225--7_21.I_mtrx
+11:09:10 BREF     2014Mar01-093225--7_22.I_mtrx
+11:09:10 BREF     2014Mar01-093225--7_22.Z_mtrx
+11:11:34 BREF     2014Mar01-093225--7_23.I_mtrx
+11:11:34 BREF     2014Mar01-093225--7_23.Z_mtrx
+11:13:58 BREF     2014Mar01-093225--7_24.I_mtrx
+11:13:58 BREF     2014Mar01-093225--7_24.Z_mtrx
+11:16:22 BREF     2014Mar01-093225--7_25.I_mtrx
+11:16:22 BREF     2014Mar01-093225--7_25.Z_mtrx
+11:18:47 BREF     2014Mar01-093225--7_26.Z_mtrx
+11:18:47 BREF     2014Mar01-093225--7_26.I_mtrx
+11:21:11 BREF     2014Mar01-093225--7_27.I_mtrx
+11:21:11 BREF     2014Mar01-093225--7_27.Z_mtrx
+11:23:35 BREF     2014Mar01-093225--7_28.I_mtrx
+11:23:35 BREF     2014Mar01-093225--7_28.Z_mtrx
+11:26:00 BREF     2014Mar01-093225--7_29.Z_mtrx
+11:26:00 BREF     2014Mar01-093225--7_29.I_mtrx
+11:28:24 BREF     2014Mar01-093225--7_30.Z_mtrx
+11:28:24 BREF     2014Mar01-093225--7_30.I_mtrx
+11:30:48 BREF     2014Mar01-093225--7_31.I_mtrx
+11:30:48 BREF     2014Mar01-093225--7_31.Z_mtrx
+11:33:12 BREF     2014Mar01-093225--7_32.I_mtrx
+11:33:12 BREF     2014Mar01-093225--7_32.Z_mtrx
+11:35:37 BREF     2014Mar01-093225--7_33.I_mtrx
+11:35:37 BREF     2014Mar01-093225--7_33.Z_mtrx
+11:38:01 BREF     2014Mar01-093225--7_34.I_mtrx
+11:38:01 BREF     2014Mar01-093225--7_34.Z_mtrx
+11:40:25 BREF     2014Mar01-093225--7_35.I_mtrx
+11:40:25 BREF     2014Mar01-093225--7_35.Z_mtrx
+11:42:49 BREF     2014Mar01-093225--7_36.Z_mtrx
+11:42:49 BREF     2014Mar01-093225--7_36.I_mtrx
+11:45:14 BREF     2014Mar01-093225--7_37.I_mtrx
+11:45:14 BREF     2014Mar01-093225--7_37.Z_mtrx
+11:47:38 BREF     2014Mar01-093225--7_38.I_mtrx
+11:47:40 BREF     2014Mar01-093225--7_38.Z_mtrx
+11:50:02 BREF     2014Mar01-093225--7_39.Z_mtrx
+11:50:02 BREF     2014Mar01-093225--7_39.I_mtrx
+11:52:26 BREF     2014Mar01-093225--7_40.I_mtrx
+11:52:26 BREF     2014Mar01-093225--7_40.Z_mtrx
+11:54:51 BREF     2014Mar01-093225--7_41.I_mtrx
+11:54:51 BREF     2014Mar01-093225--7_41.Z_mtrx
+11:57:15 BREF     2014Mar01-093225--7_42.I_mtrx
+11:57:15 BREF     2014Mar01-093225--7_42.Z_mtrx
+11:59:39 BREF     2014Mar01-093225--7_43.I_mtrx
+11:59:39 BREF     2014Mar01-093225--7_43.Z_mtrx
+12:02:03 BREF     2014Mar01-093225--7_44.I_mtrx
+12:02:03 BREF     2014Mar01-093225--7_44.Z_mtrx
+12:04:28 BREF     2014Mar01-093225--7_45.Z_mtrx
+12:04:28 BREF     2014Mar01-093225--7_45.I_mtrx
+12:06:52 BREF     2014Mar01-093225--7_46.Z_mtrx
+12:06:52 BREF     2014Mar01-093225--7_46.I_mtrx
+12:09:16 BREF     2014Mar01-093225--7_47.I_mtrx
+12:09:16 BREF     2014Mar01-093225--7_47.Z_mtrx
+12:11:40 BREF     2014Mar01-093225--7_48.I_mtrx
+12:11:41 BREF     2014Mar01-093225--7_48.Z_mtrx
+12:14:05 BREF     2014Mar01-093225--7_49.Z_mtrx
+12:14:05 BREF     2014Mar01-093225--7_49.I_mtrx
+12:16:29 BREF     2014Mar01-093225--7_50.I_mtrx
+12:16:32 BREF     2014Mar01-093225--7_50.Z_mtrx
+12:18:55 BREF     2014Mar01-093225--7_51.Z_mtrx
+12:19:06 BREF     2014Mar01-093225--7_51.I_mtrx
+12:21:18 BREF     2014Mar01-093225--7_52.I_mtrx
+12:21:18 BREF     2014Mar01-093225--7_52.Z_mtrx
+12:23:42 BREF     2014Mar01-093225--7_53.Z_mtrx
+12:23:43 BREF     2014Mar01-093225--7_53.I_mtrx
+12:26:06 BREF     2014Mar01-093225--7_54.I_mtrx
+12:26:06 BREF     2014Mar01-093225--7_54.Z_mtrx
+12:28:30 BREF     2014Mar01-093225--7_55.I_mtrx
+12:28:30 BREF     2014Mar01-093225--7_55.Z_mtrx
+12:30:55 BREF     2014Mar01-093225--7_56.Z_mtrx
+12:30:55 BREF     2014Mar01-093225--7_56.I_mtrx
+12:33:19 BREF     2014Mar01-093225--7_57.I_mtrx
+12:33:19 BREF     2014Mar01-093225--7_57.Z_mtrx
+12:35:43 BREF     2014Mar01-093225--7_58.Z_mtrx
+12:35:43 BREF     2014Mar01-093225--7_58.I_mtrx
+12:38:07 BREF     2014Mar01-093225--7_59.Z_mtrx
+12:38:07 BREF     2014Mar01-093225--7_59.I_mtrx
+12:40:32 BREF     2014Mar01-093225--7_60.I_mtrx
+12:40:32 BREF     2014Mar01-093225--7_60.Z_mtrx
+12:42:56 BREF     2014Mar01-093225--7_61.I_mtrx
+12:42:56 BREF     2014Mar01-093225--7_61.Z_mtrx
+12:45:20 BREF     2014Mar01-093225--7_62.I_mtrx
+12:45:20 BREF     2014Mar01-093225--7_62.Z_mtrx
+12:47:44 BREF     2014Mar01-093225--7_63.I_mtrx
+12:47:44 BREF     2014Mar01-093225--7_63.Z_mtrx
+12:50:09 BREF     2014Mar01-093225--7_64.I_mtrx
+12:50:09 BREF     2014Mar01-093225--7_64.Z_mtrx
+12:52:33 BREF     2014Mar01-093225--7_65.I_mtrx
+12:52:33 BREF     2014Mar01-093225--7_65.Z_mtrx
+12:54:57 BREF     2014Mar01-093225--7_66.I_mtrx
+12:54:57 BREF     2014Mar01-093225--7_66.Z_mtrx
+12:57:21 BREF     2014Mar01-093225--7_67.I_mtrx
+12:57:21 BREF     2014Mar01-093225--7_67.Z_mtrx
+12:59:46 BREF     2014Mar01-093225--7_68.Z_mtrx
+12:59:46 BREF     2014Mar01-093225--7_68.I_mtrx
+13:02:10 BREF     2014Mar01-093225--7_69.I_mtrx
+13:02:11 BREF     2014Mar01-093225--7_69.Z_mtrx
+13:04:34 BREF     2014Mar01-093225--7_70.I_mtrx
+13:04:34 BREF     2014Mar01-093225--7_70.Z_mtrx
+13:06:59 BREF     2014Mar01-093225--7_71.I_mtrx
+13:06:59 BREF     2014Mar01-093225--7_71.Z_mtrx
+13:09:23 BREF     2014Mar01-093225--7_72.I_mtrx
+13:09:23 BREF     2014Mar01-093225--7_72.Z_mtrx
+13:11:47 BREF     2014Mar01-093225--7_73.I_mtrx
+13:11:47 BREF     2014Mar01-093225--7_73.Z_mtrx
+13:14:11 BREF     2014Mar01-093225--7_74.I_mtrx
+13:14:11 BREF     2014Mar01-093225--7_74.Z_mtrx
+13:16:36 BREF     2014Mar01-093225--7_75.I_mtrx
+13:16:36 BREF     2014Mar01-093225--7_75.Z_mtrx
+13:19:00 BREF     2014Mar01-093225--7_76.I_mtrx
+13:19:00 BREF     2014Mar01-093225--7_76.Z_mtrx
+13:21:24 BREF     2014Mar01-093225--7_77.Z_mtrx
+13:21:24 BREF     2014Mar01-093225--7_77.I_mtrx
+13:23:48 BREF     2014Mar01-093225--7_78.Z_mtrx
+13:23:48 BREF     2014Mar01-093225--7_78.I_mtrx
+13:26:13 BREF     2014Mar01-093225--7_79.I_mtrx
+13:26:13 BREF     2014Mar01-093225--7_79.Z_mtrx
+13:28:37 BREF     2014Mar01-093225--7_80.I_mtrx
+13:28:37 BREF     2014Mar01-093225--7_80.Z_mtrx
+13:31:01 BREF     2014Mar01-093225--7_81.I_mtrx
+13:31:01 BREF     2014Mar01-093225--7_81.Z_mtrx
+13:33:25 BREF     2014Mar01-093225--7_82.Z_mtrx
+13:33:25 BREF     2014Mar01-093225--7_82.I_mtrx
+13:35:50 BREF     2014Mar01-093225--7_83.I_mtrx
+13:35:50 BREF     2014Mar01-093225--7_83.Z_mtrx
+13:38:14 BREF     2014Mar01-093225--7_84.Z_mtrx
+13:38:14 BREF     2014Mar01-093225--7_84.I_mtrx
+13:40:38 BREF     2014Mar01-093225--7_85.Z_mtrx
+13:40:38 BREF     2014Mar01-093225--7_85.I_mtrx
+13:43:02 BREF     2014Mar01-093225--7_86.I_mtrx
+13:43:02 BREF     2014Mar01-093225--7_86.Z_mtrx
+13:45:27 BREF     2014Mar01-093225--7_87.I_mtrx
+13:45:27 BREF     2014Mar01-093225--7_87.Z_mtrx
+13:47:51 BREF     2014Mar01-093225--7_88.I_mtrx
+13:47:51 BREF     2014Mar01-093225--7_88.Z_mtrx
+13:50:15 BREF     2014Mar01-093225--7_89.I_mtrx
+13:50:15 BREF     2014Mar01-093225--7_89.Z_mtrx
+13:52:39 BREF     2014Mar01-093225--7_90.I_mtrx
+13:52:40 BREF     2014Mar01-093225--7_90.Z_mtrx
+13:55:04 BREF     2014Mar01-093225--7_91.Z_mtrx
+13:55:04 BREF     2014Mar01-093225--7_91.I_mtrx
+13:57:30 BREF     2014Mar01-093225--7_92.I_mtrx
+13:57:53 BREF     2014Mar01-093225--7_92.Z_mtrx
+13:59:52 BREF     2014Mar01-093225--7_93.Z_mtrx
+13:59:52 BREF     2014Mar01-093225--7_93.I_mtrx
+14:02:20 BREF     2014Mar01-093225--7_94.I_mtrx
+14:02:50 BREF     2014Mar01-093225--7_94.Z_mtrx
+14:04:41 BREF     2014Mar01-093225--7_95.I_mtrx
+14:05:13 BREF     2014Mar01-093225--7_95.Z_mtrx
+14:07:14 BREF     2014Mar01-093225--7_96.Z_mtrx
+14:07:14 BREF     2014Mar01-093225--7_96.I_mtrx
+14:09:29 BREF     2014Mar01-093225--7_97.I_mtrx
+14:09:29 BREF     2014Mar01-093225--7_97.Z_mtrx
+14:11:54 BREF     2014Mar01-093225--7_98.Z_mtrx
+14:12:15 BREF     2014Mar01-093225--7_98.I_mtrx
+14:14:18 BREF     2014Mar01-093225--7_99.Z_mtrx
+14:14:19 BREF     2014Mar01-093225--7_99.I_mtrx
+14:16:42 BREF     2014Mar01-093225--7_100.Z_mtrx
+14:16:42 BREF     2014Mar01-093225--7_100.I_mtrx
+14:19:06 BREF     2014Mar01-093225--7_101.I_mtrx
+14:19:06 BREF     2014Mar01-093225--7_101.Z_mtrx
+14:21:31 BREF     2014Mar01-093225--7_102.I_mtrx
+14:21:31 BREF     2014Mar01-093225--7_102.Z_mtrx
+14:23:55 BREF     2014Mar01-093225--7_103.Z_mtrx
+14:23:55 BREF     2014Mar01-093225--7_103.I_mtrx
+14:26:19 BREF     2014Mar01-093225--7_104.I_mtrx
+14:26:19 BREF     2014Mar01-093225--7_104.Z_mtrx
+14:28:43 BREF     2014Mar01-093225--7_105.I_mtrx
+14:28:43 BREF     2014Mar01-093225--7_105.Z_mtrx
+14:31:08 BREF     2014Mar01-093225--7_106.I_mtrx
+14:31:08 BREF     2014Mar01-093225--7_106.Z_mtrx
+14:33:32 BREF     2014Mar01-093225--7_107.Z_mtrx
+14:33:32 BREF     2014Mar01-093225--7_107.I_mtrx
+14:35:56 BREF     2014Mar01-093225--7_108.I_mtrx
+14:35:56 BREF     2014Mar01-093225--7_108.Z_mtrx
+14:38:20 BREF     2014Mar01-093225--7_109.I_mtrx
+14:38:21 BREF     2014Mar01-093225--7_109.Z_mtrx
+14:40:45 BREF     2014Mar01-093225--7_110.I_mtrx
+14:40:45 BREF     2014Mar01-093225--7_110.Z_mtrx
+14:43:09 BREF     2014Mar01-093225--7_111.I_mtrx
+14:43:09 BREF     2014Mar01-093225--7_111.Z_mtrx
+14:45:33 BREF     2014Mar01-093225--7_112.I_mtrx
+14:45:33 BREF     2014Mar01-093225--7_112.Z_mtrx
+14:47:58 BREF     2014Mar01-093225--7_113.I_mtrx
+14:47:58 BREF     2014Mar01-093225--7_113.Z_mtrx
+14:50:22 BREF     2014Mar01-093225--7_114.I_mtrx
+14:50:22 BREF     2014Mar01-093225--7_114.Z_mtrx
+14:52:46 BREF     2014Mar01-093225--7_115.Z_mtrx
+14:52:47 BREF     2014Mar01-093225--7_115.I_mtrx
+14:55:10 BREF     2014Mar01-093225--7_116.Z_mtrx
+14:55:10 BREF     2014Mar01-093225--7_116.I_mtrx
+14:57:35 BREF     2014Mar01-093225--7_117.Z_mtrx
+14:57:35 BREF     2014Mar01-093225--7_117.I_mtrx
+14:59:59 BREF     2014Mar01-093225--7_118.I_mtrx
+14:59:59 BREF     2014Mar01-093225--7_118.Z_mtrx
+15:02:23 BREF     2014Mar01-093225--7_119.I_mtrx
+15:02:23 BREF     2014Mar01-093225--7_119.Z_mtrx
+15:04:47 BREF     2014Mar01-093225--7_120.I_mtrx
+15:04:47 BREF     2014Mar01-093225--7_120.Z_mtrx
+15:07:12 BREF     2014Mar01-093225--7_121.I_mtrx
+15:07:12 BREF     2014Mar01-093225--7_121.Z_mtrx
+15:09:36 BREF     2014Mar01-093225--7_122.I_mtrx
+15:09:36 BREF     2014Mar01-093225--7_122.Z_mtrx
+15:12:00 BREF     2014Mar01-093225--7_123.Z_mtrx
+15:12:00 BREF     2014Mar01-093225--7_123.I_mtrx
+15:14:24 BREF     2014Mar01-093225--7_124.I_mtrx
+15:14:24 BREF     2014Mar01-093225--7_124.Z_mtrx
+15:16:49 BREF     2014Mar01-093225--7_125.I_mtrx
+15:16:49 BREF     2014Mar01-093225--7_125.Z_mtrx
+15:19:13 BREF     2014Mar01-093225--7_126.I_mtrx
+15:19:13 BREF     2014Mar01-093225--7_126.Z_mtrx
+15:21:37 BREF     2014Mar01-093225--7_127.Z_mtrx
+15:21:37 BREF     2014Mar01-093225--7_127.I_mtrx
+15:24:01 BREF     2014Mar01-093225--7_128.Z_mtrx
+15:24:02 BREF     2014Mar01-093225--7_128.I_mtrx
+15:26:26 BREF     2014Mar01-093225--7_129.I_mtrx
+15:26:26 BREF     2014Mar01-093225--7_129.Z_mtrx
+15:28:50 BREF     2014Mar01-093225--7_130.I_mtrx
+15:28:50 BREF     2014Mar01-093225--7_130.Z_mtrx
+15:31:14 BREF     2014Mar01-093225--7_131.I_mtrx
+15:31:14 BREF     2014Mar01-093225--7_131.Z_mtrx
+15:33:38 BREF     2014Mar01-093225--7_132.I_mtrx
+15:33:39 BREF     2014Mar01-093225--7_132.Z_mtrx
+15:36:03 BREF     2014Mar01-093225--7_133.Z_mtrx
+15:36:03 BREF     2014Mar01-093225--7_133.I_mtrx
+15:38:27 BREF     2014Mar01-093225--7_134.I_mtrx
+15:38:28 BREF     2014Mar01-093225--7_134.Z_mtrx
+15:40:51 BREF     2014Mar01-093225--7_135.I_mtrx
+15:40:51 BREF     2014Mar01-093225--7_135.Z_mtrx
+15:43:16 BREF     2014Mar01-093225--7_136.Z_mtrx
+15:43:16 BREF     2014Mar01-093225--7_136.I_mtrx
+15:45:40 BREF     2014Mar01-093225--7_137.I_mtrx
+15:45:40 BREF     2014Mar01-093225--7_137.Z_mtrx
+15:48:04 BREF     2014Mar01-093225--7_138.I_mtrx
+15:48:04 BREF     2014Mar01-093225--7_138.Z_mtrx
+15:50:28 BREF     2014Mar01-093225--7_139.Z_mtrx
+15:50:28 BREF     2014Mar01-093225--7_139.I_mtrx
+15:52:53 BREF     2014Mar01-093225--7_140.Z_mtrx
+15:52:53 BREF     2014Mar01-093225--7_140.I_mtrx
+15:55:17 BREF     2014Mar01-093225--7_141.Z_mtrx
+15:55:17 BREF     2014Mar01-093225--7_141.I_mtrx
+15:57:41 BREF     2014Mar01-093225--7_142.I_mtrx
+15:57:41 BREF     2014Mar01-093225--7_142.Z_mtrx
+16:00:05 BREF     2014Mar01-093225--7_143.I_mtrx
+16:00:05 BREF     2014Mar01-093225--7_143.Z_mtrx
+16:02:30 BREF     2014Mar01-093225--7_144.I_mtrx
+16:02:30 BREF     2014Mar01-093225--7_144.Z_mtrx
+16:04:54 BREF     2014Mar01-093225--7_145.Z_mtrx
+16:04:54 BREF     2014Mar01-093225--7_145.I_mtrx
+16:07:18 BREF     2014Mar01-093225--7_146.Z_mtrx
+16:07:18 BREF     2014Mar01-093225--7_146.I_mtrx
+16:09:42 BREF     2014Mar01-093225--7_147.Z_mtrx
+16:09:43 BREF     2014Mar01-093225--7_147.I_mtrx
+16:12:07 BREF     2014Mar01-093225--7_148.I_mtrx
+16:12:07 BREF     2014Mar01-093225--7_148.Z_mtrx
+16:14:31 BREF     2014Mar01-093225--7_149.I_mtrx
+16:14:31 BREF     2014Mar01-093225--7_149.Z_mtrx
+16:16:55 BREF     2014Mar01-093225--7_150.I_mtrx
+16:16:55 BREF     2014Mar01-093225--7_150.Z_mtrx
+16:19:19 BREF     2014Mar01-093225--7_151.I_mtrx
+16:19:20 BREF     2014Mar01-093225--7_151.Z_mtrx
+16:21:44 BREF     2014Mar01-093225--7_152.Z_mtrx
+16:21:44 BREF     2014Mar01-093225--7_152.I_mtrx
+16:24:08 BREF     2014Mar01-093225--7_153.I_mtrx
+16:24:08 BREF     2014Mar01-093225--7_153.Z_mtrx
+16:26:32 BREF     2014Mar01-093225--7_154.I_mtrx
+16:26:32 BREF     2014Mar01-093225--7_154.Z_mtrx
+16:28:56 BREF     2014Mar01-093225--7_155.I_mtrx
+16:28:57 BREF     2014Mar01-093225--7_155.Z_mtrx
+16:31:21 BREF     2014Mar01-093225--7_156.Z_mtrx
+16:31:21 BREF     2014Mar01-093225--7_156.I_mtrx
+16:33:45 BREF     2014Mar01-093225--7_157.I_mtrx
+16:33:45 BREF     2014Mar01-093225--7_157.Z_mtrx
+16:36:09 BREF     2014Mar01-093225--7_158.I_mtrx
+16:36:09 BREF     2014Mar01-093225--7_158.Z_mtrx
+16:38:34 BREF     2014Mar01-093225--7_159.Z_mtrx
+16:38:34 BREF     2014Mar01-093225--7_159.I_mtrx
+16:40:58 BREF     2014Mar01-093225--7_160.I_mtrx
+16:40:58 BREF     2014Mar01-093225--7_160.Z_mtrx
+16:43:22 BREF     2014Mar01-093225--7_161.Z_mtrx
+16:43:24 BREF     2014Mar01-093225--7_161.I_mtrx
+16:45:46 BREF     2014Mar01-093225--7_162.I_mtrx
+16:45:46 BREF     2014Mar01-093225--7_162.Z_mtrx
+16:48:11 BREF     2014Mar01-093225--7_163.I_mtrx
+16:48:11 BREF     2014Mar01-093225--7_163.Z_mtrx
+16:50:35 BREF     2014Mar01-093225--7_164.Z_mtrx
+16:50:35 BREF     2014Mar01-093225--7_164.I_mtrx
+16:52:59 BREF     2014Mar01-093225--7_165.Z_mtrx
+16:52:59 BREF     2014Mar01-093225--7_165.I_mtrx
+16:55:23 BREF     2014Mar01-093225--7_166.I_mtrx
+16:55:23 BREF     2014Mar01-093225--7_166.Z_mtrx
+16:57:48 BREF     2014Mar01-093225--7_167.I_mtrx
+16:57:48 BREF     2014Mar01-093225--7_167.Z_mtrx
+17:00:12 BREF     2014Mar01-093225--7_168.I_mtrx
+17:00:12 BREF     2014Mar01-093225--7_168.Z_mtrx
+17:02:36 BREF     2014Mar01-093225--7_169.I_mtrx
+17:02:36 BREF     2014Mar01-093225--7_169.Z_mtrx
+17:05:00 BREF     2014Mar01-093225--7_170.I_mtrx
+17:05:00 BREF     2014Mar01-093225--7_170.Z_mtrx
+17:07:25 BREF     2014Mar01-093225--7_171.I_mtrx
+17:07:25 BREF     2014Mar01-093225--7_171.Z_mtrx
+17:09:49 BREF     2014Mar01-093225--7_172.I_mtrx
+17:09:49 BREF     2014Mar01-093225--7_172.Z_mtrx
+17:12:13 BREF     2014Mar01-093225--7_173.I_mtrx
+17:12:13 BREF     2014Mar01-093225--7_173.Z_mtrx
+17:14:37 BREF     2014Mar01-093225--7_174.I_mtrx
+17:14:38 BREF     2014Mar01-093225--7_174.Z_mtrx
+17:17:02 BREF     2014Mar01-093225--7_175.I_mtrx
+17:17:02 BREF     2014Mar01-093225--7_175.Z_mtrx
+17:19:26 BREF     2014Mar01-093225--7_176.Z_mtrx
+17:19:26 BREF     2014Mar01-093225--7_176.I_mtrx
+17:21:50 BREF     2014Mar01-093225--7_177.Z_mtrx
+17:21:50 BREF     2014Mar01-093225--7_177.I_mtrx
+17:24:15 BREF     2014Mar01-093225--7_178.I_mtrx
+17:24:15 BREF     2014Mar01-093225--7_178.Z_mtrx
+17:26:39 BREF     2014Mar01-093225--7_179.I_mtrx
+17:26:39 BREF     2014Mar01-093225--7_179.Z_mtrx
+17:29:03 BREF     2014Mar01-093225--7_180.I_mtrx
+17:29:03 BREF     2014Mar01-093225--7_180.Z_mtrx
+17:31:27 BREF     2014Mar01-093225--7_181.Z_mtrx
+17:31:27 BREF     2014Mar01-093225--7_181.I_mtrx
+17:33:52 BREF     2014Mar01-093225--7_182.I_mtrx
+17:33:52 BREF     2014Mar01-093225--7_182.Z_mtrx
+17:36:16 BREF     2014Mar01-093225--7_183.I_mtrx
+17:36:16 BREF     2014Mar01-093225--7_183.Z_mtrx
+17:38:40 BREF     2014Mar01-093225--7_184.I_mtrx
+17:38:40 BREF     2014Mar01-093225--7_184.Z_mtrx
+17:41:04 BREF     2014Mar01-093225--7_185.Z_mtrx
+17:41:04 BREF     2014Mar01-093225--7_185.I_mtrx
+17:43:29 BREF     2014Mar01-093225--7_186.Z_mtrx
+17:43:29 BREF     2014Mar01-093225--7_186.I_mtrx
+17:45:53 BREF     2014Mar01-093225--7_187.Z_mtrx
+17:45:53 BREF     2014Mar01-093225--7_187.I_mtrx
+17:48:17 BREF     2014Mar01-093225--7_188.I_mtrx
+17:48:17 BREF     2014Mar01-093225--7_188.Z_mtrx
+17:50:41 BREF     2014Mar01-093225--7_189.Z_mtrx
+17:50:41 BREF     2014Mar01-093225--7_189.I_mtrx
+17:53:06 BREF     2014Mar01-093225--7_190.I_mtrx
+17:53:06 BREF     2014Mar01-093225--7_190.Z_mtrx
+17:55:30 BREF     2014Mar01-093225--7_191.I_mtrx
+17:55:30 BREF     2014Mar01-093225--7_191.Z_mtrx
+17:57:54 BREF     2014Mar01-093225--7_192.Z_mtrx
+17:57:54 BREF     2014Mar01-093225--7_192.I_mtrx
+18:00:18 BREF     2014Mar01-093225--7_193.I_mtrx
+18:00:19 BREF     2014Mar01-093225--7_193.Z_mtrx
+18:02:43 BREF     2014Mar01-093225--7_194.I_mtrx
+18:02:43 BREF     2014Mar01-093225--7_194.Z_mtrx
+18:05:07 BREF     2014Mar01-093225--7_195.Z_mtrx
+18:05:07 BREF     2014Mar01-093225--7_195.I_mtrx
+18:07:31 BREF     2014Mar01-093225--7_196.I_mtrx
+18:07:31 BREF     2014Mar01-093225--7_196.Z_mtrx
+18:09:56 BREF     2014Mar01-093225--7_197.I_mtrx
+18:09:56 BREF     2014Mar01-093225--7_197.Z_mtrx
+18:12:20 BREF     2014Mar01-093225--7_198.Z_mtrx
+18:12:20 BREF     2014Mar01-093225--7_198.I_mtrx
+18:14:44 BREF     2014Mar01-093225--7_199.I_mtrx
+18:14:44 BREF     2014Mar01-093225--7_199.Z_mtrx
+18:17:08 BREF     2014Mar01-093225--7_200.Z_mtrx
+18:17:08 BREF     2014Mar01-093225--7_200.I_mtrx
+18:19:33 BREF     2014Mar01-093225--7_201.Z_mtrx
+18:19:33 BREF     2014Mar01-093225--7_201.I_mtrx
+18:21:57 BREF     2014Mar01-093225--7_202.Z_mtrx
+18:21:57 BREF     2014Mar01-093225--7_202.I_mtrx
+18:24:21 BREF     2014Mar01-093225--7_203.I_mtrx
+18:24:21 BREF     2014Mar01-093225--7_203.Z_mtrx
+18:26:45 BREF     2014Mar01-093225--7_204.Z_mtrx
+18:26:45 BREF     2014Mar01-093225--7_204.I_mtrx
+18:29:10 BREF     2014Mar01-093225--7_205.I_mtrx
+18:29:10 BREF     2014Mar01-093225--7_205.Z_mtrx
+18:31:34 BREF     2014Mar01-093225--7_206.I_mtrx
+18:31:34 BREF     2014Mar01-093225--7_206.Z_mtrx
+18:33:58 BREF     2014Mar01-093225--7_207.Z_mtrx
+18:33:58 BREF     2014Mar01-093225--7_207.I_mtrx
+18:36:22 BREF     2014Mar01-093225--7_208.I_mtrx
+18:36:22 BREF     2014Mar01-093225--7_208.Z_mtrx
+18:38:47 BREF     2014Mar01-093225--7_209.I_mtrx
+18:38:47 BREF     2014Mar01-093225--7_209.Z_mtrx
+18:41:11 BREF     2014Mar01-093225--7_210.I_mtrx
+18:41:11 BREF     2014Mar01-093225--7_210.Z_mtrx
+18:43:35 BREF     2014Mar01-093225--7_211.I_mtrx
+18:43:35 BREF     2014Mar01-093225--7_211.Z_mtrx
+18:45:59 BREF     2014Mar01-093225--7_212.I_mtrx
+18:46:00 BREF     2014Mar01-093225--7_212.Z_mtrx
+18:48:24 BREF     2014Mar01-093225--7_213.Z_mtrx
+18:48:24 BREF     2014Mar01-093225--7_213.I_mtrx
+18:50:48 BREF     2014Mar01-093225--7_214.Z_mtrx
+18:50:48 BREF     2014Mar01-093225--7_214.I_mtrx
+18:53:12 BREF     2014Mar01-093225--7_215.I_mtrx
+18:53:12 BREF     2014Mar01-093225--7_215.Z_mtrx
+18:55:37 BREF     2014Mar01-093225--7_216.I_mtrx
+18:55:37 BREF     2014Mar01-093225--7_216.Z_mtrx
+18:58:01 BREF     2014Mar01-093225--7_217.I_mtrx
+18:58:01 BREF     2014Mar01-093225--7_217.Z_mtrx
+19:00:25 BREF     2014Mar01-093225--7_218.I_mtrx
+19:00:25 BREF     2014Mar01-093225--7_218.Z_mtrx
+19:02:49 BREF     2014Mar01-093225--7_219.I_mtrx
+19:02:49 BREF     2014Mar01-093225--7_219.Z_mtrx
+19:05:14 BREF     2014Mar01-093225--7_220.I_mtrx
+19:05:14 BREF     2014Mar01-093225--7_220.Z_mtrx
+19:07:38 BREF     2014Mar01-093225--7_221.I_mtrx
+19:07:38 BREF     2014Mar01-093225--7_221.Z_mtrx
+19:10:02 BREF     2014Mar01-093225--7_222.Z_mtrx
+19:10:02 BREF     2014Mar01-093225--7_222.I_mtrx
+19:12:26 BREF     2014Mar01-093225--7_223.Z_mtrx
+19:12:26 BREF     2014Mar01-093225--7_223.I_mtrx
+19:14:51 BREF     2014Mar01-093225--7_224.I_mtrx
+19:14:51 BREF     2014Mar01-093225--7_224.Z_mtrx
+19:17:15 BREF     2014Mar01-093225--7_225.Z_mtrx
+19:17:15 BREF     2014Mar01-093225--7_225.I_mtrx
+19:19:39 BREF     2014Mar01-093225--7_226.I_mtrx
+19:19:39 BREF     2014Mar01-093225--7_226.Z_mtrx
+19:22:03 BREF     2014Mar01-093225--7_227.I_mtrx
+19:22:03 BREF     2014Mar01-093225--7_227.Z_mtrx
+19:24:28 BREF     2014Mar01-093225--7_228.I_mtrx
+19:24:28 BREF     2014Mar01-093225--7_228.Z_mtrx
+19:26:52 BREF     2014Mar01-093225--7_229.I_mtrx
+19:26:52 BREF     2014Mar01-093225--7_229.Z_mtrx
+19:29:16 BREF     2014Mar01-093225--7_230.I_mtrx
+19:29:16 BREF     2014Mar01-093225--7_230.Z_mtrx
+19:31:40 BREF     2014Mar01-093225--7_231.I_mtrx
+19:31:40 BREF     2014Mar01-093225--7_231.Z_mtrx
+19:34:05 BREF     2014Mar01-093225--7_232.I_mtrx
+19:34:05 BREF     2014Mar01-093225--7_232.Z_mtrx
+19:36:29 BREF     2014Mar01-093225--7_233.I_mtrx
+19:36:29 BREF     2014Mar01-093225--7_233.Z_mtrx
+19:38:53 BREF     2014Mar01-093225--7_234.I_mtrx
+19:38:53 BREF     2014Mar01-093225--7_234.Z_mtrx
+19:41:17 BREF     2014Mar01-093225--7_235.I_mtrx
+19:41:18 BREF     2014Mar01-093225--7_235.Z_mtrx
+19:43:42 BREF     2014Mar01-093225--7_236.I_mtrx
+19:43:42 BREF     2014Mar01-093225--7_236.Z_mtrx
+19:46:06 BREF     2014Mar01-093225--7_237.I_mtrx
+19:46:06 BREF     2014Mar01-093225--7_237.Z_mtrx
+19:48:30 BREF     2014Mar01-093225--7_238.I_mtrx
+19:48:30 BREF     2014Mar01-093225--7_238.Z_mtrx
+19:50:55 BREF     2014Mar01-093225--7_239.I_mtrx
+19:50:55 BREF     2014Mar01-093225--7_239.Z_mtrx
+19:53:19 BREF     2014Mar01-093225--7_240.Z_mtrx
+19:53:19 BREF     2014Mar01-093225--7_240.I_mtrx
+19:55:43 BREF     2014Mar01-093225--7_241.Z_mtrx
+19:55:43 BREF     2014Mar01-093225--7_241.I_mtrx
+19:58:07 BREF     2014Mar01-093225--7_242.I_mtrx
+19:58:07 BREF     2014Mar01-093225--7_242.Z_mtrx
+20:00:32 BREF     2014Mar01-093225--7_243.I_mtrx
+20:00:32 BREF     2014Mar01-093225--7_243.Z_mtrx
+20:02:56 BREF     2014Mar01-093225--7_244.I_mtrx
+20:02:56 BREF     2014Mar01-093225--7_244.Z_mtrx
+20:05:20 BREF     2014Mar01-093225--7_245.I_mtrx
+20:05:22 BREF     2014Mar01-093225--7_245.Z_mtrx
+20:07:44 BREF     2014Mar01-093225--7_246.I_mtrx
+20:07:44 BREF     2014Mar01-093225--7_246.Z_mtrx
+20:10:09 BREF     2014Mar01-093225--7_247.I_mtrx
+20:10:09 BREF     2014Mar01-093225--7_247.Z_mtrx
+20:12:33 BREF     2014Mar01-093225--7_248.I_mtrx
+20:12:33 BREF     2014Mar01-093225--7_248.Z_mtrx
+20:14:57 BREF     2014Mar01-093225--7_249.I_mtrx
+20:14:57 BREF     2014Mar01-093225--7_249.Z_mtrx
+20:17:21 BREF     2014Mar01-093225--7_250.I_mtrx
+20:17:21 BREF     2014Mar01-093225--7_250.Z_mtrx
+20:19:46 BREF     2014Mar01-093225--7_251.Z_mtrx
+20:19:46 BREF     2014Mar01-093225--7_251.I_mtrx
+20:22:10 BREF     2014Mar01-093225--7_252.I_mtrx
+20:22:10 BREF     2014Mar01-093225--7_252.Z_mtrx
+20:24:34 BREF     2014Mar01-093225--7_253.Z_mtrx
+20:24:34 BREF     2014Mar01-093225--7_253.I_mtrx
+20:26:58 BREF     2014Mar01-093225--7_254.Z_mtrx
+20:26:59 BREF     2014Mar01-093225--7_254.I_mtrx
+20:29:23 BREF     2014Mar01-093225--7_255.I_mtrx
+20:29:23 BREF     2014Mar01-093225--7_255.Z_mtrx
+20:31:47 BREF     2014Mar01-093225--7_256.I_mtrx
+20:31:47 BREF     2014Mar01-093225--7_256.Z_mtrx
+20:31:51 PMOD     XYScanner_Width <-- 3e-08 Meter
+20:31:51 PMOD     XYScanner_Height <-- 3e-08 Meter
+20:31:55 PMOD     XYScanner_X_Offset <-- 0.0 Meter
+20:31:56 PMOD     XYScanner_Y_Offset <-- 0.0 Meter
+20:31:59 PMOD     Regulator_Setpoint_1 <-- 3e-10 Ampere
+20:32:03 BREF     2014Mar01-093225--7_257.Z_mtrx
+20:32:03 BREF     2014Mar01-093225--7_257.I_mtrx

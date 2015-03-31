@@ -167,8 +167,8 @@ def add_slide(prs, *scans):
         p.font.size = Pt(10)
         try:
             s = '{:5.3f} V\n{:5.3f} nA'.format(
-                scn.props['GapVoltageControl_Voltage'],
-                1e9 * scn.props['Regulator_Setpoint_1']
+                scn.props['GapVoltageControl_Voltage'].value,
+                1e9 * scn.props['Regulator_Setpoint_1'].value
             )
             p = tf.add_paragraph()
             p.text = s
@@ -178,9 +178,9 @@ def add_slide(prs, *scans):
         # END try
         try:
             s = u'x= {:.1f} nm, y= {:.1f} nm, θ= {:.1f}°'.format(
-                1e9 * scn.props['XYScanner_X_Offset'],
-                1e9 * scn.props['XYScanner_Y_Offset'],
-                scn.props['XYScanner_Angle']
+                1e9 * scn.props['XYScanner_X_Offset'].value,
+                1e9 * scn.props['XYScanner_Y_Offset'].value,
+                scn.props['XYScanner_Angle'].value
             )
             p = tf.add_paragraph()
             p.text = s
@@ -190,10 +190,10 @@ def add_slide(prs, *scans):
         # END try
         try:
             s = u'{:.1f} × {:.1f} nm²\n{} × {} px²'.format(
-                1e9 * scn.props['XYScanner_Width'],
-                1e9 * scn.props['XYScanner_Height'],
-                scn.props['XYScanner_Points'],
-                scn.props['XYScanner_Lines']
+                1e9 * scn.props['XYScanner_Width'].value,
+                1e9 * scn.props['XYScanner_Height'].value,
+                scn.props['XYScanner_Points'].value,
+                scn.props['XYScanner_Lines'].value
             )
             p = tf.add_paragraph()
             p.text = s
@@ -230,7 +230,7 @@ def add_slide(prs, *scans):
                 circ.text = (
                     '{index}-{rep} {channel}\n'.format(**crv.props) #+
                     #'{:+0.3f} -> {:+0.3f} V\n'.format(crv.X[0], crv.X[-1]) +
-                    #'I= {:0.3f} nA\n'.format(crv.props['Regulator_Setpoint_1'])
+                    #'I= {:0.3f} nA\n'.format(crv.props['Regulator_Setpoint_1'].value)
                 )
                 circ.text_frame.word_wrap = False
                 circ.text_frame.paragraphs[0].font.size = Pt(1)

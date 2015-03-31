@@ -20,12 +20,11 @@ import re
 import random
 import time
 import multiprocessing as mp
-
-import pdb
+from pprint import pprint
 
 # 3rd-party modules
 #sys.path.append('C:/Users/csykes/alex/Dropbox/ampPy/spm_dev/')
-from pyMTRX.experiment import Experiment
+import pyMTRX
 
 #==============================================================================
 def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
@@ -35,14 +34,12 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
         cwd += '/'
     files = os.listdir(cwd)
     
-    # Get list of files...
-    
-    print 'looking for experiment files in "{}"'.format(cwd)
+    if r: print 'recursive search enabled'
+    print 'looking for STS files in "{}"'.format(cwd)
     # find one experiment file and then move on
     experiment_files = find_files(cwd, fext='mtrx', r=r)
     print 'Found the following .mtrx files'
-    for fp in experiment_files:
-        print '    ' + os.path.basename(fp)
+    for fp in experiment_files: print 4*' ' + os.path.basename(fp)
     
     N_opened = []
     try:
@@ -53,14 +50,14 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
     if processes < 1 or debug: processes = 1
     if processes == 1:
         for fp in experiment_files:
-            N_opened.append( create_experiment_log(fp, debug=debug) )
+            N_opened.append( subroutine_1(fp, debug=debug) )
         # END for
     else:
         # Create worker pool and start all jobs
         worker_pool = mp.Pool(processes=processes)
         for fp in experiment_files:
             N_opened.append(
-                worker_pool.apply_async( create_experiment_log,
+                worker_pool.apply_async( subroutine_1,
                                          args=(fp,debug)
                                        )
             )
@@ -94,58 +91,51 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
 # END main
 
 #==============================================================================
-def make_spectra_entries(scn, ex, no_warn=True, debug=False):
-    # Column titles
-    # time, scan,,,, spec index, spec channel, start voltage, end voltage,
-    # scan voltage (V), current setpoint (pA), loop gain (%), T_raster (ms) 
-    # points, file, comments
-    out = []
-    if debug and len(scn.spectra) > 0:
-        print (
-            '{0:>3d} spectra in '.format(len(scn.spectra)) +
-            '{index}_{rep}_{direction}'.format(**scn.props)
-        )
-    for crv in scn.spectra:
-        ls = []
-        # time (write time in DAYS since 1900Jan1, this is MS Excel friendly)
-        ls.append( str(crv.props['time']/86400.0 + 25569 - 4.0/24) )
-        # experiment sample
-        ls.append('{0.sample},{0.data_set}'.format(ex))
-        # parent scan index (scan, repetition, direction) and channel
-        ls.append(
-            '{index:03d},{rep:04d},{direction},{channel}'.format(
-                **scn.props
+def subroutine_1(ex_fp, debug=False):
+    '''This function will receive the path to a .mtrx file and should attempt
+    to convert every STS spectra in that experiment to a .txt (utf-8) file
+    '''
+    
+    n_opened = 0
+    cwd = os.path.dirname(ex_fp)
+    ex = pyMTRX.Experiment(ex_fp, debug=debug)
+    for fn in os.listdir(cwd):
+        if fn not in ex.datafile_st: continue
+        if not re.search(r'\.[^.]+?\(\w+\)[^.]+$', fn): continue
+        if re.search(r'\(t\)', fn): continue
+        if debug: print '\n{}'.format(fn)
+        for crv in ex.import_spectra(os.path.join(cwd, fn)):
+            parent_fn = crv.props['parent']
+            if debug: print '  parent= {}'.format(parent_fn)
+            try:
+                mrk = ex.stslinks[fn]
+                index, rep, chnl = re.search(
+                    r'(\d+)_(\d+)\.(\w+)_mtrx$', parent_fn
+                ).groups()
+                parent_str = ''.join([
+                    '{0}', '[{1:03d}-{2:02d}-{3.dir:02b}]_',
+                ])
+                parent_str = parent_str.format(
+                    chnl, int(index), int(rep), mrk
+                )
+            except (AttributeError, KeyError) as err:
+                parent_str = ''
+            # END try
+            tstr = time.strftime(
+                '%Y%b%d-%H%M%S_', time.localtime(crv.props['time'])
             )
-        )
-        # spec index (scan, repetition, direction) and channel
-        ls.append(
-            '{index:03d},{rep:04d},{direction},{channel}'.format(**crv.props)
-        )
-        # spec start, end
-        ls.append('{:0.3f},{:0.3f}'.format(crv.X[0], crv.X[-1]))
-        # scan bias
-        ls.append('{}'.format(crv.props['GapVoltageControl_Voltage']))
-        # scan current setpoint
-        ls.append(
-            '{:0.1f}'.format(crv.props['Regulator_Setpoint_1'] * 1e12)
-        )
-        # scan loop gain
-        ls.append('{:0.2f}'.format(crv.props['Regulator_Loop_Gain_1_I']))
-        # spec raster time
-        ls.append(
-            '{:0.3f}'.format(crv.props['Spectroscopy_Raster_Time_1'] * 1e3)
-        )
-        # spec number of points
-        ls.append(str(len(crv)))
-        # experiment data set and comment, sts file name
-        ls.append(
-            '{0.comment},{1[comment]},{1[file]}\n'.format(ex, crv.props)
-        )
-        
-        out.append( (crv.props['time'], ','.join(ls)) )
+            sn = ''.join([ tstr, parent_str,
+                           '{channel}[{index:03d}-{rep:02d}-{direction:02b}]',
+                           '.asc'
+                        ])
+            sn = sn.format(**crv.props)
+            pyMTRX.CurveData.save(crv, os.path.join(cwd, sn))
+            if debug: print '  saved "{}"'.format(sn)
+            n_opened += 1
+        # END for
     # END for
-    return out
-# END make_spectra_entries
+    return n_opened
+# END subroutine_1
 
 #==============================================================================
 def find_files(cwd='./', fext='[^.]+', r=True):

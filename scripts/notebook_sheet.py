@@ -120,7 +120,7 @@ def create_experiment_log(exp_fp, debug=False):
     for fn in sorted(img_files, key=lambda f: os.path.getctime(cwd+f)):
         if debug: print 'loading "{}"'.format(fn)
         # scns = [trace_up, retrace_up, trace_down, retrace_down] 
-        scns = ex.import_scan(cwd + fn, calc_duration=True)
+        scns = flatten_tree( ex.import_scan(cwd + fn, calc_duration=True) )
         for i in range(len(scns)):
             scns[i].props['direction'] = dname_lkup[i]
             IMG_entries.append(
@@ -192,22 +192,22 @@ def make_scan_entry(scn, ex, no_warn=True):
         '{index:03d},{rep:04d},{direction},{channel}'.format(**scn.props)
     )
     # scan location
-    ls.append('{}'.format(scn.props['XYScanner_X_Offset'] * 1e9))
-    ls.append('{}'.format(scn.props['XYScanner_Y_Offset'] * 1e9))
+    ls.append('{}'.format(scn.props['XYScanner_X_Offset'].value * 1e9))
+    ls.append('{}'.format(scn.props['XYScanner_Y_Offset'].value * 1e9))
     # scan voltage
-    ls.append('{}'.format(scn.props['GapVoltageControl_Voltage']))
+    ls.append('{}'.format(scn.props['GapVoltageControl_Voltage'].value))
     # scan current
-    ls.append('{:0.1f}'.format(scn.props['Regulator_Setpoint_1'] * 1e12))
+    ls.append('{:0.1f}'.format(scn.props['Regulator_Setpoint_1'].value * 1e12))
     # scan loop gain
-    ls.append('{:0.2f}'.format(scn.props['Regulator_Loop_Gain_1_I']))
+    ls.append('{:0.2f}'.format(scn.props['Regulator_Loop_Gain_1_I'].value))
     # scan raster time
-    ls.append('{:0.3f}'.format(scn.props['XYScanner_Raster_Time'] * 1e3))
+    ls.append('{:0.3f}'.format(scn.props['XYScanner_Raster_Time'].value * 1e3))
     # scan size in points and lines
-    ls.append(str(scn.props['XYScanner_Points']))
-    ls.append(str(scn.props['XYScanner_Lines']))
+    ls.append(str(scn.props['XYScanner_Points'].value))
+    ls.append(str(scn.props['XYScanner_Lines'].value))
     # scan size in physical units (nm)
-    ls.append('{:0.2f}'.format(scn.props['XYScanner_Width'] * 1e9))
-    ls.append('{:0.2f}'.format(scn.props['XYScanner_Height'] * 1e9))
+    ls.append('{:0.2f}'.format(scn.props['XYScanner_Width'].value * 1e9))
+    ls.append('{:0.2f}'.format(scn.props['XYScanner_Height'].value * 1e9))
     # alert flag for parameter errors
     if no_warn:
         ls.append('')
@@ -215,7 +215,7 @@ def make_scan_entry(scn, ex, no_warn=True):
         ls.append('*')
     # END if
     # scan angle
-    ls.append('{:0.1f}'.format(scn.props['XYScanner_Angle']))
+    ls.append('{:0.1f}'.format(scn.props['XYScanner_Angle'].value))
     # number of linked point spectra
     ls.append(str(len(scn.spectra)))
     # experiment data set, comment, scan comment, and file name
@@ -257,16 +257,16 @@ def make_spectra_entries(scn, ex, no_warn=True, debug=False):
         # spec start, end
         ls.append('{:0.3f},{:0.3f}'.format(crv.X[0], crv.X[-1]))
         # scan bias
-        ls.append('{}'.format(crv.props['GapVoltageControl_Voltage']))
+        ls.append('{}'.format(crv.props['GapVoltageControl_Voltage'].value))
         # scan current setpoint
         ls.append(
-            '{:0.1f}'.format(crv.props['Regulator_Setpoint_1'] * 1e12)
+            '{:0.1f}'.format(crv.props['Regulator_Setpoint_1'].value * 1e12)
         )
         # scan loop gain
-        ls.append('{:0.2f}'.format(crv.props['Regulator_Loop_Gain_1_I']))
+        ls.append('{:0.2f}'.format(crv.props['Regulator_Loop_Gain_1_I'].value))
         # spec raster time
         ls.append(
-            '{:0.3f}'.format(crv.props['Spectroscopy_Raster_Time_1'] * 1e3)
+            '{:0.3f}'.format(crv.props['Spectroscopy_Raster_Time_1'].value * 1e3)
         )
         # spec number of points
         ls.append(str(len(crv)))
@@ -305,7 +305,7 @@ def image_check(ex, scn):
         # END if
     # END while
     for i in range(a+1,b):
-        if re.search(r'Width|Height', ex.st_hist[i][1].name):
+        if re.search(r'Width|Height', ex.st_hist[i][2]):
             all_clear = False
             break
         # END if
@@ -349,6 +349,18 @@ def make_hms(t):
     seconds = t%60**1/60**0
     return hours, minutes, seconds
 # END make_hms
+
+#==============================================================================
+def flatten_tree(A):
+    flat = []
+    try:
+        for a in A:
+            flat.extend( flatten_tree(a) )
+    except TypeError:
+        return [A]
+    # END try
+    return flat
+# END flatten_tree
 
 #==============================================================================
 if __name__ == '__main__':
