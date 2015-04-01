@@ -320,9 +320,12 @@ class Experiment(object):
                     first_name, repeat = re.subn(
                         r'(\d+_)\d+(\.[^.]+$)', '\g<1>1\g<2>', mrk.spec_fn
                     )
-                    if repeat: 
+                    if repeat:
                         # copy over mark for following spectra
-                        new_mrk = copy(self.stslinks[first_name])
+                        try:
+                            new_mrk = copy(self.stslinks[first_name])
+                        except KeyError:
+                            pdb.set_trace()
                         new_mrk.spec_fn = mrk.spec_fn
                         self.unlinked_spectra.insert(0, new_mrk)
                     else:
@@ -375,14 +378,12 @@ class Experiment(object):
                 # END for
             # END if
             # register the spectra as unlinked
-            try:
+            if re.search(r'\([tr]\)', chnl_name):
+                self.unlinked_spectra.append( STSMark(spec_fn=fname) )
+            else:
                 self.last_sts_mark.spec_fn = fname
-            except AttributeError:
-                self.last_sts_mark = STSMark(spec_fn=fname)
-            # END try
-            self.unlinked_spectra.append(self.last_sts_mark)
-            # clear the location of the most recent point spectrum
-            self.last_sts_mark = None
+                self.unlinked_spectra.append(copy(self.last_sts_mark))
+            # END if
         # END if
         
         self.log.write(4*' ' + fname + '\n')
@@ -1198,6 +1199,13 @@ class STSMark(object):
         self.dir = dir
         self.loc = loc
     # END __init__
+    
+    def __str__(self):
+        return '[{} {:02b} {:>012d} <-- {}]'.format(
+            self.parent_fn[-18:], self.dir, self.parent_hash,
+            self.spec_fn[-18:]
+        )
+    # END __str__
 # END STSMark
 
 #==============================================================================

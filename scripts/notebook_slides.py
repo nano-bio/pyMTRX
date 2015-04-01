@@ -60,7 +60,7 @@ def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx'):
     scan_files.sort(key=lambda fp: os.path.getmtime(fp))
     print 'found {} scan files'.format(len(scan_files))
     
-    ex = om.Experiment(ex_fp, debug=True)
+    ex = om.Experiment(ex_fp)
     
     prs = Presentation()
     # Make title slide (starting from the blank template
