@@ -120,7 +120,7 @@ def create_experiment_log(exp_fp, debug=False):
     for fn in sorted(img_files, key=lambda f: os.path.getctime(cwd+f)):
         if debug: print 'loading "{}"'.format(fn)
         # scns = [trace_up, retrace_up, trace_down, retrace_down] 
-        scns = flatten_tree( ex.import_scan(cwd + fn, calc_duration=True) )
+        scns = flatten_tree( ex.import_scan(cwd + fn) )
         for i in range(len(scns)):
             scns[i].props['direction'] = dname_lkup[i]
             IMG_entries.append(

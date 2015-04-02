@@ -59,33 +59,34 @@ def main(*args):
     print '    notebook_sheet.py'
     from pyMTRX.scripts.notebook_sheet import main as nb_sheet
     nb_sheet('test_data/', debug=True)
+    quit()
     
     print ''
     print '    notebook_slides.py'
     from pyMTRX.scripts.notebook_slides import main as nb_slide
     nb_slide('test_data/')
     
-    print ''
-    print '    PngMaker'
-    scans = PngMaker.main(save_dir=sdir)
-    print 'len(main.scans) = {}'.format(len(scans))
-    with open(sdir+'Scan.__dict__.txt', 'w') as f:
-        f.write( pformat(scans[0].__dict__) )
-    for scn in scans:
-        if scn.spectra:
-            break
-    with open(sdir+'CurveData.__dict__.txt', 'w') as f:
-        f.write( pformat(scn.spectra[0].__dict__) )
-    
-    scans = PngMaker.main(save_dir=sdir)
-    print 'len(main.scans) = {}'.format(len(scans))
-    with open(sdir+'Scan.__dict__.txt', 'w') as f:
-        f.write( pformat(scans[0].__dict__) )
-    for scn in scans:
-        if scn.spectra:
-            break
-    with open(sdir+'CurveData.__dict__.txt', 'w') as f:
-        f.write( pformat(scn.spectra[0].__dict__) )
+    #print ''
+    #print '    PngMaker'
+    #scans = PngMaker.main(save_dir=sdir)
+    #print 'len(main.scans) = {}'.format(len(scans))
+    #with open(sdir+'Scan.__dict__.txt', 'w') as f:
+    #    f.write( pformat(scans[0].__dict__) )
+    #for scn in scans:
+    #    if scn.spectra:
+    #        break
+    #with open(sdir+'CurveData.__dict__.txt', 'w') as f:
+    #    f.write( pformat(scn.spectra[0].__dict__) )
+    #
+    #scans = PngMaker.main(save_dir=sdir)
+    #print 'len(main.scans) = {}'.format(len(scans))
+    #with open(sdir+'Scan.__dict__.txt', 'w') as f:
+    #    f.write( pformat(scans[0].__dict__) )
+    #for scn in scans:
+    #    if scn.spectra:
+    #        break
+    #with open(sdir+'CurveData.__dict__.txt', 'w') as f:
+    #    f.write( pformat(scn.spectra[0].__dict__) )
     
     print ''
     print '*** BEGIN TESTS FOR CurveData CLASS ***'

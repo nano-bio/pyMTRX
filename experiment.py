@@ -207,7 +207,8 @@ class Experiment(object):
         if not name:
             return False
         bklen = struct.unpack('<I', f.read(4))[0]
-        t = struct.unpack('<Q', f.read(8))[0]
+        t_bytes = f.read(8)
+        t = struct.unpack('<Q', t_bytes)[0]
         self._t_bk = t
         try:
             timestr = time.ctime(t)
@@ -242,6 +243,27 @@ class Experiment(object):
                     )
                 )
                 self._init_read_MARK(bkbuff)
+            elif re.search(r'VIEW', name) and self.debug:
+                self.log.write(
+                    '{} {} '.format(
+                        time.strftime('%H:%M:%S', time.localtime(t)), name
+                    )
+                )
+                self._init_read_VIEW(bkbuff)
+            elif re.search(r'INCI', name) and self.debug:
+                self.log.write(
+                    '{} {} '.format(
+                        time.strftime('%H:%M:%S', time.localtime( struct.unpack('q', t_bytes)[0] )), name
+                    )
+                )
+                self.log.write('    {}\n'.format(bkbuff.next_uint()))
+            elif not re.search(r'PROC', name):
+                self.log.write(
+                    '{} {}     {} bytes\n'.format(
+                        time.strftime('%H:%M:%S', time.localtime(t)), name,
+                        len(bkbuff)
+                    )
+                )
             # END if
         elif axch_pass and re.search(r'CCSY', name):
             self.log.write(
@@ -292,6 +314,46 @@ class Experiment(object):
         self.log.write(
             '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
         )
+    # END _init_read_PMOD
+    
+    def _init_read_VIEW(self, buff):
+        '''A VIEW block contains a new view setting'''
+        self.log.write('\n')
+        return
+        #skip empty space
+        buff.next(4)
+        
+        self.log.write('    ')
+        buff.next(8)
+        self.log.write('8B, ')
+        buff.next(4)
+        self.log.write('4B, ')
+        n = buff.next_uint()
+        self.log.write('{}, '.format(n))
+        self.log.write(buff.next_mtrxstr()) #Z_Fw
+        self.log.write(', ')
+        self.log.write(buff.next_mtrxstr()) #Z
+        self.log.write(', ')
+        self.log.write(buff.next_uint()) #6
+        self.log.write(', ')
+        self.log.write(buff.next_mtrxstr()) #LineSlopeSubtractor
+        self.log.write(', ')
+        #self.log.write(buff.next_mtrxstr()) #Despiker
+        #self.log.write(', ')
+        self.log.write(repr(str(buff)))
+        #self.log.write(buff.next_uint()) #18?
+        #self.log.write(', ')
+        #self.log.write(buff.next_mtrxstr()) #LineDifferentiator \n Statistics?
+        #self.log.write(', ')
+        #self.log.write(repr(str(buff)))
+        #chnl = buff.next_mtrxstr()
+        #prop, x = buff.next_mtrxparam()
+        #self.st_hist.append( (self._t_bk, chnl, prop, x) )
+        #self._curr_st[chnl+'_'+prop] = x
+        #self.log.write(
+        #    '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
+        #)
+        self.log.write('\n')
     # END _init_read_PMOD
     
     def _init_read_BREF(self, buff):
@@ -440,7 +502,7 @@ class Experiment(object):
             # "MTRX$IMAGE_COMMENT-I(V).-47249096771-1-0--1%added -2.6 V offset manually"
             # NOTE: d may be correct
             chnl_key, d, comment = re.search(
-                r'COMMENT.+?(\d+).+?\d+.+?\d+.+?(\d+)%(.*)', markstr
+                r'COMMENT.+?(\d+).+?\d+.+?\d+.+?(\d+)%(.*)', markstr, re.DOTALL
             ).groups()
             d = int(d)
             chnl_key = int(chnl_key)
@@ -644,8 +706,7 @@ class Experiment(object):
         pass
     # END _parse_marks
     
-    def import_scan( self, file_path, scan_only=False, calc_duration=False,
-                     debug=False
+    def import_scan( self, file_path, scan_only=False, debug=False
                    ):
         '''Read a scan file and return ScanData objects
         
@@ -660,9 +721,7 @@ class Experiment(object):
         '''
         
         return import_scan(
-            file_path, scan_only=scan_only, ex=self,
-            calc_duration=calc_duration,
-            debug=debug
+            file_path, scan_only=scan_only, ex=self, debug=debug
         )
     # END import_scan
     
@@ -709,13 +768,79 @@ class Experiment(object):
         all_cmnt = '\n'.join([c for _, c in comments])
         data_obj.props['comment'] = all_cmnt
     # END transfer_params
+    
+    def get_pmods(self, *t):
+        # Algorithm
+        #----------
+        # -get the time that the block saved (i.e. BREF)
+        # -get the time that the block before it saved *OR* the time that the
+        #  play button was pressed, this is the start time
+        # -from the start walk forward point by point while constantly checking
+        #  for a PMOD *AND* update the T_raster if it changes so that the walk
+        #  speed is correct
+        # -output chronological lists of PMODs for each sweep of the slow axis
+        #scn_t = [0.0, 0.0]
+        #fast_ax = depn_ax.indp_ax
+        #try:
+        #    N = 1
+        #    while N <= Npnt_act:
+        #        i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
+        #        scn_t[i] += params['XYScanner_Raster_Time'].value
+        #        N += 1
+        #    # END while
+        #    mods = ex.get_pmods(t-scn_t[0], t-scn_t[1], t)
+        #    print file_name[-18:]
+        #    print repr(scn_t)
+        #    print '{:.0f}, {:.0f}, {:.0f}'.format(t-scn_t[0], t-scn_t[1], t)
+        #    print '  start up'
+        #    for tpmod, chnl, pname, x in mods[0]:
+        #        print '    {:+.0f}: {}_{} <-- {} {}'.format(
+        #            tpmod, chnl, pname, x.value, x.unit
+        #        )
+        #    print '  start down'
+        #    for tpmod, chnl, pname, x in mods[1]:
+        #        print '    {:+.0f}: {}_{} <-- {} {}'.format(
+        #            tpmod, chnl, pname, x.value, x.unit
+        #        )
+        #    print '  finished'
+        #except KeyError:
+        #    pass
+        ## END try
+        a = 0
+        b = len(self.st_hist)
+        while a + 1 < b:
+            c = int((a+b)/2)
+            if t[0] < self.st_hist[c][0]:
+                b = c
+            else:
+                a = c
+            # END if
+        # END while
+        if not (self.st_hist[a][0] <= t[0] and t[0] < self.st_hist[a+1][0]):
+            raise RuntimeError(
+                'st_hist[{}]={} <= {} < st_hist[{}]={} is False'.format(
+                    a, self.st_hist[a][0], t[0], a+1, self.st_hist[a+1][0]
+                )
+            )
+        # END if
+        mods = []
+        for i in range(1, len(t)):
+            for b in range(a+1, len(self.st_hist)):
+                if self.st_hist[b-1][0] <= t[i] and t[i] < self.st_hist[b][0]:
+                    mods.append( self.st_hist[a+1:b] )
+                    b = a
+                    break
+                # END if
+            # END for
+        # END for
+        return mods
+    # END get_pmods 
 # END Experiment
 
 #==============================================================================
 def import_scan( file_path,
                  scan_only=False,
                  ex=None, mirroring=(True, True),
-                 calc_duration=False,
                  debug=False
                ):
     '''Read a scan file and return ScanData objects
@@ -806,14 +931,27 @@ def import_scan( file_path,
     scn_t = [0.0, 0.0]
     fast_ax = depn_ax.indp_ax
     try:
-        if calc_duration:
-            N = 1
-            while N <= Npnt_act:
-                i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
-                scn_t[i] += params['XYScanner_Raster_Time'].value
-                N += 1
-            # END while
-        # END if
+        N = 1
+        while N <= Npnt_act:
+            i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
+            scn_t[i] += params['XYScanner_Raster_Time'].value
+            N += 1
+        # END while
+        mods = ex.get_pmods(t-scn_t[0], t-scn_t[1], t)
+        print file_name[-18:]
+        print repr(scn_t)
+        print '{:.0f}, {:.0f}, {:.0f}'.format(t-scn_t[0], t-scn_t[1], t)
+        print '  start up'
+        for tpmod, chnl, pname, x in mods[0]:
+            print '    {:+.0f}: {}_{} <-- {} {}'.format(
+                tpmod, chnl, pname, x.value, x.unit
+            )
+        print '  start down'
+        for tpmod, chnl, pname, x in mods[1]:
+            print '    {:+.0f}: {}_{} <-- {} {}'.format(
+                tpmod, chnl, pname, x.value, x.unit
+            )
+        print '  finished'
     except KeyError:
         pass
     # END try

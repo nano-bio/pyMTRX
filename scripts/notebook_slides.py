@@ -40,19 +40,19 @@ BrYl = mplcolors.LinearSegmentedColormap('BrYl', BrYl_cdict)
 mapper = cm.ScalarMappable(cmap=BrYl)
 
 #==============================================================================
-def main(cwd='.', dir_filter=range(4), fext='[^.()]+_mtrx'):
+def main(cwd='.', dir_filter=range(4), fext='[^.()]+_mtrx', debug=False):
     experiment_files = find_files(cwd, fext='mtrx')
     experiment_files.sort(key=lambda fp: os.path.getmtime(fp))
     print 'found {} .mtrx files'.format(len(experiment_files))
     for ex_fp in experiment_files:
-        make_pptx(ex_fp, dir_filter=dir_filter, fext=fext)
+        make_pptx(ex_fp, dir_filter=dir_filter, fext=fext, debug=debug)
     # END for
     
     print 'finished'
 # END main
 
 #==============================================================================
-def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx'):
+def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx', debug=False):
     cwd, ex_fn = os.path.split(ex_fp)
     if not cwd: cwd = '.'
     print 'working on "{}"'.format( os.path.basename(ex_fp) )
@@ -60,7 +60,7 @@ def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx'):
     scan_files.sort(key=lambda fp: os.path.getmtime(fp))
     print 'found {} scan files'.format(len(scan_files))
     
-    ex = om.Experiment(ex_fp)
+    ex = om.Experiment(ex_fp, debug=debug)
     
     prs = Presentation()
     # Make title slide (starting from the blank template
