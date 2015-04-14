@@ -20,7 +20,7 @@
 import os
 import struct
 import re
-import time
+from datetime import datetime
 from StringIO import StringIO
 from pprint import pprint, pformat
 import pdb
@@ -82,6 +82,7 @@ class Experiment(object):
         # Initial settings state dictionary
         self.init_st = {}
         self.st_hist = []
+        self.timeline = Timeline()
         # Settings state to be kept current with the timeline
         self._curr_st = {}
         self.datafile_st = {}
@@ -124,11 +125,9 @@ class Experiment(object):
         
         # when debugging write some variables directly to the file
         if debug:
-            timestamp = time.strftime(' %Y%m%d')
             exp_date = re.search(r'\d{4}\w{3}\d\d-\d{6}', file_path).group(0)
-            log_sname = 'debug log {0} for {1}.txt'.format( timestamp,
-                                                            exp_date
-                                                          )
+            log_sname = 'debug log {0:%Y%m%d} for {1}.txt'
+            log_sname = log_sname.format(datetime.now(), exp_date)
             f = open(log_sname, 'w')
             # print out the axis hierarchy
             f.write('self.axch = \n')
@@ -136,7 +135,7 @@ class Experiment(object):
                 f.write('    {0} (x{0:0>16x}):\n'.format(k))
                 #f.write('        {}').format(type(self.axch[k]).__name__)
                 #i = 0
-                obj_str = pformat(self.axch[k].__dict__, 2, 79-8)
+                obj_str = pformat(self.axch[k].__dict__, 2, 79-16)
                 obj_str = re.sub(r'^', '        ', obj_str, flags=re.M)
                 #f.write(8*' ')
                 f.write(obj_str)
@@ -193,8 +192,8 @@ class Experiment(object):
         The following blocks will be ignored:
             META: file meta data
             EXPD: some unknown experiement files
-            INCI: is 8B of empty space, there positions don't seem to
-              correspond to STS events
+            INCI: marks anytime the instrument recording state changes from
+                  the user pressing the play, stop, pause, or restart buttons
             PROC: is info about plug-ins (e.g. CurveAverager or Despiker)
             VIEW: window view settings
             CCSY: not fully understood, contains some information on
@@ -207,70 +206,36 @@ class Experiment(object):
         if not name:
             return False
         bklen = struct.unpack('<I', f.read(4))[0]
-        t_bytes = f.read(8)
-        t = struct.unpack('<Q', t_bytes)[0]
+        t = struct.unpack('<I', f.read(4))[0]
+        # unknown bytes; seems to be 0 on everything but INCI where it is 1
+        unbytes = struct.unpack('<I', f.read(4))[0]
+        tobj = datetime.fromtimestamp(t)
         self._t_bk = t
-        try:
-            timestr = time.ctime(t)
-        except ValueError:
-            # the INCI block has no timestamp
-            timestr = ''
-        # END try
         bkbuff = MatrixBuffer(f, bklen)
         
         # Subroutines to parse the data in the different types of blocks
         if not axch_pass:
+            self.log.write(
+                '{:%H:%M:%S} x{:04x} {}'.format(tobj, unbytes, name)
+            )
             if re.search(r'EEPA', name):
                 self._init_read_EEPA(bkbuff)
             elif re.search(r'PMOD', name):
-                self.log.write(
-                    '{} {} '.format(
-                        time.strftime('%H:%M:%S', time.localtime(t)), name, bklen
-                    )
-                )
                 self._init_read_PMOD(bkbuff)
             elif re.search(r'BREF', name):
-                self.log.write(
-                    '{} {} '.format(
-                        time.strftime('%H:%M:%S', time.localtime(t)), name, bklen
-                    )
-                )
                 self._init_read_BREF(bkbuff)
             elif re.search(r'MARK', name):
-                self.log.write(
-                    '{} {} '.format(
-                        time.strftime('%H:%M:%S', time.localtime(t)), name
-                    )
-                )
                 self._init_read_MARK(bkbuff)
-            elif re.search(r'VIEW', name) and self.debug:
-                self.log.write(
-                    '{} {} '.format(
-                        time.strftime('%H:%M:%S', time.localtime(t)), name
-                    )
-                )
+            elif re.search(r'VIEW', name):
                 self._init_read_VIEW(bkbuff)
-            elif re.search(r'INCI', name) and self.debug:
-                self.log.write(
-                    '{} {} '.format(
-                        time.strftime('%H:%M:%S', time.localtime( struct.unpack('q', t_bytes)[0] )), name
-                    )
-                )
-                self.log.write('    {}\n'.format(bkbuff.next_uint()))
-            elif not re.search(r'PROC', name):
-                self.log.write(
-                    '{} {}     {} bytes\n'.format(
-                        time.strftime('%H:%M:%S', time.localtime(t)), name,
-                        len(bkbuff)
-                    )
-                )
+            elif re.search(r'INCI', name):
+                tl_entry = self.timeline.add(t, 'INCI')
+                self.datafile_st[tl_entry] = dict(self._curr_st)
+                self.log.write( '\n')
+            else:
+                self.log.write( '    {} bytes\n'.format(len(bkbuff)) )
             # END if
         elif axch_pass and re.search(r'CCSY', name):
-            self.log.write(
-                '{} {} \n'.format(
-                    time.strftime('%H:%M:%S', time.localtime(t)), name
-                )
-            )
             self._init_read_CCSY(bkbuff)
         # END if
         bkbuff.advance()
@@ -298,6 +263,7 @@ class Experiment(object):
         # END for
         
         self._curr_st = dict(self.init_st)
+        self.log.write('\n')
     # END _init_read_EEPA
     
     def _init_read_PMOD(self, buff):
@@ -310,6 +276,7 @@ class Experiment(object):
         chnl = buff.next_mtrxstr()
         prop, x = buff.next_mtrxparam()
         self.st_hist.append( (self._t_bk, chnl, prop, x) )
+        self.timeline.add(self._t_bk, 'PMOD', chnl+'_'+prop, x)
         self._curr_st[chnl+'_'+prop] = x
         self.log.write(
             '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
@@ -363,7 +330,9 @@ class Experiment(object):
         buff.next(4)
         fname = buff.next_mtrxstr()
         # freeze a copy of the current settings and register it
+        tl_entry = self.timeline.add(self._t_bk, 'BREF', fname)
         self.datafile_st[fname] = dict(self._curr_st)
+        self.datafile_st[tl_entry] = self.datafile_st[fname]
         
         # manage point-spectra linkage
         img_mat = re.search(r'\.([^()]+)_mtrx$', fname)
@@ -469,6 +438,7 @@ class Experiment(object):
         if re.search(r'Instrument information', markstr):
             self.inst_info = re.sub(r'^.*?: ', '', markstr)
         elif re.search(r'^MTRX\$STS_LOCATION', markstr):
+            self.timeline.add(self._t_bk, 'MARK', markstr)
             # Example:
             # MTRX$STS_LOCATION-192,94;7e-009,-9.33333e-009%%7800440043-1-4-0%%
             # Breakdown of mark:
@@ -769,72 +739,85 @@ class Experiment(object):
         data_obj.props['comment'] = all_cmnt
     # END transfer_params
     
-    def get_pmods(self, *t):
-        # Algorithm
-        #----------
-        # -get the time that the block saved (i.e. BREF)
-        # -get the time that the block before it saved *OR* the time that the
-        #  play button was pressed, this is the start time
-        # -from the start walk forward point by point while constantly checking
-        #  for a PMOD *AND* update the T_raster if it changes so that the walk
-        #  speed is correct
-        # -output chronological lists of PMODs for each sweep of the slow axis
-        #scn_t = [0.0, 0.0]
-        #fast_ax = depn_ax.indp_ax
-        #try:
-        #    N = 1
-        #    while N <= Npnt_act:
-        #        i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
-        #        scn_t[i] += params['XYScanner_Raster_Time'].value
-        #        N += 1
-        #    # END while
-        #    mods = ex.get_pmods(t-scn_t[0], t-scn_t[1], t)
-        #    print file_name[-18:]
-        #    print repr(scn_t)
-        #    print '{:.0f}, {:.0f}, {:.0f}'.format(t-scn_t[0], t-scn_t[1], t)
-        #    print '  start up'
-        #    for tpmod, chnl, pname, x in mods[0]:
-        #        print '    {:+.0f}: {}_{} <-- {} {}'.format(
-        #            tpmod, chnl, pname, x.value, x.unit
-        #        )
-        #    print '  start down'
-        #    for tpmod, chnl, pname, x in mods[1]:
-        #        print '    {:+.0f}: {}_{} <-- {} {}'.format(
-        #            tpmod, chnl, pname, x.value, x.unit
-        #        )
-        #    print '  finished'
-        #except KeyError:
-        #    pass
-        ## END try
-        a = 0
-        b = len(self.st_hist)
-        while a + 1 < b:
-            c = int((a+b)/2)
-            if t[0] < self.st_hist[c][0]:
-                b = c
-            else:
-                a = c
-            # END if
+    def get_pmods(self, file_name, t, N_points, slow_ax, fast_ax):
+        fparams = self.datafile_st[file_name]
+        i_bref, _ = self.timeline.bisect(t)
+        i_prev = i_bref - 1
+        # If stop/restart were pressed then there will be an INCI entry
+        # just before the BREF entry with the same timestamp;
+        # skip over this INCI, if it exists
+        while self.timeline[i_prev].t == self.timeline[i_bref].t:
+            i_prev -= 1
         # END while
-        if not (self.st_hist[a][0] <= t[0] and t[0] < self.st_hist[a+1][0]):
-            raise RuntimeError(
-                'st_hist[{}]={} <= {} < st_hist[{}]={} is False'.format(
-                    a, self.st_hist[a][0], t[0], a+1, self.st_hist[a+1][0]
-                )
-            )
-        # END if
-        mods = []
-        for i in range(1, len(t)):
-            for b in range(a+1, len(self.st_hist)):
-                if self.st_hist[b-1][0] <= t[i] and t[i] < self.st_hist[b][0]:
-                    mods.append( self.st_hist[a+1:b] )
-                    b = a
+        # The preceding INCI or BREF will mark the beginning of the scanning,
+        # but all BREFs from point spectra need to be skipped
+        while 0 <= i_prev:
+            if re.search(r'INCI', self.timeline[i_prev].bknm):
+                break
+            elif ( re.search(r'BREF', self.timeline[i_prev].bknm) and
+                    re.search(r'\.\w+_mtrx$', self.timeline[i_prev].data[0])
+                  ):
+                    break
+            else:
+                i_prev -= 1
+        # END while
+        # i_prev is now the index of a timeline entry with a timestamp that
+        # is equal to the time the data acquisition started
+        t_start = self.timeline[i_prev].t
+        init_params = self.datafile_st[self.timeline[i_prev]]
+        
+        # check for changes in raster time or point spectra
+        steady = True
+        for x in self.timeline[i_prev+1:i_bref]:
+            try:
+                if re.search( r'XYScanner.*?Raster_Time|STS_LOCATION',
+                              x.data[0] ):
+                    steady = False
                     break
                 # END if
-            # END for
+            except IndexError:
+                pass
+            # END try
         # END for
-        return mods
-    # END get_pmods 
+        
+        # remove all timeline entries that are not PMODs
+        scn_tl = self.timeline[i_prev+1:i_bref].filter('PMOD')
+        
+        # pmods will be the return value
+        # pmods should be the same shape as the return of import_scan
+        pmods = [[]]
+        if slow_ax.mirrored: pmods.append([])
+        
+        if steady:
+            # calculate the half-way point in time, and split the timeline
+            # at that point
+            t_half = ( fparams['XYScanner_Width'].value *
+                       fparams['XYScanner_Raster_Time'].value +
+                       fparams['XYScanner_Move_Raster_Time'].value
+                     ) * fparams['XYScanner_Height'].value
+            t_half /= len(pmods)
+            t_half += self.timeline[i_prev].t
+            if self.timeline[i_bref].t < t_half:
+                raise RuntimeError('t_half miscalculation')
+            scn_tl_pieces = scn_tl.split(t_half)
+            for i in range(len(pmods)):
+                pmods[i] = [ (x.t-t_start, x.data[0], x.data[1])
+                             for x in scn_tl_pieces[i]
+                           ]
+            # END for
+        else:
+            print 'WARNING: Dynamic scan encountered: ...{}'.format(
+                file_name[-18:]
+            )
+            for i in range(len(pmods)):
+                pmods[i] = [ (x.t-t_start, x.data[0], x.data[1])
+                             for x in scn_tl
+                           ]
+        # END if
+        
+        return pmods
+        
+    # END get_pmods
 # END Experiment
 
 #==============================================================================
@@ -864,7 +847,7 @@ def import_scan( file_path,
     # END if
     filebuff, _, t = MatrixBuffer.from_file(file_path)
     
-    if fdebug: fdebug.write(time.ctime(t)+'\n')
+    if fdebug: fdebug.write(datetime.now().ctime(t)+'\n')
     
     # Skip empty space
     filebuff.advance(4)
@@ -879,6 +862,8 @@ def import_scan( file_path,
             # or make up false axes
             try:
                 depn_ax = ex.axch[chnl_key].depn_ax
+                fast_ax = depn_ax.indp_ax
+                slow_ax = fast_ax.next_ax
             except AttributeError:
                 Nimg = 1
                 if mirroring[0]: Nimg *= 2
@@ -937,23 +922,18 @@ def import_scan( file_path,
             scn_t[i] += params['XYScanner_Raster_Time'].value
             N += 1
         # END while
-        mods = ex.get_pmods(t-scn_t[0], t-scn_t[1], t)
-        print file_name[-18:]
-        print repr(scn_t)
-        print '{:.0f}, {:.0f}, {:.0f}'.format(t-scn_t[0], t-scn_t[1], t)
-        print '  start up'
-        for tpmod, chnl, pname, x in mods[0]:
-            print '    {:+.0f}: {}_{} <-- {} {}'.format(
-                tpmod, chnl, pname, x.value, x.unit
-            )
-        print '  start down'
-        for tpmod, chnl, pname, x in mods[1]:
-            print '    {:+.0f}: {}_{} <-- {} {}'.format(
-                tpmod, chnl, pname, x.value, x.unit
-            )
-        print '  finished'
+        mods = ex.get_pmods(file_name, t, Npnt_act, slow_ax, fast_ax)
+        print file_name
+        print 'saved at {:%H:%M:%S}'.format(datetime.fromtimestamp(t))
+        print ''
+        for m in mods:
+            for tpmod, pname, x in m:
+                print '    +{:%M:%S} | {} <-- {} {}'.format(
+                    datetime.fromtimestamp(tpmod), pname, x.value, x.unit
+                )
+            print ''
     except KeyError:
-        pass
+        print 'KeyError in pyMTRX.import_scan: ex= {!r}'.format(ex)
     # END try
     
     # create X & Y axes
@@ -1272,7 +1252,88 @@ def unwind_split(A, n):
             i_C += 1
     # END for
     return [B, C]
-# END unravel_list
+# END unwind_split
+
+#==============================================================================
+TimelineEntry = namedtuple('TimelineEntry', ['t', 'bknm', 'data'])
+
+class Timeline(object):
+    '''Sorted list of TimelineEntry objects
+    '''
+    
+    def __init__(self, tl=None):
+        if tl is None: self._tl = []
+        else: self._tl = list(tl)
+    # END __init__
+    
+    def __call__(self, t):
+        if self._tl[-1].t <= t:
+            return self._tl[-1:]
+        elif t < self._tl[0].t:
+            return self._tl[:0]
+        else:
+            i, j = self.bisect(t)
+            return self._tl[i:j]
+        # END if
+    # END __call__
+    
+    def __getitem__(self, i):
+        if isinstance(i, slice):
+            return Timeline(self._tl[i])
+        return self._tl[i]
+    # END __getitem__
+    
+    def __iter__(self):
+        for x in self._tl: yield x
+    # END __iter__
+    
+    def __len__(self): return len(self._tl)
+    
+    def add(self, t, bknm, *data):
+        new_entry = TimelineEntry(t, bknm, data)
+        if len(self._tl) == 0:
+            self._tl.append(new_entry)
+        else:
+            self._tl.insert( self.bisect(t)[-1], new_entry)
+        # END if
+        return new_entry
+    # END add
+    
+    def bisect(self, t):
+        if self._tl[-1].t <= t:
+            return (len(self._tl),)
+        elif t < self._tl[0].t:
+            return (0,)
+        else:
+            i = 0
+            j = len(self._tl)
+            while i + 1 < j:
+                k = int((i+j)/2)
+                if t < self._tl[k].t: j = k
+                else: i = k
+            # END while
+            # t is now bound...
+            # self._tl[i].t <= t < self._tl[i+1].t
+            return i, i+1
+    # END bisect
+    
+    def filter(self, bknm_ptn):
+        return Timeline(
+            [x for x in self._tl if re.search(bknm_ptn, x.bknm)]
+        )
+    # END filter
+    
+    def pop(self, i): return self._tl.pop(i)
+    
+    def split(self, t):
+        if len(self._tl) == 0:
+            return Timeline(), Timeline()
+        # END if
+        y = self.bisect(t)
+        return self[:y[-1]], self[y[-1]:]
+    # END split
+        
+# END Timeline
 
 #==============================================================================
 class InstrChannel(object):
@@ -1283,6 +1344,12 @@ class InstrChannel(object):
     # END __init__
     
     def __hash__(self): return self._mtrx_hash_value
+    
+    def __str__(self):
+        return '<InstrChannel @ MTRX {}>'.format(self._mtrx_hash_value)
+    
+    def __repr__(self):
+        return self.__str__()
 # END InstrChannel
 
 #==============================================================================
@@ -1304,7 +1371,10 @@ class DependentAxis(object):
     def __hash__(self): return self._mtrx_hash_value
     
     def __str__(self):
-        return '<DependentAxis @ MTRX {}>'.format(self.mtrx_hash_value)
+        return '<DependentAxis @ MTRX {}>'.format(self._mtrx_hash_value)
+    
+    def __repr__(self):
+        return self.__str__()
     # END __str__
 # END DependentAxis
 
@@ -1324,6 +1394,12 @@ class IndependentAxis(object):
     def __hash__(self): return self._mtrx_hash_value
     
     def __len__(self): return self.len
+    
+    def __str__(self):
+        return '<IndependentAxis @ MTRX {}>'.format(self._mtrx_hash_value)
+    
+    def __repr__(self):
+        return self.__str__()
 # END IndependentAxis
 
 #==============================================================================
@@ -1348,7 +1424,6 @@ class STSMark(object):
 
 #==============================================================================
 PhysicalValue = namedtuple('PhysicalValue', ['value', 'unit'])
-    
 
 #==============================================================================
 class MatrixBuffer(object):
