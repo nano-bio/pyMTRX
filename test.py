@@ -19,7 +19,7 @@ from curves import CurveData
 from experiment import Experiment
 import matplotlib.pyplot as plt
 
-#===============================================================================
+#==============================================================================
 def main(*args):
     tdir = './test_data/'
     sdir = tdir + 'test_results/'
@@ -38,7 +38,7 @@ def main(*args):
     #          '2014Oct09-090049--1_122.Z_mtrx'
     #        ]
     #for fn in files:
-    #    scn_st = ex.datafile_st[fn]
+    #    scn_st = ex.get_state(fn)
     #    print 'Settings for "{}"'.format(fn)
     #    print '    V= {0.value:0.3f} {0.unit}'.format(
     #        scn_st['GapVoltageControl_Voltage']
@@ -248,7 +248,7 @@ class PngMaker(object):
         # collect scan files
         scn_files = []
         for fn in os.listdir(cwd):
-            if fn in ex.datafile_st and re.search(r'\.[^.()]_mtrx$', fn):
+            if fn in ex and not Experiment.is_point_spectrum(fn):
                 scn_files.append(fn)
             # END if
         # END for
@@ -286,5 +286,5 @@ class PngMaker(object):
     # END submain
 # END PngMaker
 
-#===============================================================================
+#==============================================================================
 if __name__ == '__main__': main(*sys.argv[1:])

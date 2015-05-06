@@ -40,19 +40,26 @@ BrYl = mplcolors.LinearSegmentedColormap('BrYl', BrYl_cdict)
 mapper = cm.ScalarMappable(cmap=BrYl)
 
 #==============================================================================
-def main(cwd='.', dir_filter=range(4), fext='[^.()]+_mtrx', debug=False):
+def main( cwd='.', sdir=None, dir_filter=range(4),
+          fext='[^.()]+_mtrx', debug=False
+        ):
     experiment_files = find_files(cwd, fext='mtrx')
     experiment_files.sort(key=lambda fp: os.path.getmtime(fp))
     print 'found {} .mtrx files'.format(len(experiment_files))
     for ex_fp in experiment_files:
-        make_pptx(ex_fp, dir_filter=dir_filter, fext=fext, debug=debug)
+        if not isinstance(sdir, str): sdir = os.path.dirname(ex_fp)
+        make_pptx(
+            ex_fp, sdir=sdir, dir_filter=dir_filter, fext=fext, debug=debug
+        )
     # END for
     
     print 'finished'
 # END main
 
 #==============================================================================
-def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx', debug=False):
+def make_pptx( ex_fp, sdir='./', dir_filter=range(4),
+               fext='[^.()]+_mtrx', debug=False
+             ):
     cwd, ex_fn = os.path.split(ex_fp)
     if not cwd: cwd = '.'
     print 'working on "{}"'.format( os.path.basename(ex_fp) )
@@ -84,7 +91,7 @@ def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx', debug=False):
     txBox.text_frame.word_wrap = True
     
     for scn_fp in scan_files:
-        if os.path.basename(scn_fp) not in ex.datafile_st: continue
+        if scn_fp not in ex: continue
         print 'adding {}'.format( os.path.basename(scn_fp) )
         scans = flatten( ex.import_scan(scn_fp) )
         try:
@@ -111,7 +118,7 @@ def make_pptx(ex_fp, dir_filter=range(4), fext='[^.()]+_mtrx', debug=False):
         )
     # END while
     
-    prs.save(os.path.join(cwd, save_name))
+    prs.save(os.path.join(sdir, save_name))
     print ''
 # END make__pptx
 

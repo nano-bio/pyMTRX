@@ -20,15 +20,17 @@ import re
 import random
 import time
 import multiprocessing as mp
+from pprint import pprint
 
 import pdb
 
 # 3rd-party modules
 #sys.path.append('C:/Users/csykes/alex/Dropbox/ampPy/spm_dev/')
+import pyMTRX
 from pyMTRX.experiment import Experiment
 
 #==============================================================================
-def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
+def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
     if debug: print '*** DEBUG MODE ON ***'
     t = time.time()
     if cwd[-1] != '/':
@@ -50,15 +52,19 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
     if processes < 1 or debug: processes = 1
     if processes == 1:
         for fp in experiment_files:
-            N_opened.append( create_experiment_log(fp, debug=debug) )
+            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
+            N_opened.append(
+                create_experiment_log(fp, sdir=sdir, debug=debug)
+            )
         # END for
     else:
         # Create worker pool and start all jobs
         worker_pool = mp.Pool(processes=processes)
         for fp in experiment_files:
+            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
             N_opened.append(
                 worker_pool.apply_async( create_experiment_log,
-                                         args=(fp,debug)
+                                         args=(fp,sdir,debug)
                                        )
             )
         # END for
@@ -91,7 +97,7 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
 # END main
 
 #==============================================================================
-def create_experiment_log(exp_fp, debug=False):
+def create_experiment_log(exp_fp, sdir='./', debug=False):
     cwd, exp_fn = os.path.split(exp_fp)
     cwd += '/'
     ex = Experiment(cwd + exp_fn, debug=debug)
@@ -99,18 +105,9 @@ def create_experiment_log(exp_fp, debug=False):
     
     # collect image files
     # (*image file must be in experiment file AND a file in the directory)
-    # img_files = [ (file_name, 1st_index, 2nd_index), ... ]
-    img_files = []
-    all_data = set(ex.datafile_st.keys())
-    for fn in os.listdir(cwd):
-        fn_mat = re.search(r'\.[A-Z0-9]+_mtrx$', fn)
-        if fn_mat and fn in all_data:
-            img_files.append(fn)
-    # END for
-    #f debug:
-    #    random.shuffle(img_files)
-    #    img_files = img_files[:5]
-    # END if
+    all_files = list( set(ex.get_data_filenames()) & set(os.listdir(cwd)) )
+    img_files = [fn for fn in all_files if Experiment.is_image(fn)]
+    sts_files = [fn for fn in all_files if Experiment.is_point_spectrum(fn)]
     
     dname_lkup = { 0: '00 trace up',   1: '01 retrace up',
                    2: '10 trace down', 3: '11 retrace down'
@@ -124,11 +121,18 @@ def create_experiment_log(exp_fp, debug=False):
         for i in range(len(scns)):
             scns[i].props['direction'] = dname_lkup[i]
             IMG_entries.append(
-                make_scan_entry(scns[i], ex, image_check(ex, scns[i]))
+                make_scan_entry(scns[i], image_check(ex, scns[i]))
             )
-            STS_entries.extend(make_spectra_entries(scns[i], ex, debug=debug))
+            #for crv in scns[i].spectra:
+            #    STS_entries.append( make_spectrum_entry(crv, debug=debug) )
         # END for
     # END for
+    for fn in sts_files:
+        curves = ex.import_spectra(os.path.join(cwd, fn))
+        for crv in curves:
+            STS_entries.append( make_spectrum_entry(crv, debug=debug) )
+    # END for
+    
     IMG_entries.sort(key=lambda tup: tup[0])
     STS_entries.sort(key=lambda tup: tup[0])
     N_opened = len(IMG_entries) + len(STS_entries) + 1
@@ -154,7 +158,7 @@ def create_experiment_log(exp_fp, debug=False):
     f.close()
     
     save_name = re.sub(r'_0001\.mtrx$', '_settings_STS.csv', exp_fn)
-    f = open(cwd+save_name, 'w')
+    f = open(os.path.join(sdir, save_name), 'w')
     columns = [ 'date/time (d)',
                 'sample', 'data set',
                 'scan index', 'rep', 'dir', 'channel',
@@ -171,7 +175,7 @@ def create_experiment_log(exp_fp, debug=False):
     for t, ln in STS_entries:
         f.write(ln)
     f.close()
-    if len(cwd+save_name) > 79:
+    if len(os.path.join(sdir, save_name)) > 79:
         print cwd + '\n    ' + save_name
     else:
         print cwd + ' ' + save_name
@@ -181,12 +185,13 @@ def create_experiment_log(exp_fp, debug=False):
 # END create_experiment_log
 
 #==============================================================================
-def make_scan_entry(scn, ex, no_warn=True):
+def make_scan_entry(scn, no_warn=True):
     ls = []
     # time
     ls.append( str(scn.props['time']/86400.0 + 25569 - 4.0/24) )
     # experiment sample
-    ls.append('{0.sample},{0.data_set}'.format(ex))
+    ls.append( csv_safe(scn.ex.sample) )
+    ls.append( csv_safe(scn.ex.data_set) )
     # img index (scan, repetition, direction) and channel
     ls.append(
         '{index:03d},{rep:04d},{direction},{channel}'.format(**scn.props)
@@ -219,66 +224,62 @@ def make_scan_entry(scn, ex, no_warn=True):
     # number of linked point spectra
     ls.append(str(len(scn.spectra)))
     # experiment data set, comment, scan comment, and file name
-    ls.append(
-        '{0.comment},{1[comment]},{1[file]}\n'.format(ex, scn.props)
-    )
+    ls.append( csv_safe(scn.ex.comment) )
+    ls.append( csv_safe(scn.props['comment']) )
+    ls.append( '{}\n'.format(scn.props['file']) )
     
     return (scn.props['time'], ','.join(ls))
 # END make_scan_entry
 
 #==============================================================================
-def make_spectra_entries(scn, ex, no_warn=True, debug=False):
+def make_spectrum_entry(crv, no_warn=True, debug=False):
     # Column titles
     # time, scan,,,, spec index, spec channel, start voltage, end voltage,
     # scan voltage (V), current setpoint (pA), loop gain (%), T_raster (ms) 
     # points, file, comments
-    out = []
-    if debug and len(scn.spectra) > 0:
-        print (
-            '{0:>3d} spectra in '.format(len(scn.spectra)) +
-            '{index}_{rep}_{direction}'.format(**scn.props)
-        )
-    for crv in scn.spectra:
-        ls = []
-        # time (write time in DAYS since 1900Jan1, this is MS Excel friendly)
-        ls.append( str(crv.props['time']/86400.0 + 25569 - 4.0/24) )
-        # experiment sample
-        ls.append('{0.sample},{0.data_set}'.format(ex))
-        # parent scan index (scan, repetition, direction) and channel
+    ls = []
+    # time (write time in DAYS since 1900Jan1, this is MS Excel friendly)
+    ls.append( str(crv.props['time']/86400.0 + 25569 - 4.0/24) )
+    # experiment sample
+    ls.append( csv_safe(crv.ex.sample) )
+    ls.append( csv_safe(crv.ex.data_set) )
+    # parent scan index (scan, repetition, direction) and channel
+    if crv.is_linked:
         ls.append(
-            '{index:03d},{rep:04d},{direction},{channel}'.format(
-                **scn.props
+            '{0[0]:03d},{0[1]:04d},{1},{0[2]}'.format(
+                pyMTRX.file_name_values(crv.props['parent']), crv.mrk.dir
             )
         )
-        # spec index (scan, repetition, direction) and channel
-        ls.append(
-            '{index:03d},{rep:04d},{direction},{channel}'.format(**crv.props)
-        )
-        # spec start, end
-        ls.append('{:0.3f},{:0.3f}'.format(crv.X[0], crv.X[-1]))
-        # scan bias
-        ls.append('{}'.format(crv.props['GapVoltageControl_Voltage'].value))
-        # scan current setpoint
-        ls.append(
-            '{:0.1f}'.format(crv.props['Regulator_Setpoint_1'].value * 1e12)
-        )
-        # scan loop gain
-        ls.append('{:0.2f}'.format(crv.props['Regulator_Loop_Gain_1_I'].value))
-        # spec raster time
-        ls.append(
-            '{:0.3f}'.format(crv.props['Spectroscopy_Raster_Time_1'].value * 1e3)
-        )
-        # spec number of points
-        ls.append(str(len(crv)))
-        # experiment data set and comment, sts file name
-        ls.append(
-            '{0.comment},{1[comment]},{1[file]}\n'.format(ex, crv.props)
-        )
-        
-        out.append( (crv.props['time'], ','.join(ls)) )
-    # END for
-    return out
-# END make_spectra_entries
+    else:
+        ls.append(',,,')
+    # END try
+    # spec index (scan, repetition, direction) and channel
+    ls.append(
+        '{index:03d},{rep:04d},{direction},{channel}'.format(**crv.props)
+    )
+    # spec start, end
+    ls.append('{:0.3f},{:0.3f}'.format(crv.X[0], crv.X[-1]))
+    # scan bias
+    ls.append('{}'.format(crv.props['GapVoltageControl_Voltage'].value))
+    # scan current setpoint
+    ls.append(
+        '{:0.1f}'.format(crv.props['Regulator_Setpoint_1'].value * 1e12)
+    )
+    # scan loop gain
+    ls.append('{:0.2f}'.format(crv.props['Regulator_Loop_Gain_1_I'].value))
+    # spec raster time
+    ls.append(
+        '{:0.3f}'.format(crv.props['Spectroscopy_Raster_Time_1'].value * 1e3)
+    )
+    # spec number of points
+    ls.append(str(len(crv)))
+    # experiment data set and comment, sts file name
+    ls.append( csv_safe(crv.ex.comment) )
+    ls.append( csv_safe(crv.props['comment']) )
+    ls.append( '{}\n'.format(crv.props['file']) )
+    
+    return (crv.props['time'], ','.join(ls))
+# END make_spectrum_entry
 
 #==============================================================================
 def image_check(ex, scn):
@@ -341,6 +342,11 @@ def find_files(cwd='./', fext='[^.]+', r=True):
     # END while
     return out_files
 # END find files
+
+#==============================================================================
+def csv_safe(s):
+    return '"' + re.sub(r'[\r\n]+', ' | ', s) + '"'
+# END csv_safe
 
 #==============================================================================
 def make_hms(t):

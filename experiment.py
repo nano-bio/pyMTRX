@@ -46,7 +46,7 @@ class Experiment(object):
                       interpreted will be written
     Instance Attributes:
         fp (str): the file path used for instantiation
-        datafile_st (dict): settings state dictionaries keyed by data file
+        _datafile_st (dict): settings state dictionaries keyed by data file
                             name
         stslinks (dict): image-spectra linkage information
             stslinks[spectra_fname] = (mrk, fname)
@@ -77,6 +77,22 @@ class Experiment(object):
         TODO fill this in
     '''
     
+    @classmethod
+    def is_image(self, file_name):
+        if re.search(r'\.[^.()]+?_mtrx$', file_name):
+            return True
+        else:
+            return False
+    # END is_point_spectra
+    
+    @classmethod
+    def is_point_spectrum(self, file_name):
+        if re.search(r'\.[^.]+?\([^.]+?\)_mtrx$', file_name):
+            return True
+        else:
+            return False
+    # END is_point_spectra
+    
     def __init__(self, file_path, debug=False):
         self.fp = file_path
         # Initial settings state dictionary
@@ -85,7 +101,7 @@ class Experiment(object):
         self.timeline = Timeline()
         # Settings state to be kept current with the timeline
         self._curr_st = {}
-        self.datafile_st = {}
+        self._datafile_st = {}
         self.stslinks = {}
         self.sample = ''
         self.data_set = ''
@@ -120,8 +136,9 @@ class Experiment(object):
             while self._init_readblock(f): pass
         # END with
         
-        # Parse all of the MARKs now that all of the channels/axes have been
-        # registered
+        # all remaining unlinked spectra did not have their "parent" images
+        # saved
+        self.free_spectra.extend(self.unlinked_spectra)
         
         # when debugging write some variables directly to the file
         if debug:
@@ -230,7 +247,7 @@ class Experiment(object):
                 self._init_read_VIEW(bkbuff)
             elif re.search(r'INCI', name):
                 tl_entry = self.timeline.add(t, 'INCI')
-                self.datafile_st[tl_entry] = dict(self._curr_st)
+                self._datafile_st[tl_entry] = dict(self._curr_st)
                 self.log.write( '\n')
             else:
                 self.log.write( '    {} bytes\n'.format(len(bkbuff)) )
@@ -331,8 +348,8 @@ class Experiment(object):
         fname = buff.next_mtrxstr()
         # freeze a copy of the current settings and register it
         tl_entry = self.timeline.add(self._t_bk, 'BREF', fname)
-        self.datafile_st[fname] = dict(self._curr_st)
-        self.datafile_st[tl_entry] = self.datafile_st[fname]
+        self._datafile_st[fname] = dict(self._curr_st)
+        self._datafile_st[tl_entry] = self._datafile_st[fname]
         
         # manage point-spectra linkage
         img_mat = re.search(r'\.([^()]+)_mtrx$', fname)
@@ -348,21 +365,19 @@ class Experiment(object):
                 if not mrk.parent_hash:
                     # the spectrum is either a repeat or a from a non-specific
                     # point
-                    first_name, repeat = re.subn(
+                    first_name = re.sub(
                         r'(\d+_)\d+(\.[^.]+$)', '\g<1>1\g<2>', mrk.spec_fn
                     )
-                    if repeat:
+                    if mrk.spec_fn != first_name:
                         # copy over mark for following spectra
                         try:
                             new_mrk = copy(self.stslinks[first_name])
-                        except KeyError:
-                            pdb.set_trace()
-                        new_mrk.spec_fn = mrk.spec_fn
-                        self.unlinked_spectra.insert(0, new_mrk)
-                    else:
-                        # this is a "free-range" spectra
-                        # e.g. an I(t) spectra
-                        self.free_spectra.append(mrk.spec_fn)
+                            new_mrk.spec_fn = mrk.spec_fn
+                            self.unlinked_spectra.insert(0, new_mrk)
+                        except KeyError :
+                            # this is a "free-range" spectra
+                            # e.g. an I(t) spectra
+                            self.free_spectra.append(mrk.spec_fn)
                     # END if
                     continue
                 # END if
@@ -672,6 +687,23 @@ class Experiment(object):
         # END while
     # END _init_read_CCSY
     
+    # Magic Methods
+    #--------------
+    def __contains__(self, item):
+        try:
+            item  = os.path.basename(item.prop['file'])
+        except AttributeError:
+            try:
+                item  = os.path.basename(item)
+            except TypeError:
+                raise TypeError(
+                    'Experiment.__contains__ accepts only str-, CurveData-, or ScanData-like objects'
+                )
+            # END try
+        # END try
+        return item in self._datafile_st
+    # END 
+    
     def _parse_marks(self):
         pass
     # END _parse_marks
@@ -709,10 +741,16 @@ class Experiment(object):
         return import_spectra(file_path, ex=self, debug=debug)
     # END import_spectra
     
+    def get_data_filenames(self):
+        return [ x for x in self._datafile_st.keys()
+                  if isinstance(x, basestring)
+                ]
+    # END get_data_filenames
+    
     def get_params(self, file_name):
         '''
         '''
-        params = dict( self.datafile_st[file_name] )
+        params = dict( self._datafile_st[file_name] )
         
         # retrieve all image comments
         comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
@@ -727,8 +765,8 @@ class Experiment(object):
     
     def transfer_params(self, data_obj):
         fn = data_obj.props['file']
-        for k in self.datafile_st[fn]:
-            data_obj.props[k] = self.datafile_st[fn][k]
+        for k in self._datafile_st[fn]:
+            data_obj.props[k] = self._datafile_st[fn][k]
         
         # retrieve all image comments
         comments = sorted(self.cmnt_lkup[fn], key=lambda tup: tup[0])
@@ -740,15 +778,31 @@ class Experiment(object):
     # END transfer_params
     
     def get_pmods(self, file_name, t, N_points, slow_ax, fast_ax):
-        fparams = self.datafile_st[file_name]
-        i_bref, _ = self.timeline.bisect(t)
+        fparams = self._datafile_st[file_name]
+        #i_bref, _ = self.timeline.bisect(t)
+        i_bref = self.timeline.find_bref(t, file_name)[0]
+        print 'timeline[0] = {}'.format(self.timeline[0])
+        print '[{}] ? <= {}'.format(i_bref, t)
+        print 'timeline[-1] = {}'.format(self.timeline[-1])
+        if i_bref == 0:
+            print '"'+file_name+'"\n'
+            pprint(self.timeline._tl[:20])
+        elif i_bref == len(self.timeline):
+            print '"'+file_name+'"\n'
+            pprint(self.timeline._tl[-20:])
         i_prev = i_bref - 1
-        # If stop/restart were pressed then there will be an INCI entry
+        # If stop/restart was pressed then there will be an INCI entry
         # just before the BREF entry with the same timestamp;
         # skip over this INCI, if it exists
-        while self.timeline[i_prev].t == self.timeline[i_bref].t:
-            i_prev -= 1
-        # END while
+        try:
+            while self.timeline[i_prev].t == self.timeline[i_bref].t:
+                i_prev -= 1
+        except IndexError as err:
+            print '0'
+            print i_prev
+            print i_bref
+            print len(self.timeline)
+            raise err
         # The preceding INCI or BREF will mark the beginning of the scanning,
         # but all BREFs from point spectra need to be skipped
         while 0 <= i_prev:
@@ -764,7 +818,7 @@ class Experiment(object):
         # i_prev is now the index of a timeline entry with a timestamp that
         # is equal to the time the data acquisition started
         t_start = self.timeline[i_prev].t
-        init_params = self.datafile_st[self.timeline[i_prev]]
+        init_params = self._datafile_st[self.timeline[i_prev]]
         
         # check for changes in raster time or point spectra
         steady = True
@@ -818,6 +872,14 @@ class Experiment(object):
         return pmods
         
     # END get_pmods
+    
+    def get_state(self, fn):
+        if isinstance(fn, basestring):
+            return self._datafile_st[fn]
+        else:
+            raise TypeError('File name argument must be str')
+        # END if
+    # END get_state
 # END Experiment
 
 #==============================================================================
@@ -961,6 +1023,7 @@ def import_scan( file_path,
         for j in range(len(scans[i])):
             params['direction'] = 2*i + j
             scans[i][j] = ScanData( X_ax, Y_ax, scans[i][j], params)
+            if not (ex is None): scans[i][j].ex = ex
             scans[i][j].spectra = []
             scans_flat.append(scans[i][j])
         # END for
@@ -977,9 +1040,9 @@ def import_scan( file_path,
         file_sts_links = ex.stslinks[file_name]
     for mrk in file_sts_links:
         try:
-            scans_flat[mrk.dir].spectra.extend(
-                ex.import_spectra( os.path.join(file_dir, mrk.spec_fn) )
-            )
+            crvs = ex.import_spectra( os.path.join(file_dir, mrk.spec_fn) )
+            scans_flat[mrk.dir].spectra.extend(crvs)
+            for x in crvs: x.parent = scans_flat[mrk.dir]
         except IOError:
             pass
         # END try
@@ -1150,18 +1213,26 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
     try:
         # make param dict from Experiment object
         params = ex.get_params(file_name)
-        # stslinks[spectra_fname] = ((ii, i, d, locstr, chnl_hash), scn_fname)
-        params['parent'] = ex.stslinks[file_name].parent_fn
-        # Example locstr:
-        #  "-193,205;7.16667e-009,9.16667e-009"
-        # pixel coordinates are relative to bottom left corner
-        # physical coordinates are relative to scan center
-        coords = re.split(r';|,', ex.stslinks[file_name].loc)
-        params['coord_px'] = ( int(coords[0]), int(coords[1]) )
-        params['coord_phys'] = ( float(coords[2]), float(coords[3]) )
+        
+        if file_name in ex.stslinks:
+            params['parent'] = ex.stslinks[file_name].parent_fn
+        else:
+            params['parent'] = ''
+        
+        try:
+            # Example locstr:
+            #  "-193,205;7.16667e-009,9.16667e-009"
+            # pixel coordinates are relative to bottom left corner
+            # physical coordinates are relative to scan center
+            coords = re.split(r';|,', ex.stslinks[file_name].loc)
+            params['coord_px'] = ( int(coords[0]), int(coords[1]) )
+            params['coord_phys'] = ( float(coords[2]), float(coords[3]) )
+        except Exception:
+            pass
+        # END try
     except (AttributeError, KeyError) as err:
         # make an incomplete param dict from available information
-        params = {'parent': ''}
+        params = {'parent': '',}
     # END try
     params['file'] = file_name
     # pull index and repetition values from file_name
@@ -1179,6 +1250,11 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
             xf = params['Spectroscopy_Device_1_End'].value
             X = np.linspace(x0, xf, len(all_Ys[0]))
             x_units = params['Spectroscopy_Device_1_Start'].unit
+        elif indp_ax.qual_name[-1] == 'Z':
+            x0 = params['Spectroscopy_Device_2_Start'].value
+            xf = params['Spectroscopy_Device_2_End'].value
+            X = np.linspace(x0, xf, len(all_Ys[0]))
+            x_units = params['Spectroscopy_Device_2_Start'].unit
         elif re.search('Clock2', indp_ax.qual_name):
             tstep = params['Clock2_Period'].value
             N = params['Clock2_Samples'].value
@@ -1196,10 +1272,11 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
     
     for i, Y in enumerate(all_Ys):
         params['direction'] = i
-        all_Ys[i] = CurveData(
+        all_Ys[i] = MTRXCurve(
             X, Y, x_units=x_units, y_units=depn_ax.unit,
             props=params
         )
+        if not (ex is None): all_Ys[i].ex = ex
     # END for
     
     return all_Ys
@@ -1237,6 +1314,21 @@ def _read_DATA_spectra(buff, depn_ax):
 # END _read_DATA_spectra
 
 #==============================================================================
+class MTRXCurve(CurveData):
+    '''CurveData sub-class with extra methods taylored for MTRX data'''
+    
+    @property
+    def is_free(self): return not self.is_linked
+    
+    @property
+    def is_linked(self): return self.props['file'] in self.ex.stslinks
+    
+    @property
+    def mrk(self): return self.ex.stslinks[self.props['file']]
+    
+# END MTRXCurve
+
+#==============================================================================
 def unwind_split(A, n):
     # A is a numpy.ndarray
     B = np.zeros(len(A)/2, dtype=A.dtype)
@@ -1253,6 +1345,15 @@ def unwind_split(A, n):
     # END for
     return [B, C]
 # END unwind_split
+
+#=============================================================================
+def file_name_values(fn):
+    try:
+        mats = re.search(r'--(\d+)_(\d+)\.([^.]+?)_mtrx$', fn).groups()
+        return (int(mats[0]), int(mats[1]), mats[2])
+    except AttributeError:
+        raise ValueError('file name does not conform to MATRIX convention')
+# END file_name_values
 
 #==============================================================================
 TimelineEntry = namedtuple('TimelineEntry', ['t', 'bknm', 'data'])
@@ -1301,9 +1402,9 @@ class Timeline(object):
     
     def bisect(self, t):
         if self._tl[-1].t <= t:
-            return (len(self._tl),)
+            return len(self._tl)-1, len(self._tl)
         elif t < self._tl[0].t:
-            return (0,)
+            return None, 0
         else:
             i = 0
             j = len(self._tl)
@@ -1322,6 +1423,24 @@ class Timeline(object):
             [x for x in self._tl if re.search(bknm_ptn, x.bknm)]
         )
     # END filter
+    
+    def find_bref(self, t, file_name):
+        '''Some entries have the same time value, this method will search
+            by time first then by file_name for a more exact result
+        '''
+        i = self.bisect(t)[0]
+        if i is None:
+            raise ValueError('No TimelineEntry with matching time value')
+        
+        while 0 <= i:
+            if self[i].bknm == 'BREF':
+                if self[i].data[0] == file_name:
+                    break
+            i -= 1
+        # END while
+        
+        return i, self[i]
+    # END find_bref
     
     def pop(self, i): return self._tl.pop(i)
     

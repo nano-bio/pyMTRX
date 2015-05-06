@@ -1,0 +1,342 @@
+self.axch = 
+    4299423811 (x0000000100440043):
+        { '_mtrx_hash_value': 4299423811L,
+          'depn_ax': <DependentAxis @ MTRX 64426606659>,
+          'descrip': u'ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)'}
+    8594391107 (x0000000200440043):
+        { '_mtrx_hash_value': 8594391107L,
+          'depn_ax': <DependentAxis @ MTRX 55836672067>,
+          'descrip': u'ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)'}
+    12889358403 (x0000000300440043):
+        { '_mtrx_hash_value': 12889358403L,
+          'depn_ax': <DependentAxis @ MTRX 60131639363>,
+          'descrip': u'ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)'}
+    17184325699 (x0000000400440043):
+        { '_mtrx_hash_value': 17184325699L,
+          'depn_ax': <DependentAxis @ MTRX 51541704771>,
+          'descrip': u'ChannelData: channel = I, storage = ResultStorage(BlockTransfer)'}
+    21476933697 (x0000000500200041):
+        { '_mtrx_hash_value': 21476933697L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::V'}
+    21479292995 (x0000000500440043):
+        { '_mtrx_hash_value': 21479292995L,
+          'depn_ax': <DependentAxis @ MTRX 73016541251>,
+          'descrip': u'ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)'}
+    25771900993 (x0000000600200041):
+        { '_mtrx_hash_value': 25771900993L,
+          'len': 1000,
+          'mirrored': False,
+          'next_ax': None,
+          'qual_name': u'Default::Spectroscopy::Z'}
+    25774260291 (x0000000600440043):
+        { '_mtrx_hash_value': 25774260291L,
+          'depn_ax': <DependentAxis @ MTRX 68721573955>,
+          'descrip': u'ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)'}
+    42951770177 (x0000000a00200041):
+        { '_mtrx_hash_value': 42951770177L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': None,
+          'qual_name': u'Default::XYScanner::Y'}
+    47246737473 (x0000000b00200041):
+        { '_mtrx_hash_value': 47246737473L,
+          'len': 600,
+          'mirrored': True,
+          'next_ax': <IndependentAxis @ MTRX 42951770177>,
+          'qual_name': u'Default::XYScanner::X'}
+    51541704771 (x0000000c00200043):
+        { '_mtrx_hash_value': 51541704771L,
+          'indp_ax': <IndependentAxis @ MTRX 47246737473>,
+          'name': u'I',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF8850>,
+          'unit': u'A'}
+    55836672067 (x0000000d00200043):
+        { '_mtrx_hash_value': 55836672067L,
+          'indp_ax': <IndependentAxis @ MTRX 47246737473>,
+          'name': u'Z',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF8C10>,
+          'unit': u'm'}
+    60131639363 (x0000000e00200043):
+        { '_mtrx_hash_value': 60131639363L,
+          'indp_ax': <IndependentAxis @ MTRX 47246737473>,
+          'name': u'Aux2',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF82B0>,
+          'unit': u'V'}
+    64426606659 (x0000000f00200043):
+        { '_mtrx_hash_value': 64426606659L,
+          'indp_ax': <IndependentAxis @ MTRX 21476933697>,
+          'name': u'I(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF8A70>,
+          'unit': u'A'}
+    68721573955 (x0000001000200043):
+        { '_mtrx_hash_value': 68721573955L,
+          'indp_ax': <IndependentAxis @ MTRX 25771900993>,
+          'name': u'I(Z)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF8310>,
+          'unit': u'A'}
+    73016541251 (x0000001100200043):
+        { '_mtrx_hash_value': 73016541251L,
+          'indp_ax': <IndependentAxis @ MTRX 21476933697>,
+          'name': u'Aux2(V)',
+          'trans_func': <pyMTRX.experiment.TransferFunction object at 0x03BF8BF0>,
+          'unit': u'V'}
+
+self.stslinks = 
+    DICT
+        21476933697, 0, Default::Spectroscopy::V, True
+        25771900993, 0, Default::Spectroscopy::Z, False
+        42951770177, 0, Default::XYScanner::Y, True
+        47246737473, 42951770177, Default::XYScanner::X, True
+        ---
+        51541704771, 47246737473, I, A
+        55836672067, 47246737473, Z, m
+        60131639363, 47246737473, Aux2, V
+        64426606659, 21476933697, I(V), A
+        68721573955, 25771900993, I(Z), A
+        73016541251, 21476933697, Aux2(V), V
+        ---
+        4299423811, 64426606659, ChannelData: channel = I(V), storage = ResultStorage(BlockTransfer)
+        8594391107, 55836672067, ChannelData: channel = Z, storage = ResultStorage(BlockTransfer)
+        12889358403, 60131639363, ChannelData: channel = Aux2, storage = ResultStorage(BlockTransfer)
+        17184325699, 51541704771, ChannelData: channel = I, storage = ResultStorage(BlockTransfer)
+        21479292995, 73016541251, ChannelData: channel = Aux2(V), storage = ResultStorage(BlockTransfer)
+        25774260291, 68721573955, ChannelData: channel = I(Z), storage = ResultStorage(BlockTransfer)
+        ---
+    CHCS
+        21476933697, 600, 0, 0
+        25771900993, 1000, 0, 0
+        42951770177, 600, 0, 0
+        47246737473, 600, 1, 0
+        ---
+        51541704771, 1, 0
+        55836672067, 1, 0
+        60131639363, 1, 0
+        64426606659, 1, 0
+        68721573955, 1, 0
+        73016541251, 1, 0
+        ---
+        4299423811, 1, 32
+        8594391107, 2, 32
+        12889358403, 2, 32
+        17184325699, 2, 32
+        21479292995, 1, 32
+        25774260291, 1, 32
+        ---
+    SCAN
+    XFER
+        51541704771: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        55836672067: TFF_Linear1D (m)
+            Factor = 1.74e+16
+            Offset = 0.0
+        60131639363: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+        64426606659: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        68721573955: TFF_MultiLinear1D (A)
+            NeutralFactor = 6.4489e+15
+            Offset = 0.0
+            PreFactor = 1.01
+            PreOffset = -0.01
+            Raw_1 = 0.0
+        73016541251: TFF_Linear1D (V)
+            Factor = 214750000.0
+            Offset = 0.0
+14:36:02 x0000 META    68 bytes
+14:36:02 x0000 EXPD    562 bytes
+14:36:02 x0000 FSEQ    8 bytes
+14:36:02 x0000 EXPS    33924 bytes
+14:36:02 x0000 EEPA
+14:36:02 x0001 INCI
+14:36:14 x0000 MARK    MTRX$CREATION_COMMENT-
+14:36:14 x0000 MARK    MTRX$SAMPLE_NAME-0.5 ML H2O Copper Oxide
+14:36:14 x0000 MARK    MTRX$DATA_SET_NAME-
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1(V)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1(Z)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1(r)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(V)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(Z)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(r)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(t)
+14:36:14 x0000 MARK    MTRX$ENABLE_RECORDING-I
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-I(V)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-I(Z)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-I(r)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-I(t)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-I_Reg
+14:36:14 x0000 MARK    MTRX$ENABLE_RECORDING-Z
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Z(r)
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-Z(t)
+14:36:14 x0000 MARK    Instrument information: Instrument >Default< calibration data set >STM/AFM for SPM PRE 4< parameter set >LT STM< (variant: >LHe<)
+14:36:14 x0001 INCI
+14:36:14 x0000 MARK    MTRX$DISABLE_RECORDING-I_Reg
+14:36:15 x0000 MARK    MTRX$ENABLE_RECORDING-Z
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1(Z)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(Z)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Z(r)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(r)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Z(t)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1(V)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(V)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux1(r)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-Aux2(t)
+14:36:15 x0000 MARK    MTRX$ENABLE_RECORDING-I
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-I(r)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-I(t)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-I(V)
+14:36:15 x0000 MARK    MTRX$DISABLE_RECORDING-I(Z)
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    76 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    76 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    76 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:36:17 x0000 VIEW
+14:36:17 x0000 PROC    100 bytes
+14:36:17 x0000 PROC    56 bytes
+14:36:17 x0000 PROC    96 bytes
+14:36:17 x0000 PROC    64 bytes
+14:36:17 x0000 PROC    52 bytes
+14:36:17 x0000 PROC    104 bytes
+14:47:15 x0001 INCI
+14:49:03 x0000 PMOD    Regulator_Setpoint_1 <-- 1e-11 Ampere
+14:49:04 x0000 CCSY    174970 bytes
+14:49:04 x0000 BREF    2015Apr01-143602--1_1.I_mtrx
+14:49:04 x0000 BREF    2015Apr01-143602--1_1.Z_mtrx
+14:50:52 x0000 BREF    2015Apr01-143602--1_2.Z_mtrx
+14:50:52 x0000 BREF    2015Apr01-143602--1_2.I_mtrx
+14:52:40 x0000 BREF    2015Apr01-143602--1_3.I_mtrx
+14:52:40 x0000 BREF    2015Apr01-143602--1_3.Z_mtrx
+14:52:44 x0000 PMOD    GapVoltageControl_Voltage <-- 0.5 Volt
+14:52:53 x0000 PMOD    GapVoltageControl_Voltage <-- -0.9 Volt
+14:53:01 x0000 PMOD    GapVoltageControl_Voltage <-- 0.9 Volt
+14:53:17 x0000 PMOD    XYScanner_Y_Offset <-- 5e-08 Meter
+14:54:29 x0000 BREF    2015Apr01-143602--1_4.I_mtrx
+14:54:29 x0000 BREF    2015Apr01-143602--1_4.Z_mtrx
+14:56:17 x0000 BREF    2015Apr01-143602--1_5.Z_mtrx
+14:56:17 x0000 BREF    2015Apr01-143602--1_5.I_mtrx
+14:56:48 x0000 PMOD    XYScanner_Y_Offset <-- 1e-07 Meter
+14:56:55 x0000 PMOD    GapVoltageControl_Voltage <-- 0.01 Volt
+14:58:05 x0000 BREF    2015Apr01-143602--1_6.Z_mtrx
+14:58:05 x0000 BREF    2015Apr01-143602--1_6.I_mtrx
+14:58:50 x0000 PMOD    Regulator_Setpoint_1 <-- 2e-12 Ampere
+14:59:53 x0000 BREF    2015Apr01-143602--1_7.I_mtrx
+14:59:53 x0000 BREF    2015Apr01-143602--1_7.Z_mtrx
+15:00:01 x0000 PMOD    GapVoltageControl_Voltage <-- 0.9 Volt
+15:01:41 x0000 BREF    2015Apr01-143602--1_8.Z_mtrx
+15:01:41 x0000 BREF    2015Apr01-143602--1_8.I_mtrx
+15:03:30 x0000 BREF    2015Apr01-143602--1_9.I_mtrx
+15:03:30 x0000 BREF    2015Apr01-143602--1_9.Z_mtrx
+15:03:32 x0000 PMOD    XYScanner_X_Offset <-- 5e-08 Meter
+15:05:18 x0000 BREF    2015Apr01-143602--1_10.Z_mtrx
+15:05:18 x0000 BREF    2015Apr01-143602--1_10.I_mtrx
+15:07:06 x0000 BREF    2015Apr01-143602--1_11.Z_mtrx
+15:07:06 x0000 BREF    2015Apr01-143602--1_11.I_mtrx
+15:08:54 x0000 BREF    2015Apr01-143602--1_12.Z_mtrx
+15:08:54 x0000 BREF    2015Apr01-143602--1_12.I_mtrx
+15:10:43 x0000 BREF    2015Apr01-143602--1_13.Z_mtrx
+15:10:43 x0000 BREF    2015Apr01-143602--1_13.I_mtrx
+15:12:31 x0000 BREF    2015Apr01-143602--1_14.Z_mtrx
+15:12:31 x0000 BREF    2015Apr01-143602--1_14.I_mtrx
+15:14:19 x0000 BREF    2015Apr01-143602--1_15.I_mtrx
+15:14:19 x0000 BREF    2015Apr01-143602--1_15.Z_mtrx
+15:16:07 x0000 BREF    2015Apr01-143602--1_16.Z_mtrx
+15:16:07 x0000 BREF    2015Apr01-143602--1_16.I_mtrx
+15:17:55 x0000 BREF    2015Apr01-143602--1_17.Z_mtrx
+15:17:55 x0000 BREF    2015Apr01-143602--1_17.I_mtrx
+15:19:44 x0000 BREF    2015Apr01-143602--1_18.I_mtrx
+15:19:44 x0000 BREF    2015Apr01-143602--1_18.Z_mtrx
+15:20:08 x0000 PMOD    GapVoltageControl_Voltage <-- 0.002 Volt
+15:20:12 x0000 PMOD    XYScanner_X_Offset <-- 1e-07 Meter
+15:21:32 x0000 BREF    2015Apr01-143602--1_19.Z_mtrx
+15:21:32 x0000 BREF    2015Apr01-143602--1_19.I_mtrx
+15:23:20 x0000 BREF    2015Apr01-143602--1_20.Z_mtrx
+15:23:20 x0000 BREF    2015Apr01-143602--1_20.I_mtrx
+15:23:33 x0001 INCI
+15:23:33 x0000 BREF    2015Apr01-143602--1_21.Z_mtrx
+15:23:33 x0000 BREF    2015Apr01-143602--1_21.I_mtrx
+15:24:00 x0001 INCI
+15:24:00 x0000 BREF    2015Apr01-143602--2_1.Z_mtrx
+15:24:00 x0000 BREF    2015Apr01-143602--2_1.I_mtrx
+15:25:00 x0001 INCI
+15:26:05 x0000 PMOD    GapVoltageControl_Voltage <-- 0.9 Volt
+15:26:12 x0000 PMOD    XYScanner_X_Offset <-- 1.5e-07 Meter
+15:26:48 x0000 BREF    2015Apr01-143602--3_1.Z_mtrx
+15:26:48 x0000 BREF    2015Apr01-143602--3_1.I_mtrx

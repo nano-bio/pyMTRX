@@ -100,12 +100,12 @@ def subroutine_1(ex_fp, debug=False):
     cwd = os.path.dirname(ex_fp)
     ex = pyMTRX.Experiment(ex_fp, debug=debug)
     for fn in os.listdir(cwd):
-        if fn not in ex.datafile_st: continue
+        if fn not in ex: continue
         if not re.search(r'\.[^.]+?\(\w+\)[^.]+$', fn): continue
         if re.search(r'\(t\)', fn): continue
         if debug: print '\n{}'.format(fn)
         for crv in ex.import_spectra(os.path.join(cwd, fn)):
-            parent_fn = crv.props['parent']
+            parent_fn = crv.props.get('parent', '')
             if debug: print '  parent= {}'.format(parent_fn)
             try:
                 mrk = ex.stslinks[fn]
