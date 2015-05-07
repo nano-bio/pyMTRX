@@ -11,4 +11,4 @@ scan_file_extentions = '[^.()]+_mtrx'
 #scan_file_extentions = 'Z_mtrx'
 
 nb_slide('.', dir_filter=directions_to_use, fext=scan_file_extentions)
-raw_input('Press Eneter to close')
+raw_input('Press Enter to close')

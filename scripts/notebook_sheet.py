@@ -30,7 +30,9 @@ import pyMTRX
 from pyMTRX.experiment import Experiment
 
 #==============================================================================
-def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
+def main( cwd='./', sdir=None, r=True, processes=mp.cpu_count(),
+          single_sheet=False, debug=False
+        ):
     if debug: print '*** DEBUG MODE ON ***'
     t = time.time()
     if cwd[-1] != '/':
@@ -52,19 +54,20 @@ def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
     if processes < 1 or debug: processes = 1
     if processes == 1:
         for fp in experiment_files:
-            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
+            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
             N_opened.append(
                 create_experiment_log(fp, sdir=sdir, debug=debug)
             )
         # END for
     else:
         # Create worker pool and start all jobs
-        worker_pool = mp.Pool(processes=processes)
+        worker_pool = mp.Pool(processes=processes, maxtasksperchild=12)
+        print 'running in multiprocess mode: {} processes'.format(processes)
         for fp in experiment_files:
-            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
+            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
             N_opened.append(
-                worker_pool.apply_async( create_experiment_log,
-                                         args=(fp,sdir,debug)
+                worker_pool.apply_async( wrapped_create_exlog,
+                                         args=(fp,sdir,debug),
                                        )
             )
         # END for
@@ -79,11 +82,10 @@ def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
     else:
         for n in N_opened:
             try:
-                n.get()
-            except:
-                continue
+                N += n.get()
+            except Exception as err:
+                print err
             # END try
-            N += n.get()
         # END for
     # END if
     t = time.time() - t
@@ -97,6 +99,15 @@ def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
 # END main
 
 #==============================================================================
+def wrapped_create_exlog(*args, **kwargs):
+    try:
+        return create_experiment_log(*args, **kwargs)
+    except Exception as err:
+        print '{}: {}'.format(args[0], repr(err))
+        return 0
+    # END try
+# END wrapped_create_exlog
+
 def create_experiment_log(exp_fp, sdir='./', debug=False):
     cwd, exp_fn = os.path.split(exp_fp)
     cwd += '/'
@@ -370,17 +381,18 @@ def flatten_tree(A):
 
 #==============================================================================
 if __name__ == '__main__':
-    main()
-    quit()
-    try:
-        main()
-    except Exception as err:
-        exc_type, exc_value, exc_tb = sys.exc_info()
-        bad_file, bad_line, func_name, text = traceback.extract_tb(exc_tb)[-1]
-        print 'Error in {}'.format(bad_file)
-        print '{} on {}: {}'.format(type(err).__name__, bad_line, err)
-        print ''
-    finally:
-        raw_input("press enter to exit")
-    # END try
+    if os.name == 'nt': mp.freeze_support()
+    #main()
+    #quit()
+    #try:
+    #    main()
+    #except Exception as err:
+    #    exc_type, exc_value, exc_tb = sys.exc_info()
+    #    bad_file, bad_line, func_name, text = traceback.extract_tb(exc_tb)[-1]
+    #    print 'Error in {}'.format(bad_file)
+    #    print '{} on {}: {}'.format(type(err).__name__, bad_line, err)
+    #    print ''
+    #finally:
+    #    raw_input("press enter to exit")
+    ## END try
 # END if

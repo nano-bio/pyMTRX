@@ -47,7 +47,7 @@ def main( cwd='.', sdir=None, dir_filter=range(4),
     experiment_files.sort(key=lambda fp: os.path.getmtime(fp))
     print 'found {} .mtrx files'.format(len(experiment_files))
     for ex_fp in experiment_files:
-        if not isinstance(sdir, str): sdir = os.path.dirname(ex_fp)
+        if not isinstance(sdir, basestring): sdir = os.path.dirname(ex_fp)
         make_pptx(
             ex_fp, sdir=sdir, dir_filter=dir_filter, fext=fext, debug=debug
         )
