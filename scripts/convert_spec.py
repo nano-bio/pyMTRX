@@ -27,7 +27,7 @@ from pprint import pprint
 import pyMTRX
 
 #==============================================================================
-def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
+def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
     if debug: print '*** DEBUG MODE ON ***'
     t = time.time()
     if cwd[-1] != '/':
@@ -50,15 +50,17 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
     if processes < 1 or debug: processes = 1
     if processes == 1:
         for fp in experiment_files:
-            N_opened.append( subroutine_1(fp, debug=debug) )
+            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
+            N_opened.append( subroutine_1(fp, sdir=sdir, debug=debug) )
         # END for
     else:
         # Create worker pool and start all jobs
         worker_pool = mp.Pool(processes=processes)
         for fp in experiment_files:
+            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
             N_opened.append(
                 worker_pool.apply_async( subroutine_1,
-                                         args=(fp,debug)
+                                         args=(fp,sdir,debug)
                                        )
             )
         # END for
@@ -91,7 +93,7 @@ def main(cwd='./', r=True, processes=mp.cpu_count(), debug=False):
 # END main
 
 #==============================================================================
-def subroutine_1(ex_fp, debug=False):
+def subroutine_1(ex_fp, sdir='.', debug=False):
     '''This function will receive the path to a .mtrx file and should attempt
     to convert every STS spectra in that experiment to a .txt (utf-8) file
     '''
@@ -129,11 +131,13 @@ def subroutine_1(ex_fp, debug=False):
                            '.asc'
                         ])
             sn = sn.format(**crv.props)
-            pyMTRX.CurveData.save(crv, os.path.join(cwd, sn))
+            pyMTRX.CurveData.save(crv, os.path.join(sdir, sn))
             if debug: print '  saved "{}"'.format(sn)
             n_opened += 1
         # END for
     # END for
+    
+    print 'saved {} spectra for {}'.format(n_opened, os.path.basename(ex_fp))
     return n_opened
 # END subroutine_1
 

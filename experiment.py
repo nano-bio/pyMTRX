@@ -77,6 +77,8 @@ class Experiment(object):
         TODO fill this in
     '''
     
+    # Class Methods
+    #--------------
     @classmethod
     def is_image(self, file_name):
         if re.search(r'\.[^.()]+?_mtrx$', file_name):
@@ -93,6 +95,8 @@ class Experiment(object):
             return False
     # END is_point_spectra
     
+    # Object instantiation
+    #---------------------
     def __init__(self, file_path, debug=False):
         self.fp = file_path
         # Initial settings state dictionary
@@ -702,12 +706,12 @@ class Experiment(object):
             # END try
         # END try
         return item in self._datafile_st
-    # END 
+    # END __contains__
     
-    def _parse_marks(self):
-        pass
-    # END _parse_marks
+    def __str__(self): return self.fp
     
+    # Object data import methods
+    #---------------------------
     def import_scan( self, file_path, scan_only=False, debug=False
                    ):
         '''Read a scan file and return ScanData objects
@@ -741,6 +745,8 @@ class Experiment(object):
         return import_spectra(file_path, ex=self, debug=debug)
     # END import_spectra
     
+    # Object information methods
+    #---------------------------
     def get_data_filenames(self):
         return [ x for x in self._datafile_st.keys()
                   if isinstance(x, basestring)
@@ -781,15 +787,6 @@ class Experiment(object):
         fparams = self._datafile_st[file_name]
         #i_bref, _ = self.timeline.bisect(t)
         i_bref = self.timeline.find_bref(t, file_name)[0]
-        print 'timeline[0] = {}'.format(self.timeline[0])
-        print '[{}] ? <= {}'.format(i_bref, t)
-        print 'timeline[-1] = {}'.format(self.timeline[-1])
-        if i_bref == 0:
-            print '"'+file_name+'"\n'
-            pprint(self.timeline._tl[:20])
-        elif i_bref == len(self.timeline):
-            print '"'+file_name+'"\n'
-            pprint(self.timeline._tl[-20:])
         i_prev = i_bref - 1
         # If stop/restart was pressed then there will be an INCI entry
         # just before the BREF entry with the same timestamp;
@@ -827,6 +824,7 @@ class Experiment(object):
                 if re.search( r'XYScanner.*?Raster_Time|STS_LOCATION',
                               x.data[0] ):
                     steady = False
+                    #print '    dynamic point: {}'.format(x)
                     break
                 # END if
             except IndexError:
@@ -860,9 +858,9 @@ class Experiment(object):
                            ]
             # END for
         else:
-            print 'WARNING: Dynamic scan encountered: ...{}'.format(
-                file_name[-18:]
-            )
+            #print 'WARNING: Dynamic scan encountered: ...{}'.format(
+            #    file_name[-18:]
+            #)
             for i in range(len(pmods)):
                 pmods[i] = [ (x.t-t_start, x.data[0], x.data[1])
                              for x in scn_tl
@@ -975,28 +973,22 @@ def import_scan( file_path,
     params['time'] = t
         
     # Calculate how long it took to take the scan
-    scn_t = [0.0, 0.0]
     fast_ax = depn_ax.indp_ax
-    try:
-        N = 1
-        while N <= Npnt_act:
-            i = (N-1) / (fast_ax.len*params['XYScanner_Lines'].value)
-            scn_t[i] += params['XYScanner_Raster_Time'].value
-            N += 1
-        # END while
-        mods = ex.get_pmods(file_name, t, Npnt_act, slow_ax, fast_ax)
-        print file_name
-        print 'saved at {:%H:%M:%S}'.format(datetime.fromtimestamp(t))
-        print ''
-        for m in mods:
-            for tpmod, pname, x in m:
-                print '    +{:%M:%S} | {} <-- {} {}'.format(
-                    datetime.fromtimestamp(tpmod), pname, x.value, x.unit
-                )
-            print ''
-    except KeyError:
-        print 'KeyError in pyMTRX.import_scan: ex= {!r}'.format(ex)
-    # END try
+    mods = ex.get_pmods(file_name, t, Npnt_act, slow_ax, fast_ax)
+    #try:
+    #    #print file_name
+    #    #print 'saved at {:%H:%M:%S}'.format(datetime.fromtimestamp(t))
+    #    #print ''
+    #    #for m in mods:
+    #    #    for tpmod, pname, x in m:
+    #    #        print '    +{:%M:%S} | {} <-- {} {}'.format(
+    #    #            datetime.fromtimestamp(tpmod), pname, x.value, x.unit
+    #    #        )
+    #    #    print ''
+    #except KeyError as err:
+    #    print 'KeyError in pyMTRX.import_scan: ex= {!s}'.format(ex)
+    #    print err
+    ## END try
     
     # create X & Y axes
     try:
@@ -1019,9 +1011,9 @@ def import_scan( file_path,
     # Create tree of ScanData objects
     scans_flat = []
     for i in range(len(scans)):
-        params['duration'] = scn_t[i]
         for j in range(len(scans[i])):
             params['direction'] = 2*i + j
+            params['pmods'] = mods[i]
             scans[i][j] = ScanData( X_ax, Y_ax, scans[i][j], params)
             if not (ex is None): scans[i][j].ex = ex
             scans[i][j].spectra = []
@@ -1428,16 +1420,15 @@ class Timeline(object):
         '''Some entries have the same time value, this method will search
             by time first then by file_name for a more exact result
         '''
-        i = self.bisect(t)[0]
+        i = self.bisect(t)[1]
         if i is None:
             raise ValueError('No TimelineEntry with matching time value')
         
-        while 0 <= i:
+        for i in range(i+1)[::-1]:
             if self[i].bknm == 'BREF':
                 if self[i].data[0] == file_name:
                     break
-            i -= 1
-        # END while
+        # END for
         
         return i, self[i]
     # END find_bref
@@ -1816,5 +1807,14 @@ class TransferFunction(object):
         )
     # END _call_multilinear_1D
 # END TransferFunction
+
+#==============================================================================
+def size_change(scn):
+    for _, pname, _ in scn.props['pmods']:
+        if re.search(r'XYScanner_Width|XYScanner_Height', pname):
+            return True
+    
+    return False
+# END size_change
 
 

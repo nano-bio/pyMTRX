@@ -7,6 +7,7 @@
 import os
 import os.path
 import re
+from datetime import datetime
 import struct
 from StringIO import StringIO
 from pprint import pprint
@@ -18,6 +19,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from PIL import Image
+import pyMTRX
 import pyMTRX.experiment as om
 
 import matplotlib.colors as mplcolors
@@ -212,7 +214,17 @@ def add_slide(prs, *scans):
             scn.props['comment']
             tf.word_wrap = True
             p = tf.add_paragraph()
-            p.text = scn.props['comment']
+            lines = [scn.props['comment'],]
+            if pyMTRX.size_change(scn):
+                for t, pname, x in scn.props['pmods']:
+                    lines.append(
+                        '\t+{:%M:%S} | {} <-- {} {}'.format(
+                            datetime.fromtimestamp(t), pname, x.value, x.unit
+                        )
+                    )
+                # END for
+            # END if
+            p.text = '\n'.join(lines)
             p.font.size = Pt(10)
             p.font.italic = True
         except KeyError:
@@ -224,9 +236,9 @@ def add_slide(prs, *scans):
             x = 16 + int( 336 * crv.props['coord_px'][0] /
                           float(scn.Z.shape[0])
                         )
-            y = 16 + int( 336 * crv.props['coord_px'][1] / 
-                          float(scn.Z.shape[1])
-                        )
+            y = 336+16 - int( 336 * crv.props['coord_px'][1] / 
+                           float(scn.Z.shape[1])
+                         )
             if (x,y) not in points:
                 circ = slide.shapes.add_shape( MSO_SHAPE.OVAL,
                                             Pt(x), Pt(y), Pt(6), Pt(6)

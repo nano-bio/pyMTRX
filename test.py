@@ -24,6 +24,7 @@ def main(*args):
     tdir = './test_data/'
     sdir = tdir + 'test_results/'
     if not os.path.exists(sdir): os.mkdir(sdir)
+    print 'saving to {}'.format(sdir)
     
     print ''
     print '*** BEGIN TESTS FOR Experiment CLASS ***'
@@ -53,18 +54,17 @@ def main(*args):
     print ''
     print '    convert_all_pntspec_to_txt.py'
     from pyMTRX.scripts.convert_spec import main as convert
-    convert('test_data/', debug=False)
+    convert('test_data/', sdir=sdir)
     
     print ''
     print '    notebook_sheet.py'
     from pyMTRX.scripts.notebook_sheet import main as nb_sheet
-    nb_sheet('test_data/', debug=True)
-    quit()
+    nb_sheet('test_data/', sdir=sdir)
     
     print ''
     print '    notebook_slides.py'
     from pyMTRX.scripts.notebook_slides import main as nb_slide
-    nb_slide('test_data/')
+    nb_slide('test_data/', sdir=sdir)
     
     #print ''
     #print '    PngMaker'

@@ -131,9 +131,7 @@ def create_experiment_log(exp_fp, sdir='./', debug=False):
         scns = flatten_tree( ex.import_scan(cwd + fn) )
         for i in range(len(scns)):
             scns[i].props['direction'] = dname_lkup[i]
-            IMG_entries.append(
-                make_scan_entry(scns[i], image_check(ex, scns[i]))
-            )
+            IMG_entries.append( make_scan_entry(scns[i]) )
             #for crv in scns[i].spectra:
             #    STS_entries.append( make_spectrum_entry(crv, debug=debug) )
         # END for
@@ -149,7 +147,7 @@ def create_experiment_log(exp_fp, sdir='./', debug=False):
     N_opened = len(IMG_entries) + len(STS_entries) + 1
     
     save_name = re.sub(r'_0001\.mtrx$', '_settings.csv', exp_fn)
-    f = open(cwd+save_name, 'w')
+    f = open(os.path.join(sdir, save_name), 'w')
     columns = [ 'date/time (d)',
                 'sample', 'data set',
                 'index', 'rep', 'dir', 'channel',
@@ -196,7 +194,7 @@ def create_experiment_log(exp_fp, sdir='./', debug=False):
 # END create_experiment_log
 
 #==============================================================================
-def make_scan_entry(scn, no_warn=True):
+def make_scan_entry(scn):
     ls = []
     # time
     ls.append( str(scn.props['time']/86400.0 + 25569 - 4.0/24) )
@@ -225,10 +223,10 @@ def make_scan_entry(scn, no_warn=True):
     ls.append('{:0.2f}'.format(scn.props['XYScanner_Width'].value * 1e9))
     ls.append('{:0.2f}'.format(scn.props['XYScanner_Height'].value * 1e9))
     # alert flag for parameter errors
-    if no_warn:
-        ls.append('')
-    else:
+    if pyMTRX.size_change(scn):
         ls.append('*')
+    else:
+        ls.append('')
     # END if
     # scan angle
     ls.append('{:0.1f}'.format(scn.props['XYScanner_Angle'].value))
@@ -291,40 +289,6 @@ def make_spectrum_entry(crv, no_warn=True, debug=False):
     
     return (crv.props['time'], ','.join(ls))
 # END make_spectrum_entry
-
-#==============================================================================
-def image_check(ex, scn):
-    all_clear = True
-    t_0 = scn.props['time'] - scn.props['duration']
-    t_f = scn.props['time']
-    
-    # a is the index of the last parameter change before the scan starts
-    # b is the index of the first parameter change after the scan ends
-    a = 0
-    b = len(ex.st_hist)-1
-    while b-a > 1:
-        i = (b+a) / 2
-        if t_0 < ex.st_hist[i][0]:
-            b = i
-        else:
-            a = i
-        # END if
-    # END while
-    while ex.st_hist[b][0] < t_f:
-        b += 1
-        if b == len(ex.st_hist):
-            break
-        # END if
-    # END while
-    for i in range(a+1,b):
-        if re.search(r'Width|Height', ex.st_hist[i][2]):
-            all_clear = False
-            break
-        # END if
-    # END for
-    
-    return all_clear
-# END image_check
 
 #==============================================================================
 def find_files(cwd='./', fext='[^.]+', r=True):
