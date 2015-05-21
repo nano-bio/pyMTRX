@@ -1184,7 +1184,7 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
                 Ncrv = 1
                 if mirroring: Ncrv *= 2
                 indp_len = Npnt_set / Ncrv
-                xnm, ynm = re.search(
+                ynm, xnm = re.search(
                     r'([^._()]+)\((\w)\)(?=_mtrx$)', file_name
                 ).groups()
                 indp_ax = IndependentAxis(
