@@ -111,8 +111,8 @@ def wrapped_create_exlog(*args, **kwargs):
 def create_experiment_log(exp_fp, sdir='./', debug=False):
     cwd, exp_fn = os.path.split(exp_fp)
     cwd += '/'
+    print 'loading ' + exp_fn
     ex = Experiment(cwd + exp_fn, debug=debug)
-    if debug: print exp_fn + ' loaded'
     
     # collect image files
     # (*image file must be in experiment file AND a file in the directory)

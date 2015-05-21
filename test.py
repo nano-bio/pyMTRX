@@ -52,17 +52,20 @@ def main(*args):
     print ''
     print 'Testing scripts...'
     print ''
-    print '    convert_all_pntspec_to_txt.py'
+    print 'convert_all_pntspec_to_txt.py'
+    print '-----------------------------'
     from pyMTRX.scripts.convert_spec import main as convert
     convert('test_data/', sdir=sdir)
     
     print ''
-    print '    notebook_sheet.py'
+    print 'notebook_sheet.py'
+    print '-----------------'
     from pyMTRX.scripts.notebook_sheet import main as nb_sheet
     nb_sheet('test_data/', sdir=sdir)
     
     print ''
-    print '    notebook_slides.py'
+    print 'notebook_slides.py'
+    print '------------------'
     from pyMTRX.scripts.notebook_slides import main as nb_slide
     nb_slide('test_data/', sdir=sdir)
     

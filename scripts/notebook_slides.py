@@ -43,9 +43,9 @@ mapper = cm.ScalarMappable(cmap=BrYl)
 
 #==============================================================================
 def main( cwd='.', sdir=None, dir_filter=range(4),
-          fext='[^.()]+_mtrx', debug=False
+          fext='[^.()]+_mtrx', r=True, debug=False
         ):
-    experiment_files = find_files(cwd, fext='mtrx')
+    experiment_files = find_files(cwd, fext='mtrx', r=r)
     experiment_files.sort(key=lambda fp: os.path.getmtime(fp))
     print 'found {} .mtrx files'.format(len(experiment_files))
     for ex_fp in experiment_files:

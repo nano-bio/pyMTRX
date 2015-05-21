@@ -802,11 +802,13 @@ class Experiment(object):
             raise err
         # The preceding INCI or BREF will mark the beginning of the scanning,
         # but all BREFs from point spectra need to be skipped
+        similar_fname = re.search(r'--\d+_\d+\.', file_name).group(0)
         while 0 <= i_prev:
             if re.search(r'INCI', self.timeline[i_prev].bknm):
                 break
             elif ( re.search(r'BREF', self.timeline[i_prev].bknm) and
-                    re.search(r'\.\w+_mtrx$', self.timeline[i_prev].data[0])
+                   re.search(r'\.\w+_mtrx$', self.timeline[i_prev].data[0]) and
+                   not re.search(similar_fname, self.timeline[i_prev].data[0])
                   ):
                     break
             else:
@@ -843,14 +845,12 @@ class Experiment(object):
         if steady:
             # calculate the half-way point in time, and split the timeline
             # at that point
-            t_half = ( fparams['XYScanner_Width'].value *
+            t_half = ( fparams['XYScanner_Points'].value *
                        fparams['XYScanner_Raster_Time'].value +
                        fparams['XYScanner_Move_Raster_Time'].value
-                     ) * fparams['XYScanner_Height'].value
-            t_half /= len(pmods)
+                     ) * fparams['XYScanner_Lines'].value
+            if fast_ax.mirrored: t_half *= 2
             t_half += self.timeline[i_prev].t
-            if self.timeline[i_bref].t < t_half:
-                raise RuntimeError('t_half miscalculation')
             scn_tl_pieces = scn_tl.split(t_half)
             for i in range(len(pmods)):
                 pmods[i] = [ (x.t-t_start, x.data[0], x.data[1])
@@ -974,7 +974,12 @@ def import_scan( file_path,
         
     # Calculate how long it took to take the scan
     fast_ax = depn_ax.indp_ax
-    mods = ex.get_pmods(file_name, t, Npnt_act, slow_ax, fast_ax)
+    try:
+        mods = ex.get_pmods(file_name, t, Npnt_act, slow_ax, fast_ax)
+    except RuntimeError as err:
+        mods = [[], []]
+        print err
+        print '  on "{}"'.format(file_name)
     #try:
     #    #print file_name
     #    #print 'saved at {:%H:%M:%S}'.format(datetime.fromtimestamp(t))
