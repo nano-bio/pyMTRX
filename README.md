@@ -5,7 +5,7 @@ A Python module for reading the data files from Omicron NanoTechnology's MATRIX 
 
 **Author:** *Alex M. Pronschinske*
 
-**Version:** *development*
+**Version:** *1.5.0*
 
 Software Requirements
 =====================
