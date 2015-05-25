@@ -10,6 +10,12 @@
         s2x
 '''
 
+# The "Colin" bug: if the experimenter changes the scan settings right before
+#                  taking a spectra and then changes them back, the settings
+#                  saved in the CurveData of the spectra will be the wrong
+#                  settings.  The scan settings state at the END of the scan
+#                  are what is attached to the point spectra.
+
 # built-in modules
 import os
 import struct
@@ -34,25 +40,19 @@ class Experiment(object):
     parsed into an Experiment object.  This object can then be used to get
     information on setting and open data files (*.Z_mtrx etc.)
     
-    Class Methods:
-        is_image(file_name)
-        is_point_spectrum(file_name)
     Instantiation Args:
         file_path (str): path and file name of *.mtrx experiment file
         debug (bool): When True a file describing how the experiment file is
                       interpreted will be written
-    Object Attributes:
-        inst_info (str): information about the instrument used and its
-            calibration settings
-        sample (str): description of the sample from experimentor
-        data_set (str): description of the data set from experimentor
-        comment (str): comments about the experiment from experimentor
+    Instance Attributes:
+        fp (str): the file path used for instantiation
+        _datafile_st (dict): settings state dictionaries keyed by data file
+                            name
         stslinks (dict): image-spectra linkage information
             stslinks[spectra_fname] = (mrk, fname)
             stslinks[scn_fname] = [(mrk, spec_fname), (mrk, spec_fname), ...]
             mrk = (ii, i, d, locstr, chnl_hash)
-        free_spectra (list): point spectra that where not found to be
-            attached to any particular other data bricklet
+        unlinked_spectra (list)
         axch (dict): pseudo-graph structure describing data axes linkage
             axch[h] = ("ChannelData...", hash_for_dependent_ax)
             
@@ -73,18 +73,8 @@ class Experiment(object):
             example: ("Default::XYScanner::Y", "triangular", 600, 0)
         log (StingIO): string buffer for constructing the debugging file
                        on-the-fly
-    Supported Operators:
-        in: will check to see if item is included in the experiement. Accepts
-            ScanData, CurveData, or str of file path. O(1)
-        str(): prints the file path of the Experiment object
-    Object Methods:
-        .import_scan(file_path, scan_only=False, debug=False)
-        .import_spectra(file_path, debug=False)
-        .get_data_filenames()
-        .get_params(file_name)
-        .tranfer_params(data_object)
-        .get_pmods(file_name, t, N_points, slow_ax, fast_ax)
-        .get_state(file_name)
+    Example:
+        TODO fill this in
     '''
     
     # Class Methods
@@ -108,28 +98,27 @@ class Experiment(object):
     # Object instantiation
     #---------------------
     def __init__(self, file_path, debug=False):
-        self._fp = file_path
+        self.fp = file_path
         # Initial settings state dictionary
-        self._init_st = {}
-        self._st_hist = []
-        self._timeline = Timeline()
+        self.init_st = {}
+        self.st_hist = []
+        self.timeline = Timeline()
         # Settings state to be kept current with the timeline
         self._curr_st = {}
         self._datafile_st = {}
-        self._stslinks = {}
-        self.inst_info = ''
+        self.stslinks = {}
         self.sample = ''
         self.data_set = ''
         self.comment = ''
-        self._cmnt_lkup = {}
-        self._last_sts_mark = None
-        self._unlinked_spectra = []
+        self.cmnt_lkup = {}
+        self.last_sts_mark = None
+        self.unlinked_spectra = []
         self.free_spectra = []
         self.axch = {}
-        self._bref_mark_cache = []
+        self.bref_mark_cache = []
         
         # for debugging
-        self._debug = debug
+        self.debug = debug
         self.log = StringIO()
         
         # ONMATRIX0101
@@ -153,7 +142,7 @@ class Experiment(object):
         
         # all remaining unlinked spectra did not have their "parent" images
         # saved
-        self.free_spectra.extend(self._unlinked_spectra)
+        self.free_spectra.extend(self.unlinked_spectra)
         
         # when debugging write some variables directly to the file
         if debug:
@@ -181,16 +170,16 @@ class Experiment(object):
             f.write('\n')
             # print out the STS linkage dict
             try:
-                f.write('self._stslinks = \n')
+                f.write('self.stslinks = \n')
                 skeys = sorted(
-                    self._stslinks.keys(),
+                    self.stslinks.keys(),
                     key=lambda s: re.sub(r'(^.*?)(\..*$)', r'\2\1', s)
                 )
                 for k in skeys:
                     if re.search(r'\.[^()]+_mtrx$', k):
                         f.write('    ')
                         kdisp = re.search(r'--.*$', k).group(0)
-                        v = self._stslinks[k]
+                        v = self.stslinks[k]
                         f.write(str(kdisp) + ': ')
                         for x in v:
                             specindex = re.search(
@@ -201,7 +190,7 @@ class Experiment(object):
                     else:
                         f.write('    ')
                         kdisp = re.search(r'--.*$', k).group(0)
-                        v = self._stslinks[k]
+                        v = self.stslinks[k]
                         scnindex = re.search(r'--.*$', v.parent_fn).group(0)
                         f.write(str(kdisp))
                         f.write(': ')
@@ -261,7 +250,7 @@ class Experiment(object):
             elif re.search(r'VIEW', name):
                 self._init_read_VIEW(bkbuff)
             elif re.search(r'INCI', name):
-                tl_entry = self._timeline.add(t, 'INCI')
+                tl_entry = self.timeline.add(t, 'INCI')
                 self._datafile_st[tl_entry] = dict(self._curr_st)
                 self.log.write( '\n')
             else:
@@ -290,11 +279,11 @@ class Experiment(object):
             chnl = buff.next_mtrxstr()
             for _ in range(buff.next_uint()):
                 prop, x = buff.next_mtrxparam()
-                self._init_st[chnl+'_'+prop] = x
+                self.init_st[chnl+'_'+prop] = x
             # END for
         # END for
         
-        self._curr_st = dict(self._init_st)
+        self._curr_st = dict(self.init_st)
         self.log.write('\n')
     # END _init_read_EEPA
     
@@ -307,8 +296,8 @@ class Experiment(object):
         
         chnl = buff.next_mtrxstr()
         prop, x = buff.next_mtrxparam()
-        self._st_hist.append( (self._t_bk, chnl, prop, x) )
-        self._timeline.add(self._t_bk, 'PMOD', chnl+'_'+prop, x)
+        self.st_hist.append( (self._t_bk, chnl, prop, x) )
+        self.timeline.add(self._t_bk, 'PMOD', chnl+'_'+prop, x)
         self._curr_st[chnl+'_'+prop] = x
         self.log.write(
             '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
@@ -347,7 +336,7 @@ class Experiment(object):
         #self.log.write(repr(str(buff)))
         #chnl = buff.next_mtrxstr()
         #prop, x = buff.next_mtrxparam()
-        #self._st_hist.append( (self._t_bk, chnl, prop, x) )
+        #self.st_hist.append( (self._t_bk, chnl, prop, x) )
         #self._curr_st[chnl+'_'+prop] = x
         #self.log.write(
         #    '    {0}_{1} <-- {2.value} {2.unit}\n'.format(chnl, prop, x)
@@ -362,7 +351,7 @@ class Experiment(object):
         buff.next(4)
         fname = buff.next_mtrxstr()
         # freeze a copy of the current settings and register it
-        tl_entry = self._timeline.add(self._t_bk, 'BREF', fname)
+        tl_entry = self.timeline.add(self._t_bk, 'BREF', fname)
         self._datafile_st[fname] = dict(self._curr_st)
         self._datafile_st[tl_entry] = self._datafile_st[fname]
         
@@ -374,9 +363,9 @@ class Experiment(object):
         if img_mat:
             # file is scan data
             img_chnl_name = img_mat.group(1)
-            self._unlinked_spectra.append(None)
-            while self._unlinked_spectra[0] is not None:
-                mrk = self._unlinked_spectra.pop(0)
+            self.unlinked_spectra.append(None)
+            while self.unlinked_spectra[0] is not None:
+                mrk = self.unlinked_spectra.pop(0)
                 if not mrk.parent_hash:
                     # the spectrum is either a repeat or a from a non-specific
                     # point
@@ -386,9 +375,9 @@ class Experiment(object):
                     if mrk.spec_fn != first_name:
                         # copy over mark for following spectra
                         try:
-                            new_mrk = copy(self._stslinks[first_name])
+                            new_mrk = copy(self.stslinks[first_name])
                             new_mrk.spec_fn = mrk.spec_fn
-                            self._unlinked_spectra.insert(0, new_mrk)
+                            self.unlinked_spectra.insert(0, new_mrk)
                         except KeyError :
                             # this is a "free-range" spectra
                             # e.g. an I(t) spectra
@@ -399,30 +388,30 @@ class Experiment(object):
                 #try:
                 sts_parent_ax = self.axch[mrk.parent_hash].depn_ax
                 #except KeyError as err:
-                #    self._unlinked_spectra.append( (mrk.spec_fn, mrk) )
+                #    self.unlinked_spectra.append( (mrk.spec_fn, mrk) )
                 #    continue
                 # END try
                 if sts_parent_ax.name != img_chnl_name:
                     # this spectra was clicked in a different channel window
                     # e.g. user clicked in I window instead of Z
-                    self._unlinked_spectra.append(mrk)
+                    self.unlinked_spectra.append(mrk)
                 # END if
                 # update the scan --> spec lookup
                 mrk.parent_fn = fname
-                if fname not in self._stslinks:
-                    self._stslinks[fname] = [mrk,]
+                if fname not in self.stslinks:
+                    self.stslinks[fname] = [mrk,]
                 else:
-                    self._stslinks[fname].append(mrk)
+                    self.stslinks[fname].append(mrk)
                 # END if
-                self._stslinks[mrk.spec_fn] = mrk
+                self.stslinks[mrk.spec_fn] = mrk
             # END while
-            self._unlinked_spectra.pop(0)
+            self.unlinked_spectra.pop(0)
             
-            self._cmnt_lkup[fname] = []
-            if img_chnl_name in self._cmnt_lkup:
-                for _ in range(len(self._cmnt_lkup[img_chnl_name])):
-                    self._cmnt_lkup[fname].append(
-                        self._cmnt_lkup[img_chnl_name].pop(0)
+            self.cmnt_lkup[fname] = []
+            if img_chnl_name in self.cmnt_lkup:
+                for _ in range(len(self.cmnt_lkup[img_chnl_name])):
+                    self.cmnt_lkup[fname].append(
+                        self.cmnt_lkup[img_chnl_name].pop(0)
                     )
                 # END for
             # END if
@@ -430,20 +419,20 @@ class Experiment(object):
             # file is for spectroscopy data
             chnl_name = pointsts_mat.group(1)
             # collect all comments on the data object
-            self._cmnt_lkup[fname] = []
-            if chnl_name in self._cmnt_lkup:
-                for _ in range(len(self._cmnt_lkup[chnl_name])):
-                    self._cmnt_lkup[fname].append(
-                        self._cmnt_lkup[chnl_name].pop(0)
+            self.cmnt_lkup[fname] = []
+            if chnl_name in self.cmnt_lkup:
+                for _ in range(len(self.cmnt_lkup[chnl_name])):
+                    self.cmnt_lkup[fname].append(
+                        self.cmnt_lkup[chnl_name].pop(0)
                     )
                 # END for
             # END if
             # register the spectra as unlinked
             if re.search(r'\([tr]\)', chnl_name):
-                self._unlinked_spectra.append( STSMark(spec_fn=fname) )
+                self.unlinked_spectra.append( STSMark(spec_fn=fname) )
             else:
-                self._last_sts_mark.spec_fn = fname
-                self._unlinked_spectra.append(copy(self._last_sts_mark))
+                self.last_sts_mark.spec_fn = fname
+                self.unlinked_spectra.append(copy(self.last_sts_mark))
             # END if
         # END if
         
@@ -468,7 +457,7 @@ class Experiment(object):
         if re.search(r'Instrument information', markstr):
             self.inst_info = re.sub(r'^.*?: ', '', markstr)
         elif re.search(r'^MTRX\$STS_LOCATION', markstr):
-            self._timeline.add(self._t_bk, 'MARK', markstr)
+            self.timeline.add(self._t_bk, 'MARK', markstr)
             # Example:
             # MTRX$STS_LOCATION-192,94;7e-009,-9.33333e-009%%7800440043-1-4-0%%
             # Breakdown of mark:
@@ -487,7 +476,7 @@ class Experiment(object):
                 markstr
             ).groups()
             img_chnl_hash = int(img_chnl_hash, 16)
-            self._last_sts_mark = STSMark(
+            self.last_sts_mark = STSMark(
                 parent_hash=img_chnl_hash, dir=int(d), loc=locstr
             )
         elif re.search(r'MTRX\$SAMPLE_NAME', markstr):
@@ -512,10 +501,10 @@ class Experiment(object):
                                           self.axch[chnl_key].descrip
                                         )
             )
-            if depn_ax.name in self._cmnt_lkup:
-                self._cmnt_lkup[depn_ax.name].append( (d, comment) )
+            if depn_ax.name in self.cmnt_lkup:
+                self.cmnt_lkup[depn_ax.name].append( (d, comment) )
             else:
-                self._cmnt_lkup[depn_ax.name] = [(d, comment),]
+                self.cmnt_lkup[depn_ax.name] = [(d, comment),]
             # END if
         # END if
     # END _init_read_MARK
@@ -719,7 +708,7 @@ class Experiment(object):
         return item in self._datafile_st
     # END __contains__
     
-    def __str__(self): return self._fp
+    def __str__(self): return self.fp
     
     # Object data import methods
     #---------------------------
@@ -770,7 +759,7 @@ class Experiment(object):
         params = dict( self._datafile_st[file_name] )
         
         # retrieve all image comments
-        comments = sorted(self._cmnt_lkup[file_name], key=lambda tup: tup[0])
+        comments = sorted(self.cmnt_lkup[file_name], key=lambda tup: tup[0])
         # TODO: correct this, it is a temporary soution
         #       comments should be attached to the specific direction they
         #       go with
@@ -786,7 +775,7 @@ class Experiment(object):
             data_obj.props[k] = self._datafile_st[fn][k]
         
         # retrieve all image comments
-        comments = sorted(self._cmnt_lkup[fn], key=lambda tup: tup[0])
+        comments = sorted(self.cmnt_lkup[fn], key=lambda tup: tup[0])
         # TODO: correct this, it is a temporary soution
         #       comments should be attached to the specific direction they
         #       go with
@@ -796,30 +785,30 @@ class Experiment(object):
     
     def get_pmods(self, file_name, t, N_points, slow_ax, fast_ax):
         fparams = self._datafile_st[file_name]
-        #i_bref, _ = self._timeline.bisect(t)
-        i_bref = self._timeline.find_bref(t, file_name)[0]
+        #i_bref, _ = self.timeline.bisect(t)
+        i_bref = self.timeline.find_bref(t, file_name)[0]
         i_prev = i_bref - 1
         # If stop/restart was pressed then there will be an INCI entry
         # just before the BREF entry with the same timestamp;
         # skip over this INCI, if it exists
         try:
-            while self._timeline[i_prev].t == self._timeline[i_bref].t:
+            while self.timeline[i_prev].t == self.timeline[i_bref].t:
                 i_prev -= 1
         except IndexError as err:
             print '0'
             print i_prev
             print i_bref
-            print len(self._timeline)
+            print len(self.timeline)
             raise err
         # The preceding INCI or BREF will mark the beginning of the scanning,
         # but all BREFs from point spectra need to be skipped
         similar_fname = re.search(r'--\d+_\d+\.', file_name).group(0)
         while 0 <= i_prev:
-            if re.search(r'INCI', self._timeline[i_prev].bknm):
+            if re.search(r'INCI', self.timeline[i_prev].bknm):
                 break
-            elif ( re.search(r'BREF', self._timeline[i_prev].bknm) and
-                   re.search(r'\.\w+_mtrx$', self._timeline[i_prev].data[0]) and
-                   not re.search(similar_fname, self._timeline[i_prev].data[0])
+            elif ( re.search(r'BREF', self.timeline[i_prev].bknm) and
+                   re.search(r'\.\w+_mtrx$', self.timeline[i_prev].data[0]) and
+                   not re.search(similar_fname, self.timeline[i_prev].data[0])
                   ):
                     break
             else:
@@ -827,12 +816,12 @@ class Experiment(object):
         # END while
         # i_prev is now the index of a timeline entry with a timestamp that
         # is equal to the time the data acquisition started
-        t_start = self._timeline[i_prev].t
-        init_params = self._datafile_st[self._timeline[i_prev]]
+        t_start = self.timeline[i_prev].t
+        init_params = self._datafile_st[self.timeline[i_prev]]
         
         # check for changes in raster time or point spectra
         steady = True
-        for x in self._timeline[i_prev+1:i_bref]:
+        for x in self.timeline[i_prev+1:i_bref]:
             try:
                 if re.search( r'XYScanner.*?Raster_Time|STS_LOCATION',
                               x.data[0] ):
@@ -846,7 +835,7 @@ class Experiment(object):
         # END for
         
         # remove all timeline entries that are not PMODs
-        scn_tl = self._timeline[i_prev+1:i_bref].filter('PMOD')
+        scn_tl = self.timeline[i_prev+1:i_bref].filter('PMOD')
         
         # pmods will be the return value
         # pmods should be the same shape as the return of import_scan
@@ -861,7 +850,7 @@ class Experiment(object):
                        fparams['XYScanner_Move_Raster_Time'].value
                      ) * fparams['XYScanner_Lines'].value
             if fast_ax.mirrored: t_half *= 2
-            t_half += self._timeline[i_prev].t
+            t_half += self.timeline[i_prev].t
             scn_tl_pieces = scn_tl.split(t_half)
             for i in range(len(pmods)):
                 pmods[i] = [ (x.t-t_start, x.data[0], x.data[1])
@@ -897,29 +886,20 @@ def import_scan( file_path,
                  ex=None, mirroring=(True, True),
                  debug=False
                ):
-    '''Read a scan file and return a tree containing ScanData objects
+    '''Read a scan file and return ScanData objects
     
     Args:
         file_path (str): path to .*_mtrx scan data file
         scan_only (bool): When True function will not attach linked spectra
-            to the ScanData objects
-        ex (Experiement): This object contains all parameter setting and data
-            linkage information
-        mirroring (tuple(bool)): Can be used to manually designate the
-            mirroring of the data when an Experiment is not given. The first
-            bool is for slow axis mirroring, the second for the fast axis.
+                          to the ScanData objects
         debug (bool): switch for writing a debugging file describing
-            how the data file was interpreted
+                      how the data file was interpreted
     Returns:
-        (list(list(ScanData)))
-        [[trace_up, retrace_up], [trace_down, retrace_down]]
-        The returned list will have a binary-tree-like structure, where each
-        axis causes branching. If data from that axis is acquired with
-        mirroring (i.e. retrace), then it will have two branches; otherwise,
-        it will only have one.
+        (list(ScanData)) [trace_up, retrace_up, trace_down, retrace_down]
     '''
     
     file_dir, file_name = os.path.split(file_path)
+    file_dir += '/'
     if debug:
         fdebug = open(file_name + '-debug.txt', 'w')
     else:
@@ -1174,12 +1154,6 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
     
     Args:
         file_path (str): standard full path
-        ex (Experiement): This object contains all parameter setting and data
-            linkage information
-        mirroring (bool): Can be used to manually designate the
-            mirroring of the data when an Experiment is not given.
-        debug (bool): switch for writing a debugging file describing
-            how the data file was interpreted
     Returns:
         (list) [CurveData, CurveData, ...]
     '''

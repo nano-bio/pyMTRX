@@ -5,7 +5,7 @@ A Python module for reading the data files from Omicron NanoTechnology's MATRIX 
 
 **Author:** *Alex M. Pronschinske*
 
-**Version:** *development*
+**Version:** *1.4.1*
 
 Software Requirements
 =====================
@@ -15,7 +15,7 @@ This package has the following direct dependencies:
  * python 2.7
  * numpy >= 1.5.1 (lower versions are untested)
  * matplotlib >= 1.1.0
- * python-pptx (optional)
+ * python-pptx
  * Pillow
 
 Known Bug List
@@ -37,17 +37,17 @@ Installation Instructions (Windows 7)
  2. Open command prompt
  3. Install nose
  
-> pip install nose
+> $pip install nose
 
  4. Install numpy 1.9.1 (always official 32-bit package) from .exe
- 5. Install all matplotlib dependencies, using "pip install [package]":
+ 6. Install all matplotlib dependencies, using "pip install [package]":
   * six
   * python-dateutil
   * pytz
   * pyparsing
   * Pillow
- 6. Install matplotlib 1.4.2 (always official 32-bit package) from .exe
- 7. Install python-pptx
+ 7. Install matplotlib 1.4.2 (always official 32-bit package) from .exe
+ 8. Install python-pptx
 
 Installation Instructions (Ubuntu 14.04)
 ========================================
@@ -66,23 +66,15 @@ Installation Instructions (Ubuntu 14.04)
  
 > $sudo apt-get install cython
 
- 6. Install all matplotlib dependencies:
+ 7. Install all matplotlib dependencies:
  
 > $sudo apt-get build-dep python-matplotlib
 
- 7. Install matplotlib:
+ 8. Install matplotlib:
  
 > $sudo apt-get install python-matplotlib
 
- 8. Install python-pptx:
+ 9. Install python-pptx:
  
 > $sudo pip install python-pptx
 
-Usage Example
-=============
-
-> import pyMTRX
-> ex = pyMTRX.experiment('test_data/2014Oct09-090049_0001.mtrx')
-> scans = ex.import_scan('2014Oct09-090049--1_122.Z_mtrx')
-> scans[0][0].global_level()
-> scans[0][0].save_png('image_of_data.png')
