@@ -15,14 +15,14 @@ import re
 from pprint import pformat
 
 # third-party modules
-from curves import CurveData
-from experiment import Experiment
+from pyMTRX import CurveData
+from pyMTRX import Experiment
 import matplotlib.pyplot as plt
 
 #==============================================================================
 def main(*args):
     tdir = './test_data/'
-    sdir = tdir + 'test_results/'
+    sdir = '../test_results/'
     if not os.path.exists(sdir): os.mkdir(sdir)
     print 'saving to {}'.format(sdir)
     
