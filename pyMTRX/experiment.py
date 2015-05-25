@@ -495,7 +495,9 @@ class Experiment(object):
         elif re.search(r'MTRX\$DATA_SET_NAME', markstr):
             self.data_set = re.search(r'-(.*)$', markstr).group(1)
         elif re.search(r'MTRX\$CREATION_COMMENT', markstr):
-            self.comment = re.search(r'(?<=COMMENT-).*', markstr).group(0)
+            self.comment = re.search(
+                r'(?<=COMMENT-).*', markstr, re.DOTALL
+            ).group(0)
         elif re.search(r'MTRX\$IMAGE_COMMENT', markstr):
             # Example:
             # "MTRX$IMAGE_COMMENT-Z.-493925695555-2-0-2%this is only a test"
@@ -1847,5 +1849,4 @@ def size_change(scn):
     
     return False
 # END size_change
-
 
