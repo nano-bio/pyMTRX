@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup( name='pyMTRX',
-       version='1.4.1',
+       version='1.5.0',
        description="Omicron NanoTechnology MATRIX SPM Support",
        author='Alex Pronschinske',
        url='https://www.github.com/ampron',
