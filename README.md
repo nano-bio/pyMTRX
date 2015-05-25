@@ -35,10 +35,7 @@ Installation Instructions (Windows 7)
 
  1. Install python (32-bit, ignore OS type), and make sure to check the option for adding python.exe to system PATH
  2. Open command prompt
- 3. Install nose by typing in the command prompt (starting after `$`):
- 
-> `$pip install nose`
-
+ 3. Install nose by typing in the command prompt (starting after `$`): `$pip install nose`
  4. Install numpy 1.9.1 (always official 32-bit package) from .exe
  5. Install all matplotlib dependencies, using `$pip install [package_name_here]`:
   * six
@@ -47,46 +44,22 @@ Installation Instructions (Windows 7)
   * pyparsing
   * Pillow
  6. Install matplotlib 1.4.2 (always official 32-bit package) from .exe
- 7. Install python-pptx
- 
-> `$pip install python-pptx`
+ 7. Install python-pptx: `$pip install python-pptx`
 
- 8. Install pyMTRX
- 
-> `$pip install pyMTRX`
+ 8. Install pyMTRX: `$pip install pyMTRX`
 
 Installation Instructions (Ubuntu 14.04)
 ========================================
 
  1. Install python (probably already there)
  2. Install pip
- 3. Install python-nose
- 
-> `$sudo apt-get install python nose`
-
- 4. Install numpy:
- 
-> `$sudo apt-get install python-numpy`
-
- 5. Install cython:
- 
-> `$sudo apt-get install cython`
-
- 6. Install all matplotlib dependencies:
- 
-> `$sudo apt-get build-dep python-matplotlib`
-
- 7. Install matplotlib:
- 
-> `$sudo apt-get install python-matplotlib`
-
- 8. Install python-pptx:
- 
-> `$sudo pip install python-pptx`
-
- 9. Install pyMTRX:
- 
-> `$sudo pip install pyMTRX`
+ 3. Install python-nose: `$sudo apt-get install python nose`
+ 4. Install numpy: `$sudo apt-get install python-numpy`
+ 5. Install cython: `$sudo apt-get install cython`
+ 6. Install all matplotlib dependencies: `$sudo apt-get build-dep python-matplotlib`
+ 7. Install matplotlib: `$sudo apt-get install python-matplotlib`
+ 8. Install python-pptx: `$sudo pip install python-pptx`
+ 9. Install pyMTRX: `$sudo pip install pyMTRX`
 
 Usage Example
 =============
