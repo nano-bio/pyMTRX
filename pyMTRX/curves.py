@@ -33,25 +33,40 @@ class CurveData(object):
         domain_match
         nn_smooth
         norm_deriv
-        split
+        save
     Instantiation Args:
         X, Y, x_units='', y_units='', props={}
     Instance Attributes:
-        X, x_units, Y, y_units, units
-    Magic Methods:
-        add, iadd, radd, call, div, idiv, eq,, iter, len, getitem, mul, imul,
-        rmul, str, sub, isub, rsub
+        X (numpy.ndarray): a copy of the input sequence X
+        x_units (str): name of X units
+        Y (numpy.ndarray): a copy of the input sequence Y
+        y_units (str): name of Y units
+        units (tup): (x_units, y_units)
+    Supported Operations:
+        +, -, /, *
+        +=, -=, /=, *=
+            These all operate on the .Y attribute
+        .__call__(x)
+            Returns the y-value at x using linear interpolation
+        ==
+            Evaluates to True if and only if the X, Y, and units match
+        .__iter__()
+            Iterates over the ordered sequence of data points, yielding a
+            tuple of (x,y) at each point
+        len()
+            Number of data points in the curve
+        .__getitem__(i)
+            Returns the i-th data point as the tuple (x,y)
+        str()
+            A string containing all data points and units
     Object Methods:
         append
         extend
         deriv
-        save
         sparkstr
         x2i
         x2i_uneven
     '''
-    # TODO:
-    # -make hashing method
     
     def __init__(self, X, Y, x_units='', y_units='',props={}):
         if len(X) != len(Y):
