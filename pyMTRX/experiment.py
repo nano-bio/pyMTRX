@@ -1055,8 +1055,8 @@ def import_scan( file_path,
     # stslinks[fname] = [(mrk, spectra_fname), (mrk, spectra_fname), ...]
     # mrk = ('ii', 'i', 'd', 'xpx,ypx;xpy,ypy', chnl_name)
     file_sts_links = []
-    if file_name in ex.stslinks:
-        file_sts_links = ex.stslinks[file_name]
+    if file_name in ex._stslinks:
+        file_sts_links = ex._stslinks[file_name]
     for mrk in file_sts_links:
         try:
             crvs = ex.import_spectra( os.path.join(file_dir, mrk.spec_fn) )
@@ -1239,8 +1239,8 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
         # make param dict from Experiment object
         params = ex.get_params(file_name)
         
-        if file_name in ex.stslinks:
-            params['parent'] = ex.stslinks[file_name].parent_fn
+        if file_name in ex._stslinks:
+            params['parent'] = ex._stslinks[file_name].parent_fn
         else:
             params['parent'] = ''
         
@@ -1249,7 +1249,7 @@ def import_spectra(file_path, ex=None, mirroring=False, debug=False):
             #  "-193,205;7.16667e-009,9.16667e-009"
             # pixel coordinates are relative to bottom left corner
             # physical coordinates are relative to scan center
-            coords = re.split(r';|,', ex.stslinks[file_name].loc)
+            coords = re.split(r';|,', ex._stslinks[file_name].loc)
             params['coord_px'] = ( int(coords[0]), int(coords[1]) )
             params['coord_phys'] = ( float(coords[2]), float(coords[3]) )
         except Exception:
@@ -1346,10 +1346,10 @@ class MTRXCurve(CurveData):
     def is_free(self): return not self.is_linked
     
     @property
-    def is_linked(self): return self.props['file'] in self.ex.stslinks
+    def is_linked(self): return self.props['file'] in self.ex._stslinks
     
     @property
-    def mrk(self): return self.ex.stslinks[self.props['file']]
+    def mrk(self): return self.ex._stslinks[self.props['file']]
     
 # END MTRXCurve
 

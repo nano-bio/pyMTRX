@@ -8,15 +8,14 @@
 
 # built-in modules
 import sys
-sys.path.append('../')
+sys.path.insert(0, '../')
 import os
 import time
 import re
 from pprint import pformat
 
 # third-party modules
-from pyMTRX import CurveData
-from pyMTRX import Experiment
+import pyMTRX
 import matplotlib.pyplot as plt
 
 #==============================================================================
@@ -27,10 +26,10 @@ def main(*args):
     print 'saving to {}'.format(sdir)
     
     print ''
-    print '*** BEGIN TESTS FOR Experiment CLASS ***'
+    print '*** BEGIN TESTS FOR pyMTRX.Experiment CLASS ***'
     print ''
     
-    #ex = Experiment('test_data/2014Oct09-090049_0001.mtrx')
+    #ex = pyMTRX.Experiment('test_data/2014Oct09-090049_0001.mtrx')
     #files = [ '2014Oct09-090049--438_1.I(V)_mtrx',
     #          '2014Oct09-090049--439_1.I(V)_mtrx',
     #          '2014Oct09-090049--440_1.I(V)_mtrx',
@@ -54,20 +53,17 @@ def main(*args):
     print ''
     print 'convert_all_pntspec_to_txt.py'
     print '-----------------------------'
-    from pyMTRX.scripts.convert_spec import main as convert
-    convert('test_data/', sdir=sdir)
+    pyMTRX.convert_spec('test_data/', sdir=sdir)
     
     print ''
     print 'notebook_sheet.py'
     print '-----------------'
-    from pyMTRX.scripts.notebook_sheet import main as nb_sheet
-    nb_sheet('test_data/', sdir=sdir)
+    pyMTRX.notebook_sheet('test_data/', sdir=sdir)
     
     print ''
     print 'notebook_slides.py'
     print '------------------'
-    from pyMTRX.scripts.notebook_slides import main as nb_slide
-    nb_slide('test_data/', sdir=sdir)
+    pyMTRX.notebook_slides('test_data/', sdir=sdir)
     
     #print ''
     #print '    PngMaker'
@@ -78,7 +74,7 @@ def main(*args):
     #for scn in scans:
     #    if scn.spectra:
     #        break
-    #with open(sdir+'CurveData.__dict__.txt', 'w') as f:
+    #with open(sdir+'pyMTRX.CurveData.__dict__.txt', 'w') as f:
     #    f.write( pformat(scn.spectra[0].__dict__) )
     #
     #scans = PngMaker.main(save_dir=sdir)
@@ -88,17 +84,17 @@ def main(*args):
     #for scn in scans:
     #    if scn.spectra:
     #        break
-    #with open(sdir+'CurveData.__dict__.txt', 'w') as f:
+    #with open(sdir+'pyMTRX.CurveData.__dict__.txt', 'w') as f:
     #    f.write( pformat(scn.spectra[0].__dict__) )
     
     print ''
-    print '*** BEGIN TESTS FOR CurveData CLASS ***'
+    print '*** BEGIN TESTS FOR pyMTRX.CurveData CLASS ***'
     print ''
     
     print 'running arithmatic tests...'
-    A = CurveData([1.0,2.0,3.0], [1.0,4.0,9.0], x_units='s', y_units='m')
-    B = CurveData([1.0,2.0,3.0], [0.0,5.0,0.0], x_units='s', y_units='m')
-    C = CurveData(
+    A = pyMTRX.CurveData([1.0,2.0,3.0], [1.0,4.0,9.0], x_units='s', y_units='m')
+    B = pyMTRX.CurveData([1.0,2.0,3.0], [0.0,5.0,0.0], x_units='s', y_units='m')
+    C = pyMTRX.CurveData(
         [1.5,2.5,3.5], [1.5**2,2.5**2,3.5**2], x_units='s', y_units='m'
         )
     print 'A = '+str(A)
@@ -141,7 +137,7 @@ def main(*args):
         )
     
     #print 'trying to import a spec file with forward and backward data'
-    #crv_f, crv_r = CurveData.import_file(fname)
+    #crv_f, crv_r = pyMTRX.CurveData.import_file(fname)
     #plt.plot(crv_f.X, crv_f.Y, 'b', crv_r.X, crv_r.Y, 'r')
     #plt.title('file: '+crv_f.sourcefile)
     #plt.xlabel('Gap Bias ('+crv_f.x_units+')')
@@ -152,10 +148,10 @@ def main(*args):
     #print ''
     
     #print 'trying to differentiate the curves'
-    #dcrv_f = CurveData.deriv_sg(crv_f, 0.5, 2, 1)
-    #dcrv_r = CurveData.deriv_sg(crv_r, 0.5, 2, 1)
+    #dcrv_f = pyMTRX.CurveData.deriv_sg(crv_f, 0.5, 2, 1)
+    #dcrv_r = pyMTRX.CurveData.deriv_sg(crv_r, 0.5, 2, 1)
     #plt.plot(dcrv_f.X, dcrv_f.Y, 'b', dcrv_r.X, dcrv_r.Y, 'r')
-    #cdcrv_f = CurveData.deriv_cdiff(crv_f)
+    #cdcrv_f = pyMTRX.CurveData.deriv_cdiff(crv_f)
     #plt.plot(cdcrv_f.X, cdcrv_f.Y, 'gray')
     #plt.title('file: '+crv_f.sourcefile)
     #plt.xlabel('Gap Bias ('+dcrv_f.x_units+')')
@@ -166,7 +162,7 @@ def main(*args):
     #print ''
     
     #print 'near-neighbor smoothing of the central difference'
-    #nncdcrv_f = CurveData.nn_smooth(cdcrv_f, 5)
+    #nncdcrv_f = pyMTRX.CurveData.nn_smooth(cdcrv_f, 5)
     #plt.plot(cdcrv_f.X, cdcrv_f.Y, 'gray')
     #plt.plot(nncdcrv_f.X, nncdcrv_f.Y, 'green')
     #plt.savefig(sdir+'nnsmooth and cdiff test fig.png')
@@ -176,7 +172,7 @@ def main(*args):
     
     #print 'testing .spec.asc importing...'
     #fname = tdir+'20130605-1030-11_01_td-mol.miv.spec.asc'
-    #mcrv = CurveDataError.import_file(fname)
+    #mcrv = pyMTRX.CurveDataError.import_file(fname)
     #plt.plot(mcrv.X, mcrv.Y)
     #plt.plot(mcrv.X, mcrv.Y+3*mcrv.eY, 'gray')
     #plt.plot(mcrv.X, mcrv.Y-3*mcrv.eY, 'gray')
@@ -244,14 +240,14 @@ class PngMaker(object):
     def submain(cls, exp_fp, save_dir):
         cwd, exp_fn = os.path.split(exp_fp)
         cwd += '/'
-        ex = Experiment(exp_fp, debug=True)
+        ex = pyMTRX.Experiment(exp_fp, debug=True)
         exp_name = re.search(r'^.+?(?=_\d{4}.mtrx$)', exp_fn).group(0)
         print '"{}" loaded'.format(exp_fn)
         
         # collect scan files
         scn_files = []
         for fn in os.listdir(cwd):
-            if fn in ex and not Experiment.is_point_spectrum(fn):
+            if fn in ex and not pyMTRX.Experiment.is_point_spectrum(fn):
                 scn_files.append(fn)
             # END if
         # END for
