@@ -523,7 +523,11 @@ class CurveData(object):
         for k in sorted(props.keys()):
             if k[0] == '_': continue
             v = props[k]
-            f.write('# {} = {}\n'.format(k, v))
+            try:
+                f.write('# {0} = {1.value} {1.unit}\n'.format(k, v))
+            except Exception:
+                f.write('# {} = {}\n'.format(k, v))
+            # END try
         # END for
         f.write('\n')
         
