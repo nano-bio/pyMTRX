@@ -16,4 +16,4 @@ from scripts.convert_spec import main as convert_spec
 from scripts.notebook_sheet import main as notebook_sheet
 from scripts.notebook_slides import main as notebook_slides
 
-__version__ = '1.5.0'
+__version__ = '1.6.0'
