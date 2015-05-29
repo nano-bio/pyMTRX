@@ -5,6 +5,7 @@ pyMTRX\curves.py
 pyMTRX\experiment.py
 pyMTRX\numerical.py
 pyMTRX\scan.py
-scripts\convert_spec.py
-scripts\notebook_sheet.py
-scripts\notebook_slides.py
+pyMTRX\scripts\__init__.py
+pyMTRX\scripts\convert_spec.py
+pyMTRX\scripts\notebook_sheet.py
+pyMTRX\scripts\notebook_slides.py
