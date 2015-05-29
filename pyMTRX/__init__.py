@@ -12,5 +12,6 @@
 from experiment import *
 from curves import *
 from scan import *
+from scripts import *
 
-__version__ = '1.7.0'
+__version__ = '1.8.0'

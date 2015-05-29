@@ -94,8 +94,13 @@ def make_pptx( ex_fp, sdir='./', dir_filter=range(4),
     
     for scn_fp in scan_files:
         if scn_fp not in ex: continue
-        print 'adding {}'.format( os.path.basename(scn_fp) )
-        scans = flatten( ex.import_scan(scn_fp) )
+        try:
+            scans = flatten( ex.import_scan(scn_fp) )
+        except Exception as err:
+            print 'skipped {}'.format( os.path.basename(scn_fp) )
+            print '    {}: {}'.format(type(err).__name__, err)
+            continue
+        # END try
         try:
             scans = [scans[i] for i in dir_filter]
         except IndexError as err:
@@ -105,6 +110,7 @@ def make_pptx( ex_fp, sdir='./', dir_filter=range(4),
         # END try
         add_slide(prs, *scans[0:2])
         add_slide(prs, *scans[2:4])
+        print 'added {}'.format( os.path.basename(scn_fp) )
     # END for
     
     # create save name and avoid overwriting
