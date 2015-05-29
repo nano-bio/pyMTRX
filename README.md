@@ -5,7 +5,7 @@ A Python module for reading the data files from Omicron NanoTechnology's MATRIX 
 
 **Author:** *Alex M. Pronschinske*
 
-**Version:** *1.5.0*
+**Version:** *1.6.0*
 
 Software Requirements
 =====================
@@ -13,7 +13,7 @@ Software Requirements
 This package has the following direct dependencies:
 
  * python 2.7
- * numpy >= 1.5.1 (lower versions are untested)
+ * numpy >= 1.6.0 (lower versions are untested)
  * matplotlib >= 1.1.0
  * python-pptx (optional)
  * Pillow
@@ -45,7 +45,6 @@ Installation Instructions (Windows 7)
   * Pillow
  6. Install matplotlib 1.4.2 (always official 32-bit package) from .exe
  7. Install python-pptx: `$pip install python-pptx`
-
  8. Install pyMTRX: `$pip install pyMTRX`
 
 Installation Instructions (Ubuntu 14.04)
