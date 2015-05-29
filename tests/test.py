@@ -25,6 +25,8 @@ def main(*args):
     if not os.path.exists(sdir): os.mkdir(sdir)
     print 'saving to {}'.format(sdir)
     
+    print 'found pyMTRX in... {}'.format(pyMTRX.__file__)
+    
     print ''
     print '*** BEGIN TESTS FOR pyMTRX.Experiment CLASS ***'
     print ''
