@@ -169,7 +169,13 @@ def add_slide(prs, *scans):
             img_buff, format='png'
         )
         
-        slide.shapes.add_picture(img_buff, lindt[i], spc, width=w_img)
+        try:
+            slide.shapes.add_picture(img_buff, lindt[i], spc, width=w_img)
+        except IOError:
+            print 'failed to add {} scan {} to slide'.format(scn.props['file'], i)
+            continue
+        # END try
+        
         txBox = slide.shapes.add_textbox(
             lindt[i], spc+w_img+spc, w_img, h_txb
         )
@@ -242,7 +248,7 @@ def add_slide(prs, *scans):
             x = 16 + int( 336 * crv.props['coord_px'][0] /
                           float(scn.Z.shape[0])
                         )
-            y = 336+16 - int( 336 * crv.props['coord_px'][1] / 
+            y = 336+16 - int( 336 * crv.props['coord_px'][1] /
                            float(scn.Z.shape[1])
                          )
             if (x,y) not in points:
