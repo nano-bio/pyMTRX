@@ -247,7 +247,7 @@ class ScanData(object):
         '''
         
         for i in range(self.shape[1]):
-            Xi = np.array( range(len(self.Z[i,:])) )
+            Xi = np.array( list(range(len(self.Z[i,:]))) )
             self.Z[i,:] = (
                 self.Z[i,:]
                 - np.polyval(np.polyfit(Xi, self.Z[i,:], poly_order), Xi)

@@ -23,13 +23,13 @@ def main(*args):
     tdir = './test_data/'
     sdir = '../test_results/'
     if not os.path.exists(sdir): os.mkdir(sdir)
-    print 'saving to {}'.format(sdir)
+    print('saving to {}'.format(sdir))
     
-    print 'found pyMTRX in... {}'.format(pyMTRX.__file__)
+    print('found pyMTRX in... {}'.format(pyMTRX.__file__))
     
-    print ''
-    print '*** BEGIN TESTS FOR pyMTRX.Experiment CLASS ***'
-    print ''
+    print('')
+    print('*** BEGIN TESTS FOR pyMTRX.Experiment CLASS ***')
+    print('')
     
     #ex = pyMTRX.Experiment('test_data/2014Oct09-090049_0001.mtrx')
     #files = [ '2014Oct09-090049--438_1.I(V)_mtrx',
@@ -50,21 +50,21 @@ def main(*args):
     #    )
     ## END for
     
-    print ''
-    print 'Testing scripts...'
-    print ''
-    print 'convert_all_pntspec_to_txt.py'
-    print '-----------------------------'
+    print('')
+    print('Testing scripts...')
+    print('')
+    print('convert_all_pntspec_to_txt.py')
+    print('-----------------------------')
     pyMTRX.convert_spec('test_data/', sdir=sdir)
     
-    print ''
-    print 'notebook_sheet.py'
-    print '-----------------'
+    print('')
+    print('notebook_sheet.py')
+    print('-----------------')
     pyMTRX.notebook_sheet('test_data/', sdir=sdir)
     
-    print ''
-    print 'notebook_slides.py'
-    print '------------------'
+    print('')
+    print('notebook_slides.py')
+    print('------------------')
     pyMTRX.notebook_slides('test_data/', sdir=sdir)
     
     #print ''
@@ -89,47 +89,47 @@ def main(*args):
     #with open(sdir+'pyMTRX.CurveData.__dict__.txt', 'w') as f:
     #    f.write( pformat(scn.spectra[0].__dict__) )
     
-    print ''
-    print '*** BEGIN TESTS FOR pyMTRX.CurveData CLASS ***'
-    print ''
+    print('')
+    print('*** BEGIN TESTS FOR pyMTRX.CurveData CLASS ***')
+    print('')
     
-    print 'running arithmatic tests...'
+    print('running arithmatic tests...')
     A = pyMTRX.CurveData([1.0,2.0,3.0], [1.0,4.0,9.0], x_units='s', y_units='m')
     B = pyMTRX.CurveData([1.0,2.0,3.0], [0.0,5.0,0.0], x_units='s', y_units='m')
     C = pyMTRX.CurveData(
         [1.5,2.5,3.5], [1.5**2,2.5**2,3.5**2], x_units='s', y_units='m'
         )
-    print 'A = '+str(A)
-    print A.sparkstr((12,12))
-    print 'B = '+str(B)
-    print B.sparkstr((12,12))
-    print 'C = '+str(C)
-    print C.sparkstr((12,12))
-    print 'A + B = '+str(A+B)
+    print('A = '+str(A))
+    print(A.sparkstr((12,12)))
+    print('B = '+str(B))
+    print(B.sparkstr((12,12)))
+    print('C = '+str(C))
+    print(C.sparkstr((12,12)))
+    print('A + B = '+str(A+B))
     try:
-        print 'A + C = {}'.format( A + C )
+        print('A + C = {}'.format( A + C ))
     except Exception as err:
-        print repr(err)
+        print(repr(err))
     # END try
-    print 'A - B = '+str(A-B)
-    print 'A * B = '+str(A*B)
-    print 'B / A = '+str(B/A)
+    print('A - B = '+str(A-B))
+    print('A * B = '+str(A*B))
+    print('B / A = '+str(B/A))
     
-    print 'testing iteration...'
-    for xy in A: print xy
+    print('testing iteration...')
+    for xy in A: print(xy)
     
-    print 'testing comparisons...'
-    print 'A == B is ' + str(A==B)
-    print 'A != B is ' + str(A!=B)
-    print 'A == A is ' + str(A==A)
-    print 'A == C is ' + str(A==C)
+    print('testing comparisons...')
+    print('A == B is ' + str(A==B))
+    print('A != B is ' + str(A!=B))
+    print('A == A is ' + str(A==A))
+    print('A == C is ' + str(A==C))
     
-    print 'testing call...'
-    print 'A(1.5) = {0:0.3f}'.format(A(1.5))
+    print('testing call...')
+    print('A(1.5) = {0:0.3f}'.format(A(1.5)))
     
-    print 'testing other methods...'
-    print 'A.units() = ' + str(A.units)
-    print ''
+    print('testing other methods...')
+    print('A.units() = ' + str(A.units))
+    print('')
     
     fname = (
         tdir +
@@ -213,26 +213,26 @@ class PngMaker(object):
                 out_scans.extend(
                     cls.main(cwd + fn + '/', save_dir=save_dir, top=False)
                 )
-                print 'len(PngMaker.main.out_scans) = {}'.format(len(out_scans))
+                print('len(PngMaker.main.out_scans) = {}'.format(len(out_scans)))
             # END if
         # END for
         for tup in experiement_files:
-            print 'found "{}"'.format(tup[0])
+            print('found "{}"'.format(tup[0]))
             out_scans.extend( cls.submain(*tup) )
-            print 'len(PngMaker.main.out_scans) = {}'.format(len(out_scans))
+            print('len(PngMaker.main.out_scans) = {}'.format(len(out_scans)))
         # END for
         
         if top:
-            print cls.t_0
-            print cls.t_1
-            print 't_exp:t_other = {:0.1f}'.format(cls.t_0/cls.t_1)
+            print(cls.t_0)
+            print(cls.t_1)
+            print('t_exp:t_other = {:0.1f}'.format(cls.t_0/cls.t_1))
             cls.t_all = time.time() - cls.t_all
-            print 'total processing time: {:0.2f} s for {:} images'.format(
+            print('total processing time: {:0.2f} s for {:} images'.format(
                 cls.t_all, cls.n_all
-            )
-            print '                       {:0.1f} img/min'.format(
+            ))
+            print('                       {:0.1f} img/min'.format(
                 float(cls.n_all) / cls.t_all / 60.0
-            )
+            ))
         # END if
         
         return out_scans
@@ -244,7 +244,7 @@ class PngMaker(object):
         cwd += '/'
         ex = pyMTRX.Experiment(exp_fp, debug=True)
         exp_name = re.search(r'^.+?(?=_\d{4}.mtrx$)', exp_fn).group(0)
-        print '"{}" loaded'.format(exp_fn)
+        print('"{}" loaded'.format(exp_fn))
         
         # collect scan files
         scn_files = []
@@ -254,13 +254,13 @@ class PngMaker(object):
             # END if
         # END for
         scn_files.sort(key=lambda f: os.path.getmtime(cwd+f))
-        print '{} scans found in "{}"'.format(len(scn_files), cwd)
+        print('{} scans found in "{}"'.format(len(scn_files), cwd))
         
         out_scans = []
         for fn in scn_files:
             # scns = [trace_up, retrace_up, trace_down, retrace_down]
             cls.t_0 -= time.time()
-            print 'importing "{}"...'.format(fn)
+            print('importing "{}"...'.format(fn))
             scans = ex.import_scan(cwd + fn)
             cls.n_all += 1
             cls.t_0 += time.time()
@@ -274,9 +274,9 @@ class PngMaker(object):
                 )
                 try:
                     scn.save_png(save_dir + save_name)
-                    print 'saved "{}"'.format(save_name)
+                    print('saved "{}"'.format(save_name))
                 except Exception as err:
-                    print '{}: skipping "{}"'.format(repr(err), fn)
+                    print('{}: skipping "{}"'.format(repr(err), fn))
                 # END try
                 cls.t_1 += time.time()
             # END for

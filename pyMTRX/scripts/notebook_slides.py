@@ -9,7 +9,7 @@ import os.path
 import re
 from datetime import datetime
 import struct
-from StringIO import StringIO
+from io import StringIO
 from pprint import pprint
 
 # third-party modules
@@ -42,32 +42,32 @@ BrYl = mplcolors.LinearSegmentedColormap('BrYl', BrYl_cdict)
 mapper = cm.ScalarMappable(cmap=BrYl)
 
 #==============================================================================
-def main( cwd='.', sdir=None, dir_filter=range(4),
+def main( cwd='.', sdir=None, dir_filter=list(range(4)),
           fext='[^.()]+_mtrx', r=True, debug=False
         ):
     experiment_files = find_files(cwd, fext='mtrx', r=r)
     experiment_files.sort(key=lambda fp: os.path.getmtime(fp))
-    print 'found {} .mtrx files'.format(len(experiment_files))
+    print('found {} .mtrx files'.format(len(experiment_files)))
     for ex_fp in experiment_files:
-        if not isinstance(sdir, basestring): sdir = os.path.dirname(ex_fp)
+        if not isinstance(sdir, str): sdir = os.path.dirname(ex_fp)
         make_pptx(
             ex_fp, sdir=sdir, dir_filter=dir_filter, fext=fext, debug=debug
         )
     # END for
     
-    print 'finished'
+    print('finished')
 # END main
 
 #==============================================================================
-def make_pptx( ex_fp, sdir='./', dir_filter=range(4),
+def make_pptx( ex_fp, sdir='./', dir_filter=list(range(4)),
                fext='[^.()]+_mtrx', debug=False
              ):
     cwd, ex_fn = os.path.split(ex_fp)
     if not cwd: cwd = '.'
-    print 'working on "{}"'.format( os.path.basename(ex_fp) )
+    print('working on "{}"'.format( os.path.basename(ex_fp) ))
     scan_files = find_files(cwd, fext=fext)
     scan_files.sort(key=lambda fp: os.path.getmtime(fp))
-    print 'found {} scan files'.format(len(scan_files))
+    print('found {} scan files'.format(len(scan_files)))
     
     ex = om.Experiment(ex_fp, debug=debug)
     
@@ -97,20 +97,20 @@ def make_pptx( ex_fp, sdir='./', dir_filter=range(4),
         try:
             scans = flatten( ex.import_scan(scn_fp) )
         except Exception as err:
-            print 'skipped {}'.format( os.path.basename(scn_fp) )
-            print '    {}: {}'.format(type(err).__name__, err)
+            print('skipped {}'.format( os.path.basename(scn_fp) ))
+            print('    {}: {}'.format(type(err).__name__, err))
             continue
         # END try
         try:
             scans = [scans[i] for i in dir_filter]
         except IndexError as err:
-            print len(scans)
-            print dir_filter
+            print(len(scans))
+            print(dir_filter)
             raise err
         # END try
         add_slide(prs, *scans[0:2])
         add_slide(prs, *scans[2:4])
-        print 'added {}'.format( os.path.basename(scn_fp) )
+        print('added {}'.format( os.path.basename(scn_fp) ))
     # END for
     
     # create save name and avoid overwriting
@@ -127,7 +127,7 @@ def make_pptx( ex_fp, sdir='./', dir_filter=range(4),
     # END while
     
     prs.save(os.path.join(sdir, save_name))
-    print ''
+    print('')
 # END make__pptx
 
 #==============================================================================
@@ -172,7 +172,7 @@ def add_slide(prs, *scans):
         try:
             slide.shapes.add_picture(img_buff, lindt[i], spc, width=w_img)
         except IOError:
-            print 'failed to add {} scan {} to slide'.format(scn.props['file'], i)
+            print('failed to add {} scan {} to slide'.format(scn.props['file'], i))
             continue
         # END try
         
@@ -198,7 +198,7 @@ def add_slide(prs, *scans):
             pass
         # END try
         try:
-            s = u'x= {:.1f} nm, y= {:.1f} nm, θ= {:.1f}°'.format(
+            s = 'x= {:.1f} nm, y= {:.1f} nm, θ= {:.1f}°'.format(
                 1e9 * scn.props['XYScanner_X_Offset'].value,
                 1e9 * scn.props['XYScanner_Y_Offset'].value,
                 scn.props['XYScanner_Angle'].value
@@ -210,7 +210,7 @@ def add_slide(prs, *scans):
             pass
         # END try
         try:
-            s = u'{:.1f} × {:.1f} nm²\n{} × {} px²'.format(
+            s = '{:.1f} × {:.1f} nm²\n{} × {} px²'.format(
                 1e9 * scn.props['XYScanner_Width'].value,
                 1e9 * scn.props['XYScanner_Height'].value,
                 scn.props['XYScanner_Points'].value,

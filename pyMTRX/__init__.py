@@ -9,9 +9,9 @@
 
 # All functions and classes from the following modules should be imported as
 # native parts of the spectroscopy package
-from experiment import *
-from curves import *
-from scan import *
-from scripts import *
+from .experiment import *
+from .curves import *
+from .scan import *
+from .scripts import *
 
 __version__ = '1.9.0'

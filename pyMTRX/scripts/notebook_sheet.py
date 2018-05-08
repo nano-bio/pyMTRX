@@ -33,17 +33,17 @@ from pyMTRX.experiment import Experiment
 def main( cwd='./', sdir=None, r=True, processes=mp.cpu_count(),
           single_sheet=False, debug=False
         ):
-    if debug: print '*** DEBUG MODE ON ***'
+    if debug: print('*** DEBUG MODE ON ***')
     t = time.time()
     if cwd[-1] != '/':
         cwd += '/'
     files = os.listdir(cwd)
-    print 'looking for experiment files in "{}"'.format(cwd)
+    print('looking for experiment files in "{}"'.format(cwd))
     # find one experiment file and then move on
     experiment_files = find_files(cwd, fext='mtrx', r=r)
-    print 'Found the following .mtrx files'
+    print('Found the following .mtrx files')
     for fp in experiment_files:
-        print '    ' + os.path.basename(fp)
+        print('    ' + os.path.basename(fp))
     
     N_opened = []
     try:
@@ -54,7 +54,7 @@ def main( cwd='./', sdir=None, r=True, processes=mp.cpu_count(),
     if processes < 1 or debug: processes = 1
     if processes == 1:
         for fp in experiment_files:
-            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
+            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
             N_opened.append(
                 create_experiment_log(fp, sdir=sdir, debug=debug)
             )
@@ -62,9 +62,9 @@ def main( cwd='./', sdir=None, r=True, processes=mp.cpu_count(),
     else:
         # Create worker pool and start all jobs
         worker_pool = mp.Pool(processes=processes, maxtasksperchild=12)
-        print 'running in multiprocess mode: {} processes'.format(processes)
+        print('running in multiprocess mode: {} processes'.format(processes))
         for fp in experiment_files:
-            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
+            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
             N_opened.append(
                 worker_pool.apply_async( wrapped_create_exlog,
                                          args=(fp,sdir,debug),
@@ -84,7 +84,7 @@ def main( cwd='./', sdir=None, r=True, processes=mp.cpu_count(),
             try:
                 N += n.get()
             except Exception as err:
-                print err
+                print(err)
             # END try
         # END for
     # END if
@@ -92,10 +92,10 @@ def main( cwd='./', sdir=None, r=True, processes=mp.cpu_count(),
     hours = int(t/3600)
     minutes = int((t-3600*hours)/60)
     seconds = int(t - 3600*hours - 60*minutes)
-    print 'Total run time: {:02d}:{:02d}:{:02d}'.format(
+    print('Total run time: {:02d}:{:02d}:{:02d}'.format(
         hours, minutes, seconds
-    )
-    print 'Average processing speed: {:.0f} files/min'.format(N/(t/60))
+    ))
+    print('Average processing speed: {:.0f} files/min'.format(N/(t/60)))
 # END main
 
 #==============================================================================
@@ -103,7 +103,7 @@ def wrapped_create_exlog(*args, **kwargs):
     try:
         return create_experiment_log(*args, **kwargs)
     except Exception as err:
-        print '{}: {}'.format(args[0], repr(err))
+        print('{}: {}'.format(args[0], repr(err)))
         return 0
     # END try
 # END wrapped_create_exlog
@@ -111,7 +111,7 @@ def wrapped_create_exlog(*args, **kwargs):
 def create_experiment_log(exp_fp, sdir='./', debug=False):
     cwd, exp_fn = os.path.split(exp_fp)
     cwd += '/'
-    print 'loading ' + exp_fn
+    print('loading ' + exp_fn)
     ex = Experiment(cwd + exp_fn, debug=debug)
     
     # collect image files
@@ -126,7 +126,7 @@ def create_experiment_log(exp_fp, sdir='./', debug=False):
     IMG_entries = []
     STS_entries = []
     for fn in sorted(img_files, key=lambda f: os.path.getctime(cwd+f)):
-        if debug: print 'loading "{}"'.format(fn)
+        if debug: print('loading "{}"'.format(fn))
         # scns = [trace_up, retrace_up, trace_down, retrace_down] 
         scns = flatten_tree( ex.import_scan(cwd + fn) )
         for i in range(len(scns)):
@@ -185,9 +185,9 @@ def create_experiment_log(exp_fp, sdir='./', debug=False):
         f.write(ln)
     f.close()
     if len(os.path.join(sdir, save_name)) > 79:
-        print cwd + '\n    ' + save_name
+        print(cwd + '\n    ' + save_name)
     else:
-        print cwd + ' ' + save_name
+        print(cwd + ' ' + save_name)
     # END if
     
     return N_opened

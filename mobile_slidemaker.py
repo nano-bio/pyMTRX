@@ -13,4 +13,4 @@ scan_file_extentions = '[^.()]+_mtrx'
 pyMTRX.notebook_slides(
     '.', dir_filter=directions_to_use, fext=scan_file_extentions
 )
-raw_input('Press Enter to close')
+input('Press Enter to close')

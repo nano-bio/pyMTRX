@@ -15,7 +15,7 @@ import os
 import struct
 import re
 from datetime import datetime
-from StringIO import StringIO
+from io import StringIO
 from pprint import pprint, pformat
 import pdb
 from collections import namedtuple
@@ -23,8 +23,8 @@ from copy import copy
 
 # third-party modules
 import numpy as np
-from scan import ScanData
-from curves import CurveData
+from .scan import ScanData
+from .curves import CurveData
 
 #==============================================================================
 class Experiment(object):
@@ -183,7 +183,7 @@ class Experiment(object):
             try:
                 f.write('self._stslinks = \n')
                 skeys = sorted(
-                    self._stslinks.keys(),
+                    list(self._stslinks.keys()),
                     key=lambda s: re.sub(r'(^.*?)(\..*$)', r'\2\1', s)
                 )
                 for k in skeys:
@@ -761,8 +761,8 @@ class Experiment(object):
     # Object information methods
     #---------------------------
     def get_data_filenames(self):
-        return [ x for x in self._datafile_st.keys()
-                  if isinstance(x, basestring)
+        return [ x for x in list(self._datafile_st.keys())
+                  if isinstance(x, str)
                 ]
     # END get_data_filenames
     
@@ -808,10 +808,10 @@ class Experiment(object):
             while self._timeline[i_prev].t == self._timeline[i_bref].t:
                 i_prev -= 1
         except IndexError as err:
-            print '0'
-            print i_prev
-            print i_bref
-            print len(self._timeline)
+            print('0')
+            print(i_prev)
+            print(i_bref)
+            print(len(self._timeline))
             raise err
         # The preceding INCI or BREF will mark the beginning of the scanning,
         # but all BREFs from point spectra need to be skipped
@@ -885,7 +885,7 @@ class Experiment(object):
     # END get_pmods
     
     def get_state(self, fn):
-        if isinstance(fn, basestring):
+        if isinstance(fn, str):
             return self._datafile_st[fn]
         else:
             raise TypeError('File name argument must be str')
@@ -1000,8 +1000,8 @@ def import_scan( file_path,
         mods = ex.get_pmods(file_name, t, Npnt_act, slow_ax, fast_ax)
     except RuntimeError as err:
         mods = [[], []]
-        print err
-        print '  on "{}"'.format(file_name)
+        print(err)
+        print('  on "{}"'.format(file_name))
     #try:
     #    #print file_name
     #    #print 'saved at {:%H:%M:%S}'.format(datetime.fromtimestamp(t))
@@ -1606,7 +1606,7 @@ class MatrixBuffer(object):
             )
     # END __len__
     
-    def __nonzero__(self):
+    def __bool__(self):
         if len(self) > 0:
             return True
         else:
@@ -1757,7 +1757,7 @@ class MatrixBuffer(object):
             raise RuntimeError('String is too long ({})'.format(strlen))
         else:
             # Grab the set number of bytes and read it as UTF-16 characters
-            return unicode(self.next(2*strlen), 'utf-16')
+            return str(self.next(2*strlen), 'utf-16')
         # END if
     # END next_mtrxstr
     

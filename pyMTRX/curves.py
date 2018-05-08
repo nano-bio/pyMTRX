@@ -18,7 +18,7 @@ import time
 import numpy as np
 
 # internal modules
-import numerical as num
+from . import numerical as num
 
 #===============================================================================
 class CurveData(object):
@@ -334,7 +334,7 @@ class CurveData(object):
         # END if
         
         Y = crv.Y
-        porder_range = range(poly_order+1)
+        porder_range = list(range(poly_order+1))
         half_window = (i_window -1) / 2
         
         # Compute coefficients

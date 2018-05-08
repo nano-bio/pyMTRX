@@ -76,7 +76,7 @@ def sgSm(y, window_size, order, deriv=0):
 	if window_size < order + 2:
 		raise TypeError("window_size is too small for the polynomials order")
 	
-	order_range = range(order+1)
+	order_range = list(range(order+1))
 	half_window = (window_size -1) / 2
 	
 	# precompute coefficients

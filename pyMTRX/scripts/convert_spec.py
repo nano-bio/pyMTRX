@@ -28,18 +28,18 @@ import pyMTRX
 
 #==============================================================================
 def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
-    if debug: print '*** DEBUG MODE ON ***'
+    if debug: print('*** DEBUG MODE ON ***')
     t = time.time()
     if cwd[-1] != '/':
         cwd += '/'
     files = os.listdir(cwd)
     
-    if r: print 'recursive search enabled'
-    print 'looking for STS files in "{}"'.format(cwd)
+    if r: print('recursive search enabled')
+    print('looking for STS files in "{}"'.format(cwd))
     # find one experiment file and then move on
     experiment_files = find_files(cwd, fext='mtrx', r=r)
-    print 'Found the following .mtrx files'
-    for fp in experiment_files: print 4*' ' + os.path.basename(fp)
+    print('Found the following .mtrx files')
+    for fp in experiment_files: print(4*' ' + os.path.basename(fp))
     
     N_opened = []
     try:
@@ -50,14 +50,14 @@ def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
     if processes < 1 or debug: processes = 1
     if processes == 1:
         for fp in experiment_files:
-            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
+            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
             N_opened.append( subroutine_1(fp, sdir=sdir, debug=debug) )
         # END for
     else:
         # Create worker pool and start all jobs
         worker_pool = mp.Pool(processes=processes)
         for fp in experiment_files:
-            if not isinstance(sdir, basestring): sdir = os.path.dirname(fp)
+            if not isinstance(sdir, str): sdir = os.path.dirname(fp)
             N_opened.append(
                 worker_pool.apply_async( subroutine_1,
                                          args=(fp,sdir,debug)
@@ -86,10 +86,10 @@ def main(cwd='./', sdir=None, r=True, processes=mp.cpu_count(), debug=False):
     hours = int(t/3600)
     minutes = int((t-3600*hours)/60)
     seconds = int(t - 3600*hours - 60*minutes)
-    print 'Total run time: {:02d}:{:02d}:{:02d}'.format(
+    print('Total run time: {:02d}:{:02d}:{:02d}'.format(
         hours, minutes, seconds
-    )
-    print 'Average processing speed: {:.0f} files/min'.format(N/(t/60))
+    ))
+    print('Average processing speed: {:.0f} files/min'.format(N/(t/60)))
 # END main
 
 #==============================================================================
@@ -105,10 +105,10 @@ def subroutine_1(ex_fp, sdir='.', debug=False):
         if fn not in ex: continue
         if not re.search(r'\.[^.]+?\(\w+\)[^.]+$', fn): continue
         if re.search(r'\(t\)', fn): continue
-        if debug: print '\n{}'.format(fn)
+        if debug: print('\n{}'.format(fn))
         for crv in ex.import_spectra(os.path.join(cwd, fn)):
             parent_fn = crv.props.get('parent', '')
-            if debug: print '  parent= {}'.format(parent_fn)
+            if debug: print('  parent= {}'.format(parent_fn))
             try:
                 mrk = ex.stslinks[fn]
                 index, rep, chnl = re.search(
@@ -132,12 +132,12 @@ def subroutine_1(ex_fp, sdir='.', debug=False):
                         ])
             sn = sn.format(**crv.props)
             pyMTRX.CurveData.save(crv, os.path.join(sdir, sn))
-            if debug: print '  saved "{}"'.format(sn)
+            if debug: print('  saved "{}"'.format(sn))
             n_opened += 1
         # END for
     # END for
     
-    print 'saved {} spectra for {}'.format(n_opened, os.path.basename(ex_fp))
+    print('saved {} spectra for {}'.format(n_opened, os.path.basename(ex_fp)))
     return n_opened
 # END subroutine_1
 
@@ -186,10 +186,10 @@ if __name__ == '__main__':
     except Exception as err:
         exc_type, exc_value, exc_tb = sys.exc_info()
         bad_file, bad_line, func_name, text = traceback.extract_tb(exc_tb)[-1]
-        print 'Error in {}'.format(bad_file)
-        print '{} on {}: {}'.format(type(err).__name__, bad_line, err)
-        print ''
+        print('Error in {}'.format(bad_file))
+        print('{} on {}: {}'.format(type(err).__name__, bad_line, err))
+        print('')
     finally:
-        raw_input("press enter to exit")
+        input("press enter to exit")
     # END try
 # END if
